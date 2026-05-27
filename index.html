@@ -15,22 +15,39 @@
     main {
       padding: 24px;
     }
-    button {
+    .button-area {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .app-button {
+      display: inline-block;
       padding: 12px 24px;
       font-size: 16px;
       border-radius: 8px;
       border: none;
       background: #ffb300;
       color: #333;
+      text-decoration: none;
       cursor: pointer;
+      font-weight: bold;
+    }
+    .app-button:hover {
+      background: #ffa000;
     }
   </style>
 </head>
 <body>
   <main>
-    <h1>キリンの遊び場 アプリ1</h1>
-    <p>ここにゲームやツールのHTML／JavaScriptを書きます。</p>
-    <button onclick="alert('キリンと遊ぼう！');">遊ぶ</button>
+    <h1>キリンの遊び場</h1>
+    <p>開きたいアプリを選んでください。</p>
+
+    <div class="button-area">
+      <a class="app-button" href="GuitarCordsVer1_20260527.html">ギターコード</a>
+      <a class="app-button" href="VocalCheck_20260527.html">ボーカルチェック</a>
+    </div>
   </main>
 </body>
 </html>
