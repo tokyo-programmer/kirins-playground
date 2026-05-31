@@ -19,11 +19,10 @@
       --danger: #ff8c7a;
       --shadow: 0 18px 44px rgba(0,0,0,0.34);
 
-      --wheel-max: 1060px;
-
-      /* PC安全版 */
-      --wheel-zoom: 1.03;
-      --wheel-shift-y: 42px;
+      /* PC向けは広めに確保 */
+      --wheel-max: 1400px;
+      --wheel-zoom: 1.12;
+      --wheel-shift-y: 22px;
     }
 
     * { box-sizing: border-box; }
@@ -43,7 +42,7 @@
     }
 
     .app {
-      max-width: 1240px;
+      max-width: 1440px;
       margin: 0 auto;
       padding: 4px;
     }
@@ -130,11 +129,13 @@
       padding: 0;
     }
 
+    /* PCは高さ基準で大きく見せる */
     .wheelFrame {
       position: relative;
-      width: min(100%, var(--wheel-max));
+      width: min(96vw, var(--wheel-max));
+      height: min(82vh, 980px);
+      min-height: 620px;
       max-width: 100%;
-      aspect-ratio: 1 / 0.80;
       display: grid;
       place-items: center;
       user-select: none;
@@ -153,8 +154,8 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 126%;
-      height: 126%;
+      width: 118%;
+      height: 118%;
       display: block;
       cursor: grab;
       overflow: visible;
@@ -429,6 +430,9 @@
       }
 
       .wheelFrame {
+        width: min(100%, var(--wheel-max));
+        height: auto;
+        min-height: 0;
         aspect-ratio: 1 / 0.80;
       }
 
@@ -1345,7 +1349,6 @@
     wheelSvg.addEventListener("pointercancel", endDrag);
     wheelSvg.addEventListener("lostpointercapture", endDrag);
 
-    /* PCのマウスクリック / スマホのタップ どちらもここで受け付けます */
     wheelSvg.addEventListener("click", (e) => {
       if (performance.now() < state.ignoreClickUntil) return;
 
