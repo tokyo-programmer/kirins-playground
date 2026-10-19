@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="../../css/normalize.css">
 <link rel="stylesheet" href="../../css/site.css">
-<title>U-FRET Singer Manager</title>
+<title>U-FRET 弾き語り管理ツール</title>
 
 <style>
 body {
@@ -13,7 +13,79 @@ body {
   background: #f5f5f5;
   padding: 20px;
 }
-/* Responsive improvements for mobile */
+h1 { text-align: center; }
+nav { text-align: center; margin-bottom: 20px; }
+nav button { margin: 0 5px; padding: 6px 14px; cursor: pointer; }
+
+.section {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  display: none;
+}
+.section.active { display: block; }
+
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+input { flex: 1; padding: 6px; }
+button { padding: 6px 10px; }
+
+.item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.item:last-child { border-bottom: none; }
+
+.main { flex: 1; }
+.actions { display: flex; gap: 6px; white-space: nowrap; }
+
+a { color: #0066cc; font-weight: bold; text-decoration: none; }
+.date { font-size: 12px; color: #666; }
+
+/* お気に入りボタン */
+.star {
+  font-size: 18px;
+  cursor: pointer;
+  color: #fff;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  padding: 2px 4px;
+  transition: color 0.2s, background-color 0.2s, transform 0.1s;
+  background-color: #fff;
+}
+.star.active {
+  color: gold;
+  background-color: #fff;
+  border-color: gold;
+}
+.star:hover { transform: scale(1.2); }
+
+/* Settings menu responsive / mobile improvements */
+#settingsMenu {
+  display:none;
+  position: fixed;
+  top: 40px;
+  left: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 100;
+  width: auto;
+  max-width: 360px;
+}
+#settingsMenu.open { display:block; }
+
 @media (max-width:760px){
   body{padding:12px}
   .section{padding:12px;margin:0 0 12px}
@@ -21,7 +93,8 @@ body {
   input{width:100%}
   nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
   nav button{flex:1 1 auto;min-width:0}
-  #settingsMenu{left:8px;right:8px;width:auto}
+  #settingsMenu{left:0;right:0;top:auto;bottom:0;border-radius:12px 12px 0 0;max-width:none;padding:12px;}
+  #settingsMenu .close-btn{display:inline-block;margin-bottom:8px}
 }
 
 /* increase touch targets */
@@ -33,7 +106,7 @@ button, .star{min-height:44px;padding:10px 12px}
 <body>
 
 <!-- 設定ボタン -->
-<button id="settingsBtn" style="
+<button id="settingsBtn" aria-controls="settingsMenu" aria-expanded="false" aria-label="設定メニューを開く" style="
   position: fixed;
   top: 10px;
   left: 10px;
@@ -44,22 +117,14 @@ button, .star{min-height:44px;padding:10px 12px}
 ">⚙️ 設定</button>
 
 <!-- 設定メニュー -->
-<div id="settingsMenu" style="
-  display:none;
-  position: fixed;
-  top: 40px;
-  left: 10px;
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  z-index: 100;
-">
-  <button onclick="upgradeData()">既存データを最新版形式に変換</button>
-  <button id="backupBtn">バックアップを保存</button>
-  <button id="restoreBtn">バックアップを読み込む</button>
-  <input type="file" id="restoreFile" accept=".json" hidden>
+<div id="settingsMenu" role="dialog" aria-modal="true" aria-hidden="true">
+  <button id="settingsClose" class="close-btn" aria-label="閉じる">閉じる</button>
+  <div>
+    <button onclick="upgradeData()">既存データを最新版形式に変換</button>
+    <button id="backupBtn">バックアップを保存</button>
+    <button id="restoreBtn">バックアップを読み込む</button>
+    <input type="file" id="restoreFile" accept=".json" hidden>
+  </div>
 </div>
 
 <h1>🎸 弾き語り管理ツール</h1>
@@ -71,10 +136,412 @@ button, .star{min-height:44px;padding:10px 12px}
   <button onclick="showPage('requests')">リクエスト</button>
 </nav>
 
-<!-- original content preserved below -->
+<!-- アーティスト -->
+<div id="artists" class="section active">
+  <div class="controls">
+    <input id="artistSearch" placeholder="U-FRETで検索">
+    <button onclick="searchUfret()">検索</button>
+  </div>
+  <div class="controls">
+    <input id="artistUrl" placeholder="U-FRET公式アーティストURL">
+    <button onclick="addArtist()">追加</button>
+  </div>
+  <hr>
+  <div id="artistList"></div>
+</div>
+
+<!-- 履歴 -->
+<div id="history" class="section">
+  <div class="controls">
+    <input id="songArtist" placeholder="アーティスト名">
+    <input id="songTitle" placeholder="曲名">
+    <button onclick="addHistory()">追加</button>
+  </div>
+  <div class="controls">
+    <input id="songUrl" placeholder="U-FRETの曲URLを貼り付け">
+    <button onclick="addHistoryFromUrl()">URL追加</button>
+  </div>
+  <hr>
+  <div id="historyList"></div>
+</div>
+
+<!-- お気に入り -->
+<div id="favorites" class="section">
+  <div id="favoriteList"></div>
+</div>
+
+<!-- リクエスト -->
+<div id="requests" class="section">
+  <div class="controls">
+    <input id="reqFrom" placeholder="リクエストした人（例：TikTok：〇〇）">
+    <input id="reqArtist" placeholder="アーティスト">
+    <input id="reqTitle" placeholder="曲名">
+    <button onclick="addRequest()">追加</button>
+  </div>
+  <hr>
+  <div id="requestList"></div>
+</div>
 
 <script>
-/* original JS preserved */
+function showPage(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* ===== アーティスト ===== */
+const ARTIST_KEY="ufret_artists";
+const getArtists=()=>JSON.parse(localStorage.getItem(ARTIST_KEY)||"[]");
+const saveArtists=d=>localStorage.setItem(ARTIST_KEY,JSON.stringify(d));
+
+function searchUfret(){
+  if(!artistSearch.value) return;
+  window.open("https://www.ufret.jp/search.php?key="+encodeURIComponent(artistSearch.value));
+}
+
+function addArtist(){
+  const url=artistUrl.value.trim();
+  if(!url.includes("artist.php")) return alert("公式アーティストURLを入力してください");
+  const name=decodeURIComponent(new URL(url).searchParams.get("data")||"");
+  const d=getArtists();
+  if(!d.some(a=>a.name===name)){
+    d.push({name,url});
+    saveArtists(d);
+  }
+  artistUrl.value="";
+  renderArtists();
+}
+
+function deleteArtist(i){
+  if(!confirm("削除しますか？")) return;
+  const d=getArtists();
+  d.splice(i,1);
+  saveArtists(d);
+  renderArtists();
+}
+
+function renderArtists(){
+  const list=artistList;
+  const d=getArtists().sort((a,b)=>a.name.localeCompare(b.name,"ja"));
+  list.innerHTML=d.length?"":"<p>未登録</p>";
+  d.forEach((a,i)=>{
+    list.innerHTML+=`
+      <div class="item">
+        <div class="main">
+          <a href="${a.url}" target="_blank">${a.name}</a>
+        </div>
+        <div class="actions">
+          <button onclick="deleteArtist(${i})">削除</button>
+        </div>
+      </div>`;
+  });
+}
+
+/* ===== storage ===== */
+const HISTORY_KEY="history";
+const FAVORITE_KEY="favorites";
+const REQ_KEY="requests";
+
+const getHistory=()=>JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]");
+const saveHistory=d=>localStorage.setItem(HISTORY_KEY,JSON.stringify(d));
+
+const getFavorites=()=>JSON.parse(localStorage.getItem(FAVORITE_KEY)||"[]");
+const saveFavorites=d=>localStorage.setItem(FAVORITE_KEY,JSON.stringify(d));
+
+const getRequests=()=>JSON.parse(localStorage.getItem(REQ_KEY)||"[]");
+const saveRequests=d=>localStorage.setItem(REQ_KEY,JSON.stringify(d));
+
+/* ===== 履歴 ===== */
+function addHistory(){
+  if(!songArtist.value || !songTitle.value) return;
+  const artist=songArtist.value.trim();
+  const title=songTitle.value.trim();
+  const url="https://www.ufret.jp/search.php?key="+encodeURIComponent(`${artist} ${title}`);
+
+  const d=getHistory();
+  d.push({id:crypto.randomUUID(),artist,title,url,date:new Date().toISOString()});
+  saveHistory(d);
+  songArtist.value=songTitle.value="";
+  renderHistory();
+}
+
+function addHistoryFromUrl(){
+  const url=songUrl.value.trim();
+  if(!url.includes("ufret.jp")) return alert("U-FRETのURLを貼ってください");
+  const d=getHistory();
+  d.push({id:crypto.randomUUID(),artist:"（未設定）",title:"（未設定）",url,date:new Date().toISOString()});
+  saveHistory(d);
+  songUrl.value="";
+  renderHistory();
+}
+
+function editLink(id){
+  const d=getHistory();
+  const i=d.findIndex(x=>x.id===id);
+  const url=prompt("U-FRETリンクを編集",d[i].url);
+  if(!url) return;
+  d[i].url=url;
+  saveHistory(d);
+  renderHistory();
+}
+
+function toggleFavorite(id){
+  const f=getFavorites();
+  const h=getHistory().find(x=>x.id===id);
+  if(!h) return;
+  const i=f.findIndex(x=>x.id===id);
+  i===-1 ? f.push(h) : f.splice(i,1);
+  saveFavorites(f);
+  renderHistory();
+  renderFavorites();
+}
+
+function deleteHistory(id){
+  if(!confirm("削除しますか？")) return;
+  saveHistory(getHistory().filter(x=>x.id!==id));
+  renderHistory();
+}
+
+function renderHistory(){
+  const list=historyList;
+  const d=getHistory().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const f=getFavorites();
+  list.innerHTML=d.length?"":"<p>履歴なし</p>";
+
+  d.forEach(s=>{
+    const isFav=f.some(x=>x.id===s.id);
+    list.innerHTML+=`
+      <div class="item">
+        <div class="main">
+          <a href="${s.url}" target="_blank"><strong>${s.artist}</strong> / ${s.title}</a><br>
+          <span class="date">${new Date(s.date).toLocaleString()}</span>
+        </div>
+        <div class="actions">
+          <button onclick="editLink('${s.id}')">リンク</button>
+          <span class="star ${isFav?'active':''}" onclick="toggleFavorite('${s.id}')">★</span>
+          <button onclick="deleteHistory('${s.id}')">削除</button>
+        </div>
+      </div>`;
+  });
+}
+
+function deleteFavorite(id){
+  const d=getFavorites();
+  d.splice(d.findIndex(x=>x.id===id),1);
+  saveFavorites(d);
+  renderFavorites();
+  renderHistory();
+}
+
+function renderFavorites(){
+  const list=favoriteList;
+  const d=getFavorites();
+  list.innerHTML=d.length?"":"<p>お気に入りなし</p>";
+  d.forEach(s=>{
+    list.innerHTML+=`
+      <div class="item">
+        <div class="main">
+          <a href="${s.url}" target="_blank"><strong>${s.artist}</strong> / ${s.title}</a>
+        </div>
+        <div class="actions">
+          <button onclick="deleteFavorite('${s.id}')">削除</button>
+        </div>
+      </div>`;
+  });
+}
+
+/* ===== リクエスト ===== */
+function addRequest(){
+  const fromEl   = document.getElementById("reqFrom");
+  const artistEl = document.getElementById("reqArtist");
+  const titleEl  = document.getElementById("reqTitle");
+
+  // from / artist / title のどれか入力されていればOK
+  if(!fromEl.value && !artistEl.value && !titleEl.value) return;
+
+  const d = getRequests();
+  d.push({
+    from: fromEl?.value.trim() || "（不明）",
+    artist: artistEl.value.trim() || "（未設定）",
+    title: titleEl.value.trim() || "（未設定）",
+    date: new Date().toISOString(),
+    id: crypto.randomUUID()
+  });
+
+  saveRequests(d);
+
+  fromEl.value = artistEl.value = titleEl.value = "";
+  renderRequests();
+}
+
+function deleteRequest(id){
+  if(!confirm("削除しますか？")) return;
+  const d = getRequests().filter(r=>r.id!==id);
+  saveRequests(d);
+  renderRequests();
+}
+
+function renderRequests(){
+  const list = requestList;
+  const d = getRequests().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  list.innerHTML = d.length ? "" : "<p>なし</p>";
+
+  d.forEach(r=>{
+    list.innerHTML += `
+      <div class="item">
+        <div class="main">
+          <strong>${r.artist}</strong> / ${r.title}<br>
+          <span class="date">${r.from}｜${new Date(r.date).toLocaleString()}</span>
+        </div>
+        <div class="actions">
+          <button onclick="deleteRequest('${r.id}')">削除</button>
+        </div>
+      </div>`;
+  });
+}
+
+/* ===== 設定ボタン ===== */
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsMenu = document.getElementById("settingsMenu");
+const settingsClose = document.getElementById("settingsClose");
+
+// Toggle using class so CSS can control presentation (desktop modal / mobile bottom sheet)
+settingsBtn.addEventListener("click", ()=>{
+  const open = settingsMenu.classList.toggle("open");
+  settingsBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  settingsMenu.setAttribute("aria-hidden", open ? "false" : "true");
+});
+
+settingsClose.addEventListener("click", ()=>{
+  settingsMenu.classList.remove("open");
+  settingsBtn.setAttribute("aria-expanded", "false");
+  settingsMenu.setAttribute("aria-hidden", "true");
+});
+
+document.getElementById("restoreBtn").addEventListener("click", () => {
+  document.getElementById("restoreFile").click();
+});
+
+document.getElementById("restoreFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+
+      if (!confirm("現在のデータは上書きされます。よろしいですか？")) return;
+
+      // 🔑 正しい key で保存
+      if (data.artists)   localStorage.setItem("ufret_artists", JSON.stringify(data.artists));
+      if (data.history)   localStorage.setItem("history", JSON.stringify(data.history));
+      if (data.favorites) localStorage.setItem("favorites", JSON.stringify(data.favorites));
+      if (data.requests)  localStorage.setItem("requests", JSON.stringify(data.requests));
+
+      alert("バックアップを復元しました");
+
+      renderArtists();
+      renderHistory();
+      renderFavorites();
+      renderRequests();
+
+    } catch (err) {
+      alert("バックアップファイルが壊れています");
+      console.error(err);
+    }
+  };
+
+  reader.readAsText(file);
+});
+
+function upgradeData(){
+  // 履歴
+  let hist = getHistory();
+  let changedHist = false;
+  hist = hist.map(h=>{
+    if(!h.id) { h.id = crypto.randomUUID(); changedHist=true; }
+    if(!h.artist) h.artist = "（未設定）";
+    if(!h.title) h.title = "（未設定）";
+    if(!h.url) h.url = h.artist && h.title 
+      ? "https://www.ufret.jp/search.php?key="+encodeURIComponent(h.artist+" "+h.title)
+      : "";
+    return h;
+  });
+  if(changedHist) saveHistory(hist);
+
+  // お気に入り
+  let fav = getFavorites();
+  let changedFav=false;
+  fav = fav.map(f=>{
+    if(!f.id) { f.id = crypto.randomUUID(); changedFav=true; }
+    return f;
+  });
+  if(changedFav) saveFavorites(fav);
+
+ // リクエスト
+ let req = getRequests();
+ let changedReq = false;
+ req = req.map(r=>{
+   if(!r.id) { r.id = crypto.randomUUID(); changedReq = true; }
+   if(!r.from) r.from = "（不明）";
+   if(!r.artist) r.artist = "（未設定）";
+   if(!r.title) r.title = "（未設定）";
+   return r;
+ });
+ if(changedReq) saveRequests(req);
+
+
+  alert("既存データを最新版形式に変換しました");
+  renderHistory();
+  renderFavorites();
+  renderRequests();
+}
+
+// Backup button
+document.getElementById("backupBtn").addEventListener("click", () => {
+  const artists   = getArtists();
+  const history   = getHistory();
+  const favorites = getFavorites();
+  const requests  = getRequests();
+
+  // ✅ 中身チェック
+  if (
+    artists.length === 0 &&
+    history.length === 0 &&
+    favorites.length === 0 &&
+    requests.length === 0
+  ) {
+    alert("保存されているデータがありません。\n（このブラウザでは未登録の可能性があります）");
+    return;
+  }
+
+  const backupData = {
+    artists,
+    history,
+    favorites,
+    requests,
+    version: "1.0",
+    savedAt: new Date().toISOString()
+  };
+
+  console.log("バックアップ内容:", backupData);
+
+  const blob = new Blob(
+    [JSON.stringify(backupData, null, 2)],
+    { type: "application/json" }
+  );
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ufret_backup.json";
+  a.click();
+});
+
+/* 初期描画 */
+renderArtists();
+renderHistory();
+renderFavorites();
+renderRequests();
 </script>
 
 </body>
