@@ -25,7 +25,9 @@ body{
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:#fff;padding:.6rem 1rem;border-radius:var(--radius);border:0;cursor:pointer;min-height:44px;text-decoration:none}
-.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--text)}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--text)}n
+/* App-specific button alias */
+.app-button{display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:#fff;padding:.6rem 1rem;border-radius:8px;border:0;cursor:pointer;min-height:44px;text-decoration:none}
 
 /* Utility */
 .flex{display:flex}
