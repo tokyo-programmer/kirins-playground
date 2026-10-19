@@ -1,0 +1,46 @@
+/* site.css — global design tokens and utilities for kirins-playground */
+:root{
+  --primary:#2E7DFF;
+  --primary-700:#1A5CE6;
+  --accent:#FFB74D;
+  --bg:#ffffff;
+  --surface:#f8fafc;
+  --text:#111827;
+  --muted:#6B7280;
+  --radius:10px;
+  --gap:1rem;
+  --container-max:1100px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  color:var(--text);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+.container{width:100%;max-width:var(--container-max);margin:0 auto;padding:1rem}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:#fff;padding:.6rem 1rem;border-radius:var(--radius);border:0;cursor:pointer;min-height:44px;text-decoration:none}
+.btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--text)}
+
+/* Utility */
+.flex{display:flex}
+.flex-center{display:flex;align-items:center;justify-content:center}
+.mt-1{margin-top:1rem}
+.mb-1{margin-bottom:1rem}
+.text-muted{color:var(--muted)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Responsive helpers */
+@media (min-width:768px){
+  body{font-size:16px}
+}
+
+@media (max-width:480px){
+  .container{padding:.75rem}
+  .btn{padding:.72rem .9rem}
+}
