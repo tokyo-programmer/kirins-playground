@@ -3,205 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ボーカルチェック | キリンの遊び場</title>
+  <title>五度圏サークル | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
   <style>
-    :root {
-      --page-bg: #f8f7ff;
-      --panel: #ffffff;
-      --line: rgba(124,58,237,0.12);
-      --shadow: 0 18px 38px rgba(15,23,42,0.08);
-      --bar: #dbeafe;
-      --bar-fill: #2e7dff;
-      --key: #f3e8ff;
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: var(--page-bg);
-      color: var(--text);
+      background: linear-gradient(180deg, #f5f5ff, #f3f7ff);
     }
-
-    .page-shell {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 18px 44px;
-    }
-
-    .back-link {
-      display: inline-flex;
+    .wheel-panel {
+      display: grid;
+      grid-template-columns: minmax(300px, 1.4fr) minmax(220px, 0.9fr);
+      gap: 1.2rem;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
+      margin-top: 1rem;
     }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 20px;
+    .wheel-wrap {
+      position: relative;
+      width: min(72vw, 520px);
+      aspect-ratio: 1;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 0%, #eef2ff 62%, #e0e7ff 100%);
+      border: 12px solid rgba(79,70,229,0.08);
+      box-shadow: inset 0 0 30px rgba(79,70,229,0.05);
     }
-
-    .header {
+    .wheel-wrap::before {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(79,70,229,0.12);
+    }
+    .key {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 76px;
+      height: 32px;
+      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(var(--angle) * -1));
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.7rem, 2vw, 2.4rem);
-    }
-
-    .status {
-      padding: 7px 10px;
+      justify-content: center;
       border-radius: 999px;
-      background: rgba(124,58,237,0.12);
-      color: #6d28d9;
+      font-size: 0.88rem;
+      font-weight: 700;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(37,99,235,0.12);
+      color: #1f2937;
+    }
+    .key.major { background: rgba(46,125,255,0.12); color: var(--primary); }
+    .key.minor { background: rgba(52,211,153,0.12); color: #0d8f63; }
+    .legend { display: grid; gap: 1rem; }
+    .legend-card {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(79,70,229,0.12);
+      border-radius: 16px;
+      padding: 1rem;
+    }
+    .legend-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.7rem;
+    }
+    .chip {
+      display: inline-flex;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
       font-size: 0.8rem;
       font-weight: 700;
     }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 18px;
-    }
-
-    .meter {
-      background: linear-gradient(180deg, #f9f9ff, #f3f4ff);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-    }
-
-    .range-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .bar {
-      height: 18px;
-      background: var(--bar);
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .bar > span {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 72%;
-      background: linear-gradient(90deg, var(--bar-fill), #7c3aed);
-      border-radius: inherit;
-    }
-
-    .piano {
-      display: grid;
-      grid-template-columns: repeat(8, minmax(38px, 1fr));
-      gap: 8px;
-      margin-top: 18px;
-    }
-
-    .key-box {
-      background: var(--key);
-      border: 1px solid rgba(124,58,237,0.12);
-      border-radius: 10px;
-      padding: 12px 6px;
-      text-align: center;
-      font-weight: 700;
-      color: #2f2f46;
-    }
-
-    .mini-card {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .mini-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    .stats {
-      display: grid;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .stat {
-      display: flex;
-      justify-content: space-between;
-      background: #f8f7ff;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(124,58,237,0.08);
-    }
-
+    .chip.major { background: rgba(46,125,255,0.1); color: var(--primary); }
+    .chip.minor { background: rgba(52,211,153,0.12); color: #0d8f63; }
     @media (max-width: 760px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .piano {
-        grid-template-columns: repeat(4, minmax(38px, 1fr));
-      }
+      .wheel-panel { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <main class="page-shell">
+  <main class="app-shell">
     <a class="back-link" href="../../index.html">← ホームへ戻る</a>
 
-    <section class="panel">
-      <div class="header">
-        <h1>ボーカルチェック</h1>
-        <span class="status">Live</span>
+    <div class="app-header">
+      <div>
+        <h1 class="app-title">五度圏サークル</h1>
+        <div class="app-subtitle">主要調と関連マイナーを視覚的に巡るツールです。</div>
+      </div>
+    </div>
+
+    <div class="app-panel wheel-panel">
+      <div class="wheel-wrap" aria-label="五度圏ルーレット">
+        <div class="key major" style="--angle:0deg; --radius:190px;">C</div>
+        <div class="key major" style="--angle:30deg; --radius:190px;">G</div>
+        <div class="key major" style="--angle:60deg; --radius:190px;">D</div>
+        <div class="key major" style="--angle:90deg; --radius:190px;">A</div>
+        <div class="key major" style="--angle:120deg; --radius:190px;">E</div>
+        <div class="key major" style="--angle:150deg; --radius:190px;">B</div>
+        <div class="key major" style="--angle:180deg; --radius:190px;">F#</div>
+        <div class="key major" style="--angle:210deg; --radius:190px;">C#</div>
+        <div class="key major" style="--angle:240deg; --radius:190px;">G#</div>
+        <div class="key major" style="--angle:270deg; --radius:190px;">D#</div>
+        <div class="key major" style="--angle:300deg; --radius:190px;">A#</div>
+        <div class="key major" style="--angle:330deg; --radius:190px;">F</div>
       </div>
 
-      <div class="layout">
-        <div class="meter">
-          <div class="range-row">
-            <strong>音域範囲</strong>
-            <span>A2 - E5</span>
-          </div>
-          <div class="bar"><span></span></div>
-
-          <div class="piano">
-            <div class="key-box">A2</div>
-            <div class="key-box">C3</div>
-            <div class="key-box">E3</div>
-            <div class="key-box">G3</div>
-            <div class="key-box">A3</div>
-            <div class="key-box">C4</div>
-            <div class="key-box">E4</div>
-            <div class="key-box">G4</div>
+      <div class="legend">
+        <div class="legend-card">
+          <h3>メジャーキー</h3>
+          <div class="legend-list">
+            <span class="chip major">C</span>
+            <span class="chip major">G</span>
+            <span class="chip major">D</span>
+            <span class="chip major">A</span>
+            <span class="chip major">E</span>
           </div>
         </div>
 
-        <aside class="mini-card">
-          <h3>測定結果</h3>
-          <div class="stats">
-            <div class="stat"><span>最低音</span><strong>A2</strong></div>
-            <div class="stat"><span>最高音</span><strong>E5</strong></div>
-            <div class="stat"><span>テノール域</span><strong>適合</strong></div>
+        <div class="legend-card">
+          <h3>関連マイナー</h3>
+          <div class="legend-list">
+            <span class="chip minor">Am</span>
+            <span class="chip minor">Em</span>
+            <span class="chip minor">Bm</span>
+            <span class="chip minor">F#m</span>
+            <span class="chip minor">C#m</span>
           </div>
-        </aside>
+        </div>
       </div>
-    </section>
+    </div>
   </main>
 </body>
 </html>

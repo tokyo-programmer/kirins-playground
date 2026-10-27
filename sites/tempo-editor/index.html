@@ -3,146 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>リズムパターン | キリンの遊び場</title>
+  <title>ボーカルチェック | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
   <style>
-    :root {
-      --page-bg: #f4fbff;
-      --panel: #ffffff;
-      --line: rgba(14,116,144,0.14);
-      --shadow: 0 18px 42px rgba(15,23,42,0.08);
-      --beat: #d9f6ff;
-      --accent: #0ea5e9;
-      --accent-2: #14b8a6;
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: var(--page-bg);
-      color: var(--text);
+      background: linear-gradient(180deg, #f8f7ff, #f5f7ff);
     }
-
-    .page-shell {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 18px 48px;
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 0.9fr;
+      gap: 1.2rem;
+      margin-top: 1rem;
     }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
+    .meter-panel,
+    .result-panel {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: 0 14px 32px rgba(15,23,42,0.06);
     }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
-
-    .header {
+    .range-row {
       display: flex;
       justify-content: space-between;
+      gap: 0.8rem;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
     }
-
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.7rem, 2vw, 2.4rem);
-    }
-
-    .tempo {
-      background: rgba(14,165,233,0.1);
-      color: #0369a1;
+    .bar {
+      position: relative;
+      height: 18px;
+      background: #dfe8ff;
       border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
+      overflow: hidden;
     }
-
-    .staff {
+    .bar > span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 72%;
+      background: linear-gradient(90deg, #2e7dff, #7c3aed);
+      border-radius: inherit;
+    }
+    .piano-grid {
       display: grid;
-      grid-template-columns: repeat(8, minmax(40px, 1fr));
-      gap: 10px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: linear-gradient(180deg, #ffffff, #f8fdff);
+      grid-template-columns: repeat(8, minmax(42px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
     }
-
-    .cell {
-      min-height: 72px;
-      border-radius: 12px;
-      border: 1px solid rgba(14,116,144,0.12);
-      background: var(--beat);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #075985;
-    }
-
-    .cell.accent {
-      background: rgba(20,184,166,0.18);
-      color: #115e59;
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .btn {
-      border: 0;
+    .key-box {
+      text-align: center;
+      background: #f3f4ff;
+      border: 1px solid rgba(124,58,237,0.12);
       border-radius: 10px;
-      padding: 10px 14px;
+      padding: 0.7rem 0.5rem;
       font-weight: 700;
-      cursor: pointer;
+      color: #2f2f46;
     }
-
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-secondary { background: rgba(14,165,233,0.1); color: #0f172a; }
+    .stats {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 0.8rem;
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      background: #f8f7ff;
+      border: 1px solid rgba(124,58,237,0.08);
+    }
+    @media (max-width: 760px) {
+      .layout { grid-template-columns: 1fr; }
+      .piano-grid { grid-template-columns: repeat(4, minmax(42px, 1fr)); }
+    }
   </style>
 </head>
 <body>
-  <main class="page-shell">
+  <main class="app-shell">
     <a class="back-link" href="../../index.html">← ホームへ戻る</a>
 
-    <section class="panel">
-      <div class="header">
-        <h1>リズムパターン</h1>
-        <span class="tempo">120 BPM</span>
+    <div class="app-header">
+      <div>
+        <h1 class="app-title">ボーカルチェック</h1>
+        <div class="app-subtitle">マイクから音域を測定してピアノ表示</div>
       </div>
+      <span class="badge" style="background:rgba(124,58,237,0.12); color:#6d28d9;">Live</span>
+    </div>
 
-      <div class="staff" aria-label="リズムパターン">
-        <div class="cell accent">1</div>
-        <div class="cell">2</div>
-        <div class="cell">3</div>
-        <div class="cell accent">4</div>
-        <div class="cell">5</div>
-        <div class="cell">6</div>
-        <div class="cell accent">7</div>
-        <div class="cell">8</div>
-      </div>
+    <div class="layout">
+      <section class="meter-panel">
+        <div class="range-row">
+          <strong>音域範囲</strong>
+          <span>A2 - E5</span>
+        </div>
+        <div class="bar"><span></span></div>
 
-      <div class="controls">
-        <button class="btn btn-primary">再生</button>
-        <button class="btn btn-secondary">拍子を変更</button>
-        <button class="btn btn-secondary">パターン保存</button>
-      </div>
-    </section>
+        <div class="piano-grid">
+          <div class="key-box">A2</div>
+          <div class="key-box">C3</div>
+          <div class="key-box">E3</div>
+          <div class="key-box">G3</div>
+          <div class="key-box">A3</div>
+          <div class="key-box">C4</div>
+          <div class="key-box">E4</div>
+          <div class="key-box">G4</div>
+        </div>
+      </section>
+
+      <aside class="result-panel">
+        <h3>測定結果</h3>
+        <div class="stats">
+          <div class="stat"><span>最低音</span><strong>A2</strong></div>
+          <div class="stat"><span>最高音</span><strong>E5</strong></div>
+          <div class="stat"><span>テノール域</span><strong>適合</strong></div>
+        </div>
+      </aside>
+    </div>
   </main>
 </body>
 </html>

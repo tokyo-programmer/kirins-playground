@@ -3,159 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>U-FRET 管理 | キリンの遊び場</title>
+  <title>リズムパターン | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
   <style>
-    :root {
-      --page-bg: #f6f7fb;
-      --panel: #ffffff;
-      --line: rgba(15,23,42,0.08);
-      --shadow: 0 18px 42px rgba(15,23,42,0.08);
-      --chip: #eef2ff;
-      --primary: #2e7dff;
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: var(--page-bg);
-      color: var(--text);
+      background: linear-gradient(180deg, #f4fbff, #f0f8ff);
     }
-
-    .page-shell {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 18px 48px;
+    .panel-strong {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(14,116,144,0.14);
+      border-radius: 20px;
+      padding: 1rem;
+      box-shadow: 0 14px 36px rgba(15,23,42,0.06);
     }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
+    .staff {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(40px, 1fr));
+      gap: 0.7rem;
+      margin-top: 1rem;
+      background: linear-gradient(180deg, #ffffff, #f8fdff);
+      border: 1px solid rgba(14,116,144,0.12);
+      border-radius: 16px;
+      padding: 1rem;
     }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
-
-    .header {
+    .cell {
+      min-height: 72px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
+      justify-content: center;
+      border-radius: 12px;
+      background: #dff7ff;
+      border: 1px solid rgba(14,116,144,0.12);
+      font-weight: 700;
+      color: #075985;
     }
-
-    .header h1 {
-      margin: 0;
-      font-size: clamp(1.6rem, 2vw, 2.2rem);
+    .cell.accent {
+      background: rgba(20,184,166,0.18);
+      color: #115e59;
     }
-
-    .chip-row {
+    .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 20px;
+      gap: 0.7rem;
+      margin-top: 1rem;
     }
-
-    .chip {
-      background: var(--chip);
-      color: #1e3a8a;
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-    }
-
-    .card h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
-    }
-
-    .entry {
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(15,23,42,0.05);
-    }
-
-    .entry:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: 0;
-    }
-
-    .entry strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    @media (max-width: 760px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    .btn-primary {
+      background: #0ea5e9;
+      color: #fff;
+      border-color: transparent;
     }
   </style>
 </head>
 <body>
-  <main class="page-shell">
+  <main class="app-shell">
     <a class="back-link" href="../../index.html">← ホームへ戻る</a>
 
-    <section class="panel">
-      <div class="header">
-        <h1>U-FRET 管理</h1>
-        <a class="app-button" href="../../index.html">ホーム</a>
+    <div class="app-header">
+      <div>
+        <h1 class="app-title">リズムパターン</h1>
+        <div class="app-subtitle">譜面風のリズム作成サポート</div>
+      </div>
+      <span class="badge" style="background:rgba(14,165,233,0.1); color:#0369a1;">120 BPM</span>
+    </div>
+
+    <section class="panel-strong">
+      <div class="staff" aria-label="リズムパターン">
+        <div class="cell accent">1</div>
+        <div class="cell">2</div>
+        <div class="cell">3</div>
+        <div class="cell accent">4</div>
+        <div class="cell">5</div>
+        <div class="cell">6</div>
+        <div class="cell accent">7</div>
+        <div class="cell">8</div>
       </div>
 
-      <div class="chip-row">
-        <span class="chip">履歴</span>
-        <span class="chip">お気に入り</span>
-        <span class="chip">バックアップ</span>
-        <span class="chip">設定</span>
-      </div>
-
-      <div class="grid">
-        <article class="card">
-          <h3>最近の履歴</h3>
-          <div class="entry"><strong>曲: いつかの夢</strong><span>1時間前</span></div>
-          <div class="entry"><strong>曲: 夜のメロディ</strong><span>昨日</span></div>
-          <div class="entry"><strong>曲: 風のうた</strong><span>3日前</span></div>
-        </article>
-
-        <article class="card">
-          <h3>お気に入り</h3>
-          <div class="entry"><strong>F#m7</strong><span>人を惹くコード</span></div>
-          <div class="entry"><strong>Gmaj7</strong><span>やわらかい響き</span></div>
-          <div class="entry"><strong>Am9</strong><span>ライトなボケ感</span></div>
-        </article>
-
-        <article class="card">
-          <h3>バックアップ</h3>
-          <div class="entry"><strong>最終保存</strong><span>今日 19:45</span></div>
-          <div class="entry"><strong>ファイル</strong><span>u-fret-backup.json</span></div>
-          <div class="entry"><strong>状態</strong><span>正常</span></div>
-        </article>
+      <div class="controls">
+        <button class="btn-primary" type="button">再生</button>
+        <button type="button">拍子を変更</button>
+        <button type="button">パターン保存</button>
       </div>
     </section>
   </main>

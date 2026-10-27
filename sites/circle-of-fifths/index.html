@@ -3,207 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>五度圏サークル | キリンの遊び場</title>
+  <title>ギターコード | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
   <style>
-    :root {
-      --page-bg: #f5f5ff;
-      --panel: rgba(255,255,255,0.9);
-      --line: rgba(79,70,229,0.14);
-      --shadow: 0 16px 40px rgba(15,23,42,0.08);
-      --ring: #e0e7ff;
-      --ring-fill: #eef2ff;
-      --major: #2e7dff;
-      --minor: #34d399;
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: var(--page-bg);
-      color: var(--text);
+      background: linear-gradient(180deg, #f2f6ff, #eef5ff);
     }
-
-    .page-shell {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 18px 48px;
-    }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-
-    .panel h1 {
-      margin: 0 0 8px;
-      font-size: clamp(1.7rem, 2.5vw, 2.4rem);
-    }
-
-    .subtitle {
-      color: var(--muted);
-      margin-bottom: 20px;
-    }
-
-    .wheel-wrap {
+    .layout {
       display: grid;
-      grid-template-columns: minmax(260px, 1.5fr) minmax(220px, 1fr);
-      gap: 20px;
-      align-items: center;
+      grid-template-columns: 1.4fr 0.9fr;
+      gap: 1.2rem;
+      margin-top: 1rem;
     }
-
-    .wheel {
-      position: relative;
-      width: min(70vw, 500px);
-      aspect-ratio: 1;
-      margin: 0 auto;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ffffff 0%, var(--ring-fill) 62%, var(--ring) 100%);
-      border: 12px solid rgba(79,70,229,0.08);
-      box-shadow: inset 0 0 30px rgba(79,70,229,0.05);
-    }
-
-    .wheel::before {
-      content: "";
-      position: absolute;
-      inset: 18%;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.8);
-      border: 1px solid rgba(79,70,229,0.14);
-    }
-
-    .key {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 72px;
-      height: 32px;
-      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(var(--angle) * -1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #1f2937;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(37,99,235,0.12);
-    }
-
-    .key.major {
-      background: rgba(46,125,255,0.12);
-      color: var(--major);
-    }
-
-    .key.minor {
-      background: rgba(52,211,153,0.12);
-      color: #0d8f63;
-    }
-
-    .legend {
-      display: grid;
-      gap: 12px;
-    }
-
-    .legend-card {
+    .panel-strong {
       background: #fff;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(148,163,184,0.24);
+      border-radius: 20px;
+      padding: 1.1rem;
+      box-shadow: 0 12px 32px rgba(15,23,42,0.07);
+    }
+    .chord-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(100px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+    .chord-tile {
+      background: linear-gradient(180deg, #f9fbff, #eef4ff);
+      border: 1px solid rgba(46,125,255,0.18);
       border-radius: 14px;
-      padding: 16px;
+      padding: 0.9rem 0.75rem;
+      text-align: center;
     }
-
-    .legend-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
+    .chord-tile strong {
+      display: block;
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      margin-bottom: 0.2rem;
     }
-
-    .legend-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .sidebar { display: grid; gap: 1rem; }
+    .preset-list { display: grid; gap: 0.5rem; margin-top: 0.8rem; }
+    .preset-list button {
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid rgba(46,125,255,0.15);
     }
-
-    .chip {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.82rem;
-    }
-
-    .chip.major { background: rgba(46,125,255,0.12); color: var(--major); }
-    .chip.minor { background: rgba(52,211,153,0.12); color: #0d8f63; }
-
     @media (max-width: 760px) {
-      .wheel-wrap {
-        grid-template-columns: 1fr;
-      }
+      .layout { grid-template-columns: 1fr; }
+      .chord-grid { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
     }
   </style>
 </head>
 <body>
-  <main class="page-shell">
+  <main class="app-shell">
     <a class="back-link" href="../../index.html">← ホームへ戻る</a>
 
-    <section class="panel">
-      <h1>五度圏サークル</h1>
-      <div class="subtitle">主要調と関連マイナーを視覚的に巡るツールです。</div>
-
-      <div class="wheel-wrap">
-        <div class="wheel" aria-label="五度圏ルーレット">
-          <div class="key major" style="--angle: 0deg; --radius: 190px;">C</div>
-          <div class="key major" style="--angle: 30deg; --radius: 190px;">G</div>
-          <div class="key major" style="--angle: 60deg; --radius: 190px;">D</div>
-          <div class="key major" style="--angle: 90deg; --radius: 190px;">A</div>
-          <div class="key major" style="--angle: 120deg; --radius: 190px;">E</div>
-          <div class="key major" style="--angle: 150deg; --radius: 190px;">B</div>
-          <div class="key major" style="--angle: 180deg; --radius: 190px;">F#</div>
-          <div class="key major" style="--angle: 210deg; --radius: 190px;">C#</div>
-          <div class="key major" style="--angle: 240deg; --radius: 190px;">G#</div>
-          <div class="key major" style="--angle: 270deg; --radius: 190px;">D#</div>
-          <div class="key major" style="--angle: 300deg; --radius: 190px;">A#</div>
-          <div class="key major" style="--angle: 330deg; --radius: 190px;">F</div>
-        </div>
-
-        <div class="legend">
-          <div class="legend-card">
-            <h3>メジャーキー</h3>
-            <div class="legend-list">
-              <span class="chip major">C</span>
-              <span class="chip major">G</span>
-              <span class="chip major">D</span>
-              <span class="chip major">A</span>
-              <span class="chip major">E</span>
-            </div>
-          </div>
-
-          <div class="legend-card">
-            <h3>関連マイナー</h3>
-            <div class="legend-list">
-              <span class="chip minor">Am</span>
-              <span class="chip minor">Em</span>
-              <span class="chip minor">Bm</span>
-              <span class="chip minor">F#m</span>
-              <span class="chip minor">C#m</span>
-            </div>
-          </div>
-        </div>
+    <div class="app-header">
+      <div>
+        <h1 class="app-title">ギターコード</h1>
+        <div class="app-subtitle">チューニング別のコード確認と再生</div>
       </div>
-    </section>
+      <span class="badge primary-badge">Tune: E A D G B E</span>
+    </div>
+
+    <div class="layout">
+      <section class="panel-strong">
+        <h2>コード一覧</h2>
+        <div class="chord-grid">
+          <div class="chord-tile"><strong>C</strong><span>ド</span></div>
+          <div class="chord-tile"><strong>G</strong><span>ソ</span></div>
+          <div class="chord-tile"><strong>D</strong><span>レ</span></div>
+          <div class="chord-tile"><strong>Am</strong><span>ラm</span></div>
+          <div class="chord-tile"><strong>Em</strong><span>ミm</span></div>
+          <div class="chord-tile"><strong>F</strong><span>ファ</span></div>
+          <div class="chord-tile"><strong>Bm</strong><span>シm</span></div>
+          <div class="chord-tile"><strong>Dm</strong><span>レm</span></div>
+        </div>
+        <div class="row" style="margin-top:1rem; flex-wrap:wrap;">
+          <span class="badge" style="background:rgba(255,183,77,0.14); color:#8a4b00;"># 音程確認</span>
+          <span class="badge" style="background:rgba(46,125,255,0.1); color:var(--primary);"># 再生</span>
+          <span class="badge" style="background:rgba(31,157,104,0.12); color:var(--success);"># チューニング切替</span>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="panel-strong">
+          <h3>プリセット</h3>
+          <div class="preset-list">
+            <button>Standard</button>
+            <button>Drop D</button>
+            <button>Open G</button>
+          </div>
+        </div>
+
+        <div class="panel-strong">
+          <h3>チェックポイント</h3>
+          <p class="muted">押さえやすいフォーム、コードの構成音、弦ごとの音を確認できます。</p>
+        </div>
+      </aside>
+    </div>
   </main>
 </body>
 </html>
