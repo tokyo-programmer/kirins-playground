@@ -11,12 +11,14 @@
     body {
       background: linear-gradient(180deg, #f8f7ff, #f5f7ff);
     }
+
     .layout {
       display: grid;
       grid-template-columns: 1.4fr 0.9fr;
       gap: 1.2rem;
       margin-top: 1rem;
     }
+
     .meter-panel,
     .result-panel {
       background: rgba(255,255,255,0.82);
@@ -25,6 +27,7 @@
       padding: 1rem;
       box-shadow: 0 14px 32px rgba(15,23,42,0.06);
     }
+
     .range-row {
       display: flex;
       justify-content: space-between;
@@ -33,6 +36,7 @@
       font-weight: 700;
       margin-bottom: 0.75rem;
     }
+
     .bar {
       position: relative;
       height: 18px;
@@ -40,6 +44,7 @@
       border-radius: 999px;
       overflow: hidden;
     }
+
     .bar > span {
       position: absolute;
       inset: 0 auto 0 0;
@@ -47,12 +52,14 @@
       background: linear-gradient(90deg, #2e7dff, #7c3aed);
       border-radius: inherit;
     }
+
     .piano-grid {
       display: grid;
       grid-template-columns: repeat(8, minmax(38px, 1fr));
       gap: 0.5rem;
       margin-top: 1rem;
     }
+
     .key-box {
       text-align: center;
       background: #f3f4ff;
@@ -62,11 +69,25 @@
       font-weight: 700;
       color: #2f2f46;
     }
+
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .voice-select {
+      min-width: 160px;
+    }
+
     .stats {
       display: grid;
       gap: 0.75rem;
       margin-top: 0.8rem;
     }
+
     .stat {
       display: flex;
       justify-content: space-between;
@@ -76,6 +97,7 @@
       background: #f8f7ff;
       border: 1px solid rgba(124,58,237,0.08);
     }
+
     @media (max-width: 760px) {
       .layout { grid-template-columns: 1fr; }
       .piano-grid { grid-template-columns: repeat(4, minmax(42px, 1fr)); }
@@ -101,6 +123,12 @@
           <span id="rangeLabel">A2 - E5</span>
         </div>
         <div class="bar"><span id="rangeFill"></span></div>
+
+        <div class="controls">
+          <label for="voiceSelect" class="muted">音域タイプ</label>
+          <select id="voiceSelect" class="voice-select" aria-label="音域タイプ"></select>
+        </div>
+
         <div id="pianoGrid" class="piano-grid"></div>
       </section>
 
@@ -114,24 +142,49 @@
   <script>
     (function () {
       const theory = window.MUSIC_THEORY_DATA;
+      if (!theory) return;
+
       const pianoGrid = document.getElementById('pianoGrid');
       const resultStats = document.getElementById('resultStats');
       const rangeLabel = document.getElementById('rangeLabel');
       const rangeFill = document.getElementById('rangeFill');
+      const voiceSelect = document.getElementById('voiceSelect');
       const notes = ['A2', 'C3', 'E3', 'G3', 'A3', 'C4', 'E4', 'G4'];
 
-      const defaultRange = theory.voiceRanges[2] || { low: 'B2', high: 'G5' };
-      rangeLabel.textContent = `${defaultRange.low} - ${defaultRange.high}`;
-      rangeFill.style.width = '72%';
+      function renderVoiceSelect() {
+        voiceSelect.innerHTML = theory.voiceRanges.map((range) => `
+          <option value="${range.id}">${range.name}</option>
+        `).join('');
+        voiceSelect.value = 'tenor';
+      }
 
-      pianoGrid.innerHTML = notes.map((note) => `<div class="key-box">${note}</div>`).join('');
+      function renderVoiceRange() {
+        const type = voiceSelect.value;
+        const range = theory.getVoiceRange(type);
+        const lowIndex = notes.indexOf(range.low) >= 0 ? notes.indexOf(range.low) : 0;
+        const highIndex = notes.indexOf(range.high) >= 0 ? notes.indexOf(range.high) : notes.length - 1;
 
-      const recommendedKey = theory.keys[0] || { id: 'C', relativeMinor: 'Am' };
-      resultStats.innerHTML = `
-        <div class="stat"><span>最低音</span><strong>${defaultRange.low}</strong></div>
-        <div class="stat"><span>最高音</span><strong>${defaultRange.high}</strong></div>
-        <div class="stat"><span>推奨キー</span><strong>${recommendedKey.id} / ${recommendedKey.relativeMinor}</strong></div>
-      `;
+        rangeLabel.textContent = `${range.low} - ${range.high}`;
+        rangeFill.style.width = `${Math.min(100, ((highIndex + 1) / notes.length) * 100)}%`;
+
+        pianoGrid.innerHTML = notes.map((note, idx) => {
+          const active = idx >= lowIndex && idx <= highIndex
+            ? 'style="background:rgba(46,125,255,0.12); border-color:rgba(46,125,255,0.4);"'
+            : '';
+          return `<div class="key-box" ${active}>${note}</div>`;
+        }).join('');
+
+        const recommendedKey = theory.keys[0] || { id: 'C', relativeMinor: 'Am' };
+        resultStats.innerHTML = `
+          <div class="stat"><span>最低音</span><strong>${range.low}</strong></div>
+          <div class="stat"><span>最高音</span><strong>${range.high}</strong></div>
+          <div class="stat"><span>推奨キー</span><strong>${recommendedKey.id} / ${recommendedKey.relativeMinor}</strong></div>
+        `;
+      }
+
+      renderVoiceSelect();
+      voiceSelect.addEventListener('change', renderVoiceRange);
+      renderVoiceRange();
     })();
   </script>
 </body>

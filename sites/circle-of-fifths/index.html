@@ -3,56 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ギターコード | キリンの遊び場</title>
+  <title>五度圏 | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
+  <script src="../../data/music-theory.js"></script>
   <style>
     body {
-      background: linear-gradient(180deg, #f2f6ff, #eef5ff);
+      background: linear-gradient(180deg, #f6f8ff, #eef5ff);
     }
+
     .layout {
       display: grid;
-      grid-template-columns: 1.4fr 0.9fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 1.2rem;
       margin-top: 1rem;
     }
+
     .panel-strong {
-      background: #fff;
+      background: rgba(255,255,255,0.82);
       border: 1px solid rgba(148,163,184,0.24);
       border-radius: 20px;
       padding: 1.1rem;
       box-shadow: 0 12px 32px rgba(15,23,42,0.07);
     }
-    .chord-grid {
+
+    .circle-wrap {
+      position: relative;
+      width: min(500px, 100%);
+      aspect-ratio: 1;
+      margin: 1rem auto 0;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(46,125,255,0.08), rgba(255,255,255,0.72) 46%, rgba(148,163,184,0.08) 100%);
+      border: 1px solid rgba(46,125,255,0.18);
+      overflow: hidden;
+    }
+
+    .circle-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 32%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffffff, #eef4ff);
+      border: 1px solid rgba(46,125,255,0.18);
       display: grid;
-      grid-template-columns: repeat(4, minmax(100px, 1fr));
-      gap: 0.8rem;
+      place-items: center;
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(46,125,255,0.12);
+      z-index: 2;
+    }
+
+    .key-node {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 76px;
+      height: 40px;
+      margin-left: -38px;
+      margin-top: -20px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(148,163,184,0.22);
+      box-shadow: 0 6px 16px rgba(15,23,42,0.04);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      z-index: 3;
+    }
+
+    .key-node.active {
+      background: rgba(46,125,255,0.12);
+      border-color: rgba(46,125,255,0.5);
+      color: var(--primary-700);
+      transform: scale(1.08);
+    }
+
+    .key-list {
+      display: grid;
+      gap: 0.65rem;
       margin-top: 1rem;
     }
-    .chord-tile {
-      background: linear-gradient(180deg, #f9fbff, #eef4ff);
-      border: 1px solid rgba(46,125,255,0.18);
-      border-radius: 14px;
-      padding: 0.9rem 0.75rem;
-      text-align: center;
-    }
-    .chord-tile strong {
-      display: block;
-      font-size: clamp(1.2rem, 2vw, 1.7rem);
-      margin-bottom: 0.2rem;
-    }
-    .sidebar { display: grid; gap: 1rem; }
-    .preset-list { display: grid; gap: 0.5rem; margin-top: 0.8rem; }
-    .preset-list button {
+
+    .key-list button {
       width: 100%;
       text-align: left;
       background: #fff;
       border-radius: 12px;
       border: 1px solid rgba(46,125,255,0.15);
     }
+
+    .key-list button.active {
+      background: rgba(46,125,255,0.08);
+      border-color: rgba(46,125,255,0.5);
+      color: var(--primary-700);
+      font-weight: 700;
+    }
+
     @media (max-width: 760px) {
       .layout { grid-template-columns: 1fr; }
-      .chord-grid { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
     }
   </style>
 </head>
@@ -62,48 +115,108 @@
 
     <div class="app-header">
       <div>
-        <h1 class="app-title">ギターコード</h1>
-        <div class="app-subtitle">チューニング別のコード確認と再生</div>
+        <h1 class="app-title">五度圏</h1>
+        <div class="app-subtitle">キーと相対長調を視覚的に確認</div>
       </div>
-      <span class="badge primary-badge">Tune: E A D G B E</span>
+      <span class="badge primary-badge" id="currentBadge">C</span>
     </div>
 
     <div class="layout">
       <section class="panel-strong">
-        <h2>コード一覧</h2>
-        <div class="chord-grid">
-          <div class="chord-tile"><strong>C</strong><span>ド</span></div>
-          <div class="chord-tile"><strong>G</strong><span>ソ</span></div>
-          <div class="chord-tile"><strong>D</strong><span>レ</span></div>
-          <div class="chord-tile"><strong>Am</strong><span>ラm</span></div>
-          <div class="chord-tile"><strong>Em</strong><span>ミm</span></div>
-          <div class="chord-tile"><strong>F</strong><span>ファ</span></div>
-          <div class="chord-tile"><strong>Bm</strong><span>シm</span></div>
-          <div class="chord-tile"><strong>Dm</strong><span>レm</span></div>
-        </div>
-        <div class="row" style="margin-top:1rem; flex-wrap:wrap;">
-          <span class="badge" style="background:rgba(255,183,77,0.14); color:#8a4b00;"># 音程確認</span>
-          <span class="badge" style="background:rgba(46,125,255,0.1); color:var(--primary);"># 再生</span>
-          <span class="badge" style="background:rgba(31,157,104,0.12); color:var(--success);"># チューニング切替</span>
+        <h2>キーの循環</h2>
+        <div class="circle-wrap">
+          <div id="circleNodes"></div>
+          <div class="circle-center">
+            <div>
+              <div style="font-size:0.8rem;color:var(--muted);">Key</div>
+              <div id="centerKey" style="font-size:2rem;font-weight:800;">C</div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <aside class="sidebar">
-        <div class="panel-strong">
-          <h3>プリセット</h3>
-          <div class="preset-list">
-            <button>Standard</button>
-            <button>Drop D</button>
-            <button>Open G</button>
-          </div>
-        </div>
-
-        <div class="panel-strong">
-          <h3>チェックポイント</h3>
-          <p class="muted">押さえやすいフォーム、コードの構成音、弦ごとの音を確認できます。</p>
-        </div>
+      <aside class="panel-strong">
+        <h3>詳細</h3>
+        <div id="detailCard" class="text-muted">C の構成音: C D E F G A B</div>
+        <div class="key-list" id="keyList"></div>
       </aside>
     </div>
   </main>
+
+  <script>
+    (function () {
+      const theory = window.musicTheory;
+      const data = window.MUSIC_THEORY_DATA;
+      if (!theory || !data) return;
+
+      const keys = data.keys;
+      const circleNodes = document.getElementById('circleNodes');
+      const keyList = document.getElementById('keyList');
+      const detailCard = document.getElementById('detailCard');
+      const currentBadge = document.getElementById('currentBadge');
+      const centerKey = document.getElementById('centerKey');
+      const state = { selected: 'C' };
+
+      function getPosition(index, total) {
+        const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+        const radius = 170;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        return { x, y };
+      }
+
+      function renderCircle() {
+        circleNodes.innerHTML = keys.map((item, index) => {
+          const pos = getPosition(index, keys.length);
+          const active = item.id === state.selected ? 'active' : '';
+          return `
+            <button
+              type="button"
+              class="key-node ${active}"
+              data-key="${item.id}"
+              style="transform: translate(${pos.x}px, ${pos.y}px);"
+            >${item.id}</button>
+          `;
+        }).join('');
+      }
+
+      function renderKeyList() {
+        keyList.innerHTML = keys.map((item) => `
+          <button type="button" class="${state.selected === item.id ? 'active' : ''}" data-key="${item.id}">${item.id} / ${item.relativeMinor}</button>
+        `).join('');
+      }
+
+      function renderDetails() {
+        const key = keys.find((item) => item.id === state.selected) || keys[0];
+        centerKey.textContent = key.id;
+        currentBadge.textContent = key.id;
+        const progression = theory.getChordProgression(key.id).join(' → ');
+        detailCard.innerHTML = `
+          <div><strong>${key.id}</strong> の構成音: ${key.notes.join(' ')}</div>
+          <div style="margin-top:0.5rem;">相対長調: ${key.relativeMinor}</div>
+          <div style="margin-top:0.5rem;">よく使う進行: ${progression}</div>
+        `;
+      }
+
+      function bindSelection() {
+        const selector = (event) => {
+          const button = event.target.closest('[data-key]');
+          if (!button) return;
+          state.selected = button.dataset.key;
+          renderCircle();
+          renderKeyList();
+          renderDetails();
+        };
+
+        circleNodes.addEventListener('click', selector);
+        keyList.addEventListener('click', selector);
+      }
+
+      renderCircle();
+      renderKeyList();
+      renderDetails();
+      bindSelection();
+    })();
+  </script>
 </body>
 </html>
