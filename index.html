@@ -2,21 +2,92 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>キリンの遊び場</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="キリンの遊び場 - ギターコード・五度圏・ボーカル・リズム・U-FRETの音楽ユーティリティ集">
+  <title>キリンの遊び場</title>
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/site.css">
   <style>
-    body{background:linear-gradient(180deg,#fefcf3,#fef9e7);color:var(--text)}
-    header{background:linear-gradient(90deg,rgba(46,125,255,0.08),rgba(255,183,77,0.02));padding:1rem 0}
-    .hero{max-width:1100px;margin:0 auto;padding:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-    .hero h1{margin:0;font-size:1.6rem}
-    .site-desc{color:var(--muted)}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:1rem}
-    .card{background:var(--surface);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,.06);text-align:left}
-    .card h3{margin:0 0 6px}
-    .card p{margin:0 0 8px;color:var(--muted)}
-    .card a{display:inline-block}
+    :root {
+      --page-bg: linear-gradient(180deg, #fefcf3, #fef9e7);
+      --panel-bg: rgba(255,255,255,0.72);
+      --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--page-bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(90deg, rgba(46,125,255,0.08), rgba(255,183,77,0.02));
+      border-bottom: 1px solid rgba(17,24,39,0.05);
+      backdrop-filter: blur(6px);
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      letter-spacing: 0.04em;
+    }
+
+    .site-desc {
+      color: var(--muted);
+      margin-top: 0.4rem;
+      font-size: 0.96rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: var(--panel-bg);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 1.1rem;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card .app-button {
+      align-self: flex-start;
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
@@ -26,7 +97,7 @@
         <h1>キリンの遊び場</h1>
         <div class="site-desc">小さな音楽ユーティリティ集 — 各アプリを開いて確認してください。</div>
       </div>
-      <div class="mt-1"><a class="app-button" href="#">管理</a></div>
+      <div class="mt-1"><a class="app-button" href="sites/u-fret-manager/index.html">管理</a></div>
     </div>
   </header>
 
@@ -34,31 +105,35 @@
     <section>
       <h2>アプリ一覧</h2>
       <div class="cards">
-        <div class="card">
+        <article class="card">
           <h3>ギターコード</h3>
           <p>チューニング別のコード確認と再生。</p>
           <a class="app-button" href="sites/guitar-chords/index.html">開く</a>
-        </div>
-        <div class="card">
+        </article>
+
+        <article class="card">
           <h3>五度圏サークル</h3>
           <p>インタラクティブな五度圏ルーレット。</p>
           <a class="app-button" href="sites/circle-of-fifths/index.html">開く</a>
-        </div>
-        <div class="card">
+        </article>
+
+        <article class="card">
           <h3>ボーカルチェック</h3>
           <p>マイクから音域を測定してピアノ表示。</p>
           <a class="app-button" href="sites/vocal-check/index.html">開く</a>
-        </div>
-        <div class="card">
+        </article>
+
+        <article class="card">
           <h3>リズムパターン</h3>
           <p>譜面風のリズム作成サポート。</p>
           <a class="app-button" href="sites/tempo-editor/index.html">開く</a>
-        </div>
-        <div class="card">
+        </article>
+
+        <article class="card">
           <h3>U-FRET 管理</h3>
           <p>U-FRET の履歴 / お気に入り / バックアップ。</p>
           <a class="app-button" href="sites/u-fret-manager/index.html">開く</a>
-        </div>
+        </article>
       </div>
     </section>
   </main>

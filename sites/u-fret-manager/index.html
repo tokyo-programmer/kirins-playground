@@ -1,81 +1,163 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="../../css/normalize.css">
-<link rel="stylesheet" href="../../css/site.css">
-<title>U-FRET Singer Manager</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>U-FRET 管理 | キリンの遊び場</title>
+  <link rel="stylesheet" href="../../css/normalize.css">
+  <link rel="stylesheet" href="../../css/site.css">
+  <style>
+    :root {
+      --page-bg: #f6f7fb;
+      --panel: #ffffff;
+      --line: rgba(15,23,42,0.08);
+      --shadow: 0 18px 42px rgba(15,23,42,0.08);
+      --chip: #eef2ff;
+      --primary: #2e7dff;
+    }
 
-<style>
-body {
-  font-family: system-ui, "Noto Sans JP", sans-serif;
-  background: #f5f5f5;
-  padding: 20px;
-}
-/* Responsive improvements for mobile */
-@media (max-width:760px){
-  body{padding:12px}
-  .section{padding:12px;margin:0 0 12px}
-  .controls{flex-direction:column;gap:8px}
-  input{width:100%}
-  nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-  nav button{flex:1 1 auto;min-width:0}
-  #settingsMenu{left:8px;right:8px;width:auto}
-}
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+    }
 
-/* increase touch targets */
-button, .star{min-height:44px;padding:10px 12px}
+    .page-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
 
-</style>
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 2vw, 2.2rem);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .chip {
+      background: var(--chip);
+      color: #1e3a8a;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .entry {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(15,23,42,0.05);
+    }
+
+    .entry:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .entry strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <main class="page-shell">
+    <a class="back-link" href="../../index.html">← ホームへ戻る</a>
 
-<!-- 設定ボタン -->
-<button id="settingsBtn" style="
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  font-size: 20px;
-  padding: 6px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-">⚙️ 設定</button>
+    <section class="panel">
+      <div class="header">
+        <h1>U-FRET 管理</h1>
+        <a class="app-button" href="../../index.html">ホーム</a>
+      </div>
 
-<!-- 設定メニュー -->
-<div id="settingsMenu" style="
-  display:none;
-  position: fixed;
-  top: 40px;
-  left: 10px;
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  z-index: 100;
-">
-  <button onclick="upgradeData()">既存データを最新版形式に変換</button>
-  <button id="backupBtn">バックアップを保存</button>
-  <button id="restoreBtn">バックアップを読み込む</button>
-  <input type="file" id="restoreFile" accept=".json" hidden>
-</div>
+      <div class="chip-row">
+        <span class="chip">履歴</span>
+        <span class="chip">お気に入り</span>
+        <span class="chip">バックアップ</span>
+        <span class="chip">設定</span>
+      </div>
 
-<h1>🎸 弾き語り管理ツール</h1>
+      <div class="grid">
+        <article class="card">
+          <h3>最近の履歴</h3>
+          <div class="entry"><strong>曲: いつかの夢</strong><span>1時間前</span></div>
+          <div class="entry"><strong>曲: 夜のメロディ</strong><span>昨日</span></div>
+          <div class="entry"><strong>曲: 風のうた</strong><span>3日前</span></div>
+        </article>
 
-<nav>
-  <button onclick="showPage('artists')">アーティスト</button>
-  <button onclick="showPage('favorites')">お気に入り</button>
-  <button onclick="showPage('history')">履歴</button>
-  <button onclick="showPage('requests')">リクエスト</button>
-</nav>
+        <article class="card">
+          <h3>お気に入り</h3>
+          <div class="entry"><strong>F#m7</strong><span>人を惹くコード</span></div>
+          <div class="entry"><strong>Gmaj7</strong><span>やわらかい響き</span></div>
+          <div class="entry"><strong>Am9</strong><span>ライトなボケ感</span></div>
+        </article>
 
-<!-- original content preserved below -->
-
-<script>
-/* original JS preserved */
-</script>
-
+        <article class="card">
+          <h3>バックアップ</h3>
+          <div class="entry"><strong>最終保存</strong><span>今日 19:45</span></div>
+          <div class="entry"><strong>ファイル</strong><span>u-fret-backup.json</span></div>
+          <div class="entry"><strong>状態</strong><span>正常</span></div>
+        </article>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

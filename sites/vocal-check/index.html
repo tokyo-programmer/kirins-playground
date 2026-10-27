@@ -1,18 +1,207 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ボーカルチェック | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
-  <title>Vocal Range Checker</title>
   <style>
-    :root{--primary:#2E7DFF;--accent:#FFB74D}
-    :where(button, .app-button, .btn){min-height:48px}
-    .card{padding:16px}
+    :root {
+      --page-bg: #f8f7ff;
+      --panel: #ffffff;
+      --line: rgba(124,58,237,0.12);
+      --shadow: 0 18px 38px rgba(15,23,42,0.08);
+      --bar: #dbeafe;
+      --bar-fill: #2e7dff;
+      --key: #f3e8ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+    }
+
+    .page-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 44px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2vw, 2.4rem);
+    }
+
+    .status {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(124,58,237,0.12);
+      color: #6d28d9;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+    }
+
+    .meter {
+      background: linear-gradient(180deg, #f9f9ff, #f3f4ff);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .range-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .bar {
+      height: 18px;
+      background: var(--bar);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar > span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 72%;
+      background: linear-gradient(90deg, var(--bar-fill), #7c3aed);
+      border-radius: inherit;
+    }
+
+    .piano {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(38px, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .key-box {
+      background: var(--key);
+      border: 1px solid rgba(124,58,237,0.12);
+      border-radius: 10px;
+      padding: 12px 6px;
+      text-align: center;
+      font-weight: 700;
+      color: #2f2f46;
+    }
+
+    .mini-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .mini-card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      background: #f8f7ff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(124,58,237,0.08);
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .piano {
+        grid-template-columns: repeat(4, minmax(38px, 1fr));
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- original VocalCheck content preserved -->
+  <main class="page-shell">
+    <a class="back-link" href="../../index.html">← ホームへ戻る</a>
+
+    <section class="panel">
+      <div class="header">
+        <h1>ボーカルチェック</h1>
+        <span class="status">Live</span>
+      </div>
+
+      <div class="layout">
+        <div class="meter">
+          <div class="range-row">
+            <strong>音域範囲</strong>
+            <span>A2 - E5</span>
+          </div>
+          <div class="bar"><span></span></div>
+
+          <div class="piano">
+            <div class="key-box">A2</div>
+            <div class="key-box">C3</div>
+            <div class="key-box">E3</div>
+            <div class="key-box">G3</div>
+            <div class="key-box">A3</div>
+            <div class="key-box">C4</div>
+            <div class="key-box">E4</div>
+            <div class="key-box">G4</div>
+          </div>
+        </div>
+
+        <aside class="mini-card">
+          <h3>測定結果</h3>
+          <div class="stats">
+            <div class="stat"><span>最低音</span><strong>A2</strong></div>
+            <div class="stat"><span>最高音</span><strong>E5</strong></div>
+            <div class="stat"><span>テノール域</span><strong>適合</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

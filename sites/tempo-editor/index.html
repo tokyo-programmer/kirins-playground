@@ -3,15 +3,146 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>リズムパターン | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
-  <title>Tempo Editor</title>
   <style>
-    :root{--primary:#2E7DFF;--accent:#FFB74D}
-    :where(button, .app-button, .btn){min-height:48px}
+    :root {
+      --page-bg: #f4fbff;
+      --panel: #ffffff;
+      --line: rgba(14,116,144,0.14);
+      --shadow: 0 18px 42px rgba(15,23,42,0.08);
+      --beat: #d9f6ff;
+      --accent: #0ea5e9;
+      --accent-2: #14b8a6;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+    }
+
+    .page-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2vw, 2.4rem);
+    }
+
+    .tempo {
+      background: rgba(14,165,233,0.1);
+      color: #0369a1;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .staff {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(40px, 1fr));
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff, #f8fdff);
+    }
+
+    .cell {
+      min-height: 72px;
+      border-radius: 12px;
+      border: 1px solid rgba(14,116,144,0.12);
+      background: var(--beat);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #075985;
+    }
+
+    .cell.accent {
+      background: rgba(20,184,166,0.18);
+      color: #115e59;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: rgba(14,165,233,0.1); color: #0f172a; }
   </style>
 </head>
 <body>
-  <!-- original TempoEditingVer1.0.0.html content preserved -->
+  <main class="page-shell">
+    <a class="back-link" href="../../index.html">← ホームへ戻る</a>
+
+    <section class="panel">
+      <div class="header">
+        <h1>リズムパターン</h1>
+        <span class="tempo">120 BPM</span>
+      </div>
+
+      <div class="staff" aria-label="リズムパターン">
+        <div class="cell accent">1</div>
+        <div class="cell">2</div>
+        <div class="cell">3</div>
+        <div class="cell accent">4</div>
+        <div class="cell">5</div>
+        <div class="cell">6</div>
+        <div class="cell accent">7</div>
+        <div class="cell">8</div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-primary">再生</button>
+        <button class="btn btn-secondary">拍子を変更</button>
+        <button class="btn btn-secondary">パターン保存</button>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

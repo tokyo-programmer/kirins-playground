@@ -3,22 +3,215 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ギターコード | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
-  <title>Guitar Chord Composer</title>
   <style>
-    :root{--primary:#2E7DFF;--accent:#FFB74D}
-    :where(button, .app-button, .btn){min-height:48px}
-    /* keep original theme but nudge key elements to primary */
-    .preset-button,.fret-cell.active{background:var(--primary)!important;color:#fff}
+    :root {
+      --page-bg: #f2f6ff;
+      --panel: #ffffff;
+      --panel-alt: #eef4ff;
+      --line: rgba(37, 99, 235, 0.12);
+      --shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+    }
+
+    .page-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 18px 44px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .header-row h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2vw, 2.2rem);
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(46,125,255,0.1);
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+    }
+
+    .chord-box {
+      background: linear-gradient(180deg, #ffffff, #f8faff);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .chord-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .chord-card {
+      background: var(--panel-alt);
+      border: 1px solid rgba(37,99,235,0.12);
+      border-radius: 12px;
+      text-align: center;
+      padding: 12px 8px;
+    }
+
+    .chord-card strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 6px;
+    }
+
+    .notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      background: rgba(255,183,77,0.18);
+      color: #8a4b00;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .mini-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .mini-card h3 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+    }
+
+    .preset-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .preset-list button {
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid rgba(37,99,235,0.15);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .chord-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
 </head>
 <body>
-<main class="app">
-  <!-- original content preserved (from GuitarCordsVer1_20260527.html) -->
-</main>
-<script>
-/* original JS preserved */
-</script>
+  <main class="page-shell">
+    <a class="back-link" href="../../index.html">← ホームへ戻る</a>
+
+    <div class="panel">
+      <div class="header-row">
+        <h1>ギターコード</h1>
+        <span class="status">Tune: E A D G B E</span>
+      </div>
+
+      <div class="layout">
+        <section class="chord-box">
+          <h2>コード一覧</h2>
+          <div class="chord-grid">
+            <div class="chord-card"><strong>C</strong><span>ド</span></div>
+            <div class="chord-card"><strong>G</strong><span>ソ</span></div>
+            <div class="chord-card"><strong>D</strong><span>レ</span></div>
+            <div class="chord-card"><strong>Am</strong><span>ラm</span></div>
+            <div class="chord-card"><strong>Em</strong><span>ミm</span></div>
+            <div class="chord-card"><strong>F</strong><span>ファ</span></div>
+            <div class="chord-card"><strong>Bm</strong><span>シm</span></div>
+            <div class="chord-card"><strong>Dm</strong><span>レm</span></div>
+          </div>
+
+          <div class="notes">
+            <span class="tag"># 音程確認</span>
+            <span class="tag"># 再生</span>
+            <span class="tag"># チューニング切替</span>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <div class="mini-card">
+            <h3>プリセット</h3>
+            <div class="preset-list">
+              <button>Standard</button>
+              <button>Drop D</button>
+              <button>Open G</button>
+            </div>
+          </div>
+
+          <div class="mini-card">
+            <h3>チェックポイント</h3>
+            <p>押さえやすいフォーム、コードの構成音、弦ごとの音を確認できます。</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
 </body>
 </html>
