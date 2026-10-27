@@ -6,6 +6,7 @@
   <title>五度圏サークル | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
+  <script src="../../data/music-theory.js"></script>
   <style>
     body {
       background: linear-gradient(180deg, #f5f5ff, #f3f7ff);
@@ -93,45 +94,40 @@
     </div>
 
     <div class="app-panel wheel-panel">
-      <div class="wheel-wrap" aria-label="五度圏ルーレット">
-        <div class="key major" style="--angle:0deg; --radius:190px;">C</div>
-        <div class="key major" style="--angle:30deg; --radius:190px;">G</div>
-        <div class="key major" style="--angle:60deg; --radius:190px;">D</div>
-        <div class="key major" style="--angle:90deg; --radius:190px;">A</div>
-        <div class="key major" style="--angle:120deg; --radius:190px;">E</div>
-        <div class="key major" style="--angle:150deg; --radius:190px;">B</div>
-        <div class="key major" style="--angle:180deg; --radius:190px;">F#</div>
-        <div class="key major" style="--angle:210deg; --radius:190px;">C#</div>
-        <div class="key major" style="--angle:240deg; --radius:190px;">G#</div>
-        <div class="key major" style="--angle:270deg; --radius:190px;">D#</div>
-        <div class="key major" style="--angle:300deg; --radius:190px;">A#</div>
-        <div class="key major" style="--angle:330deg; --radius:190px;">F</div>
-      </div>
+      <div class="wheel-wrap" id="circleWheel" aria-label="五度圏ルーレット"></div>
 
       <div class="legend">
         <div class="legend-card">
           <h3>メジャーキー</h3>
-          <div class="legend-list">
-            <span class="chip major">C</span>
-            <span class="chip major">G</span>
-            <span class="chip major">D</span>
-            <span class="chip major">A</span>
-            <span class="chip major">E</span>
-          </div>
+          <div class="legend-list" id="majorKeyList"></div>
         </div>
 
         <div class="legend-card">
           <h3>関連マイナー</h3>
-          <div class="legend-list">
-            <span class="chip minor">Am</span>
-            <span class="chip minor">Em</span>
-            <span class="chip minor">Bm</span>
-            <span class="chip minor">F#m</span>
-            <span class="chip minor">C#m</span>
-          </div>
+          <div class="legend-list" id="minorKeyList"></div>
         </div>
       </div>
     </div>
   </main>
+
+  <script>
+    (function () {
+      const keys = window.MUSIC_THEORY_DATA.keys;
+      const circle = document.getElementById('circleWheel');
+      const majorList = document.getElementById('majorKeyList');
+      const minorList = document.getElementById('minorKeyList');
+
+      const ringKeys = keys.map((key, index) => {
+        const angle = (360 / keys.length) * index;
+        return `
+          <div class="key major" style="--angle:${angle}deg; --radius:190px;">${key.id}</div>
+        `;
+      }).join('');
+
+      circle.innerHTML = ringKeys;
+      majorList.innerHTML = keys.slice(0, 5).map((key) => `<span class="chip major">${key.id}</span>`).join('');
+      minorList.innerHTML = keys.slice(0, 5).map((key) => `<span class="chip minor">${key.relativeMinor}</span>`).join('');
+    })();
+  </script>
 </body>
 </html>

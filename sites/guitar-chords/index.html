@@ -6,212 +6,128 @@
   <title>ギターコード | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css">
   <link rel="stylesheet" href="../../css/site.css">
+  <script src="../../data/music-theory.js"></script>
   <style>
-    :root {
-      --page-bg: #f2f6ff;
-      --panel: #ffffff;
-      --panel-alt: #eef4ff;
-      --line: rgba(37, 99, 235, 0.12);
-      --shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
-    }
-
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: var(--page-bg);
-      color: var(--text);
+      background: linear-gradient(180deg, #f2f6ff, #eef5ff);
     }
-
-    .page-shell {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 28px 18px 44px;
-    }
-
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-    }
-
-    .header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .header-row h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 2vw, 2.2rem);
-    }
-
-    .status {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(46,125,255,0.1);
-      color: var(--primary);
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-
     .layout {
       display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 18px;
+      grid-template-columns: 1.4fr 0.9fr;
+      gap: 1.2rem;
+      margin-top: 1rem;
     }
-
-    .chord-box {
-      background: linear-gradient(180deg, #ffffff, #f8faff);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
+    .panel-strong {
+      background: #fff;
+      border: 1px solid rgba(148,163,184,0.24);
+      border-radius: 20px;
+      padding: 1.1rem;
+      box-shadow: 0 12px 32px rgba(15,23,42,0.07);
     }
-
     .chord-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 16px;
+      grid-template-columns: repeat(4, minmax(100px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
     }
-
-    .chord-card {
-      background: var(--panel-alt);
-      border: 1px solid rgba(37,99,235,0.12);
-      border-radius: 12px;
-      text-align: center;
-      padding: 12px 8px;
-    }
-
-    .chord-card strong {
-      display: block;
-      font-size: 1.35rem;
-      margin-bottom: 6px;
-    }
-
-    .notes {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .tag {
-      background: rgba(255,183,77,0.18);
-      color: #8a4b00;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .mini-card {
-      background: #fff;
-      border: 1px solid var(--line);
+    .chord-tile {
+      background: linear-gradient(180deg, #f9fbff, #eef4ff);
+      border: 1px solid rgba(46,125,255,0.18);
       border-radius: 14px;
-      padding: 16px;
+      padding: 0.9rem 0.75rem;
+      text-align: center;
     }
-
-    .mini-card h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
+    .chord-tile strong {
+      display: block;
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      margin-bottom: 0.2rem;
     }
-
-    .preset-list {
-      display: grid;
-      gap: 8px;
-    }
-
+    .sidebar { display: grid; gap: 1rem; }
+    .preset-list { display: grid; gap: 0.5rem; margin-top: 0.8rem; }
     .preset-list button {
       width: 100%;
       text-align: left;
-      padding: 10px 12px;
-      border: 1px solid rgba(37,99,235,0.15);
-      border-radius: 10px;
       background: #fff;
-      cursor: pointer;
-      font-weight: 600;
+      border-radius: 12px;
+      border: 1px solid rgba(46,125,255,0.15);
     }
-
     @media (max-width: 760px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-
-      .chord-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .layout { grid-template-columns: 1fr; }
+      .chord-grid { grid-template-columns: repeat(2, minmax(100px, 1fr)); }
     }
   </style>
 </head>
 <body>
-  <main class="page-shell">
+  <main class="app-shell">
     <a class="back-link" href="../../index.html">← ホームへ戻る</a>
 
-    <div class="panel">
-      <div class="header-row">
-        <h1>ギターコード</h1>
-        <span class="status">Tune: E A D G B E</span>
+    <div class="app-header">
+      <div>
+        <h1 class="app-title">ギターコード</h1>
+        <div class="app-subtitle">チューニング別のコード確認と再生</div>
       </div>
+      <span class="badge primary-badge" id="tuningBadge">Tune: E A D G B E</span>
+    </div>
 
-      <div class="layout">
-        <section class="chord-box">
-          <h2>コード一覧</h2>
-          <div class="chord-grid">
-            <div class="chord-card"><strong>C</strong><span>ド</span></div>
-            <div class="chord-card"><strong>G</strong><span>ソ</span></div>
-            <div class="chord-card"><strong>D</strong><span>レ</span></div>
-            <div class="chord-card"><strong>Am</strong><span>ラm</span></div>
-            <div class="chord-card"><strong>Em</strong><span>ミm</span></div>
-            <div class="chord-card"><strong>F</strong><span>ファ</span></div>
-            <div class="chord-card"><strong>Bm</strong><span>シm</span></div>
-            <div class="chord-card"><strong>Dm</strong><span>レm</span></div>
-          </div>
+    <div class="layout">
+      <section class="panel-strong">
+        <h2>コード一覧</h2>
+        <div class="chord-grid" id="guitarChordGrid"></div>
+        <div class="row" style="margin-top:1rem; flex-wrap:wrap;">
+          <span class="badge" style="background:rgba(255,183,77,0.14); color:#8a4b00;"># 音程確認</span>
+          <span class="badge" style="background:rgba(46,125,255,0.1); color:var(--primary);"># 再生</span>
+          <span class="badge" style="background:rgba(31,157,104,0.12); color:var(--success);"># チューニング切替</span>
+        </div>
+      </section>
 
-          <div class="notes">
-            <span class="tag"># 音程確認</span>
-            <span class="tag"># 再生</span>
-            <span class="tag"># チューニング切替</span>
-          </div>
-        </section>
+      <aside class="sidebar">
+        <div class="panel-strong">
+          <h3>プリセット</h3>
+          <div class="preset-list" id="tuningPresetList"></div>
+        </div>
 
-        <aside class="sidebar">
-          <div class="mini-card">
-            <h3>プリセット</h3>
-            <div class="preset-list">
-              <button>Standard</button>
-              <button>Drop D</button>
-              <button>Open G</button>
-            </div>
-          </div>
-
-          <div class="mini-card">
-            <h3>チェックポイント</h3>
-            <p>押さえやすいフォーム、コードの構成音、弦ごとの音を確認できます。</p>
-          </div>
-        </aside>
-      </div>
+        <div class="panel-strong">
+          <h3>チェックポイント</h3>
+          <p class="muted" id="progressionHint">押さえやすいフォーム、コードの構成音、弦ごとの音を確認できます。</p>
+        </div>
+      </aside>
     </div>
   </main>
+
+  <script>
+    (function () {
+      const theory = window.musicTheory;
+      if (!theory) {
+        return;
+      }
+
+      const chords = theory.getCommonChords();
+      const tuningPresetList = document.getElementById('tuningPresetList');
+      const tuningBadge = document.getElementById('tuningBadge');
+      const progressionHint = document.getElementById('progressionHint');
+      const chordGrid = document.getElementById('guitarChordGrid');
+
+      chordGrid.innerHTML = chords.map((chord) => `
+        <div class="chord-tile">
+          <strong>${chord.symbol}</strong>
+          <span>${chord.label}</span>
+        </div>
+      `).join('');
+
+      const tunings = window.MUSIC_THEORY_DATA.tunings;
+      tuningPresetList.innerHTML = tunings.map((tuning) => `
+        <button type="button" data-tuning="${tuning.id}">${tuning.name}</button>
+      `).join('');
+
+      tuningPresetList.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-tuning]');
+        if (!button) return;
+        const tuning = theory.getTuning(button.dataset.tuning);
+        tuningBadge.textContent = 'Tune: ' + tuning.notes.join(' ');
+        const key = window.MUSIC_THEORY_DATA.keys[0]?.id || 'C';
+        progressionHint.textContent = `${key}キーのよく使う進行: ${window.musicTheory.getChordProgression(key).join(' → ')}`;
+      });
+    })();
+  </script>
 </body>
 </html>
