@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>リズムパターン | キリンの遊び場</title>
   <link rel="stylesheet" href="../../css/normalize.css" />
   <link rel="stylesheet" href="../../css/site.css" />
@@ -54,7 +54,8 @@
       border: 1px solid rgba(14,116,144,0.12);
       font-weight: 700;
       color: #075985;
-      transition: transform 0.15s ease;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
     }
     .cell:hover { transform: translateY(-1px); }
     .cell.accent {
@@ -66,6 +67,11 @@
       flex-wrap: wrap;
       gap: 0.7rem;
       margin-top: 1rem;
+      align-items: center;
+    }
+    .tempo-slider {
+      width: min(240px, 100%);
+      accent-color: #0ea5e9;
     }
     .btn-primary {
       background: #0ea5e9;
@@ -94,9 +100,11 @@
       <div id="staff" class="staff" aria-label="リズムパターン"></div>
 
       <div class="controls">
-        <button class="btn-primary" type="button">再生</button>
-        <button type="button">拍子を変更</button>
-        <button type="button">パターン保存</button>
+        <button class="btn-primary" id="playBtn" type="button">再生</button>
+        <button id="toggleMeter" type="button">拍子を変更</button>
+        <label class="muted" for="tempoSlider">BPM</label>
+        <input id="tempoSlider" class="tempo-slider" type="range" min="60" max="180" value="120" />
+        <span id="tempoValue" class="muted">120</span>
       </div>
     </section>
   </main>
@@ -104,21 +112,87 @@
   <script>
     (function () {
       const theory = window.MUSIC_THEORY_DATA;
+      if (!theory) return;
+
       const staff = document.getElementById('staff');
       const insight = document.getElementById('insight');
       const tempoBadge = document.getElementById('tempoBadge');
+      const tempoSlider = document.getElementById('tempoSlider');
+      const tempoValue = document.getElementById('tempoValue');
+      const playBtn = document.getElementById('playBtn');
+      const toggleMeterBtn = document.getElementById('toggleMeter');
 
-      const pattern = [1, 0, 0, 1, 1, 0, 1, 0];
-      const key = (theory.keys[0] || { id: 'C' }).id;
-      const progression = (theory.commonProgressions[key] || ['C', 'F', 'G', 'Am']).join(' → ');
+      let pattern = [1, 0, 0, 1, 1, 0, 1, 0];
+      let bpm = 120;
+      let meter = 4;
 
-      insight.innerHTML = `
-        <span class="chip">推奨キー: ${key}</span>
-        <span class="chip">進行: ${progression}</span>
-      `;
+      function renderPattern() {
+        const key = (theory.keys[0] || { id: 'C' }).id;
+        const progression = (theory.getChordProgression(key) || ['C', 'F', 'G', 'Am']).join(' → ');
 
-      staff.innerHTML = pattern.map((value, index) => `<div class="cell ${value ? 'accent' : ''}">${index + 1}</div>`).join('');
-      tempoBadge.textContent = '120 BPM';
+        insight.innerHTML = `
+          <span class="chip">推奨キー: ${key}</span>
+          <span class="chip">進行: ${progression}</span>
+        `;
+
+        staff.innerHTML = pattern.map((value, index) => `
+          <button type="button" class="cell ${value ? 'accent' : ''}" data-index="${index}">${index + 1}</button>
+        `).join('');
+
+        tempoBadge.textContent = `${bpm} BPM`;
+        tempoValue.textContent = `${bpm}`;
+      }
+
+      function toggleCell(index) {
+        pattern[index] = pattern[index] ? 0 : 1;
+        renderPattern();
+      }
+
+      function playPattern() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) {
+          alert('この環境では Web Audio が使えません。');
+          return;
+        }
+        const audioCtx = new AudioCtx();
+        const unit = 60 / bpm;
+        pattern.forEach((value, index) => {
+          if (!value) return;
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          oscillator.type = 'triangle';
+          oscillator.frequency.value = 220 + (index % 4) * 30;
+          gainNode.gain.value = 0.0001;
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          const start = audioCtx.currentTime + index * unit * 0.9;
+          oscillator.start(start);
+          gainNode.gain.exponentialRampToValueAtTime(0.15, start + 0.02);
+          gainNode.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
+          oscillator.stop(start + 0.2);
+        });
+      }
+
+      staff.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-index]');
+        if (!button) return;
+        toggleCell(Number(button.dataset.index));
+      });
+
+      tempoSlider.addEventListener('input', (event) => {
+        bpm = Number(event.target.value);
+        renderPattern();
+      });
+
+      toggleMeterBtn.addEventListener('click', () => {
+        meter = meter === 4 ? 3 : 4;
+        const nextPattern = meter === 4 ? [1, 0, 0, 1, 1, 0, 1, 0] : [1, 0, 1, 0, 1, 0, 1, 1];
+        pattern = nextPattern.slice(0, 8);
+        renderPattern();
+      });
+
+      playBtn.addEventListener('click', playPattern);
+      renderPattern();
     })();
   </script>
 </body>
