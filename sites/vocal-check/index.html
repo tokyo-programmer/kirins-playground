@@ -2,83 +2,83 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>五度圏サークル | キリンの遊び場</title>
-  <link rel="stylesheet" href="../../css/normalize.css">
-  <link rel="stylesheet" href="../../css/site.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ボーカルチェック | キリンの遊び場</title>
+  <link rel="stylesheet" href="../../css/normalize.css" />
+  <link rel="stylesheet" href="../../css/site.css" />
   <script src="../../data/music-theory.js"></script>
   <style>
     body {
-      background: linear-gradient(180deg, #f5f5ff, #f3f7ff);
+      background: linear-gradient(180deg, #f8f7ff, #f5f7ff);
     }
-    .wheel-panel {
+    .layout {
       display: grid;
-      grid-template-columns: minmax(300px, 1.4fr) minmax(220px, 0.9fr);
+      grid-template-columns: 1.4fr 0.9fr;
       gap: 1.2rem;
-      align-items: center;
       margin-top: 1rem;
     }
-    .wheel-wrap {
-      position: relative;
-      width: min(72vw, 520px);
-      aspect-ratio: 1;
-      margin: 0 auto;
-      border-radius: 50%;
-      background: radial-gradient(circle, #ffffff 0%, #eef2ff 62%, #e0e7ff 100%);
-      border: 12px solid rgba(79,70,229,0.08);
-      box-shadow: inset 0 0 30px rgba(79,70,229,0.05);
-    }
-    .wheel-wrap::before {
-      content: "";
-      position: absolute;
-      inset: 18%;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.8);
-      border: 1px solid rgba(79,70,229,0.12);
-    }
-    .key {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 76px;
-      height: 32px;
-      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(var(--angle) * -1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      background: rgba(255,255,255,0.75);
-      border: 1px solid rgba(37,99,235,0.12);
-      color: #1f2937;
-    }
-    .key.major { background: rgba(46,125,255,0.12); color: var(--primary); }
-    .key.minor { background: rgba(52,211,153,0.12); color: #0d8f63; }
-    .legend { display: grid; gap: 1rem; }
-    .legend-card {
-      background: rgba(255,255,255,0.8);
-      border: 1px solid rgba(79,70,229,0.12);
-      border-radius: 16px;
+    .meter-panel,
+    .result-panel {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 20px;
       padding: 1rem;
+      box-shadow: 0 14px 32px rgba(15,23,42,0.06);
     }
-    .legend-list {
+    .range-row {
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.7rem;
-    }
-    .chip {
-      display: inline-flex;
-      padding: 0.4rem 0.8rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: center;
       font-weight: 700;
+      margin-bottom: 0.75rem;
     }
-    .chip.major { background: rgba(46,125,255,0.1); color: var(--primary); }
-    .chip.minor { background: rgba(52,211,153,0.12); color: #0d8f63; }
+    .bar {
+      position: relative;
+      height: 18px;
+      background: #dfe8ff;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar > span {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 72%;
+      background: linear-gradient(90deg, #2e7dff, #7c3aed);
+      border-radius: inherit;
+    }
+    .piano-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(38px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .key-box {
+      text-align: center;
+      background: #f3f4ff;
+      border: 1px solid rgba(124,58,237,0.12);
+      border-radius: 10px;
+      padding: 0.7rem 0.5rem;
+      font-weight: 700;
+      color: #2f2f46;
+    }
+    .stats {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 0.8rem;
+    }
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 12px;
+      background: #f8f7ff;
+      border: 1px solid rgba(124,58,237,0.08);
+    }
     @media (max-width: 760px) {
-      .wheel-panel { grid-template-columns: 1fr; }
+      .layout { grid-template-columns: 1fr; }
+      .piano-grid { grid-template-columns: repeat(4, minmax(42px, 1fr)); }
     }
   </style>
 </head>
@@ -88,45 +88,50 @@
 
     <div class="app-header">
       <div>
-        <h1 class="app-title">五度圏サークル</h1>
-        <div class="app-subtitle">主要調と関連マイナーを視覚的に巡るツールです。</div>
+        <h1 class="app-title">ボーカルチェック</h1>
+        <div class="app-subtitle">マイクから音域を測定してピアノ表示</div>
       </div>
+      <span class="badge" style="background:rgba(124,58,237,0.12); color:#6d28d9;">Live</span>
     </div>
 
-    <div class="app-panel wheel-panel">
-      <div class="wheel-wrap" id="circleWheel" aria-label="五度圏ルーレット"></div>
-
-      <div class="legend">
-        <div class="legend-card">
-          <h3>メジャーキー</h3>
-          <div class="legend-list" id="majorKeyList"></div>
+    <div class="layout">
+      <section class="meter-panel">
+        <div class="range-row">
+          <strong>音域範囲</strong>
+          <span id="rangeLabel">A2 - E5</span>
         </div>
+        <div class="bar"><span id="rangeFill"></span></div>
+        <div id="pianoGrid" class="piano-grid"></div>
+      </section>
 
-        <div class="legend-card">
-          <h3>関連マイナー</h3>
-          <div class="legend-list" id="minorKeyList"></div>
-        </div>
-      </div>
+      <aside class="result-panel">
+        <h3>測定結果</h3>
+        <div class="stats" id="resultStats"></div>
+      </aside>
     </div>
   </main>
 
   <script>
     (function () {
-      const keys = window.MUSIC_THEORY_DATA.keys;
-      const circle = document.getElementById('circleWheel');
-      const majorList = document.getElementById('majorKeyList');
-      const minorList = document.getElementById('minorKeyList');
+      const theory = window.MUSIC_THEORY_DATA;
+      const pianoGrid = document.getElementById('pianoGrid');
+      const resultStats = document.getElementById('resultStats');
+      const rangeLabel = document.getElementById('rangeLabel');
+      const rangeFill = document.getElementById('rangeFill');
+      const notes = ['A2', 'C3', 'E3', 'G3', 'A3', 'C4', 'E4', 'G4'];
 
-      const ringKeys = keys.map((key, index) => {
-        const angle = (360 / keys.length) * index;
-        return `
-          <div class="key major" style="--angle:${angle}deg; --radius:190px;">${key.id}</div>
-        `;
-      }).join('');
+      const defaultRange = theory.voiceRanges[2] || { low: 'B2', high: 'G5' };
+      rangeLabel.textContent = `${defaultRange.low} - ${defaultRange.high}`;
+      rangeFill.style.width = '72%';
 
-      circle.innerHTML = ringKeys;
-      majorList.innerHTML = keys.slice(0, 5).map((key) => `<span class="chip major">${key.id}</span>`).join('');
-      minorList.innerHTML = keys.slice(0, 5).map((key) => `<span class="chip minor">${key.relativeMinor}</span>`).join('');
+      pianoGrid.innerHTML = notes.map((note) => `<div class="key-box">${note}</div>`).join('');
+
+      const recommendedKey = theory.keys[0] || { id: 'C', relativeMinor: 'Am' };
+      resultStats.innerHTML = `
+        <div class="stat"><span>最低音</span><strong>${defaultRange.low}</strong></div>
+        <div class="stat"><span>最高音</span><strong>${defaultRange.high}</strong></div>
+        <div class="stat"><span>推奨キー</span><strong>${recommendedKey.id} / ${recommendedKey.relativeMinor}</strong></div>
+      `;
     })();
   </script>
 </body>

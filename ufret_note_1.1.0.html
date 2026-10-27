@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>弾き語りノート 1.2.0</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/site.css">
+  <script src="data/music-theory.js"></script>
+  <style>
+    :root {
+      --accent: #245bb5;
+      --line: #dce1e8;
+      --muted: #647084;
+      --background: #f3f5f8;
+      --panel: #ffffff;
+      --soft: #edf3fc;
+      --warning: #fff1cf;
+      --shadow: 0 12px 30px rgba(15,23,42,0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: clamp(10px, 1.5vw, 20px);
+      font-family: system-ui, "Noto Sans JP", sans-serif;
+      background: var(--background);
+      color: #202838;
+    }
+    header, main, nav, #notice { max-width: 1100px; margin-left: auto; margin-right: auto; }
+    h1 { margin: 8px 0; font-size: clamp(22px, 2.7vw, 30px); }
+    h2 { margin-top: 0; font-size: clamp(18px, 2vw, 24px); }
+    h3 { font-size: 17px; }
+    p, li { line-height: 1.75; }
+    a { color: #1959a5; overflow-wrap: anywhere; }
+    button, input, select, textarea { font: inherit; }
+    button {
+      min-height: 42px; padding: 8px 11px; border: 1px solid #bcc6d4; border-radius: 8px; background: white; color: #202838;
+      font-size: clamp(13px, 0.35vw + 12px, 16px); cursor: pointer;
+    }
+    button:hover { background: #edf3fc; }
+    button.primary { border-color: var(--accent); background: var(--accent); color: white; }
+    button.danger { color: #ac2434; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    input, select, textarea { width: 100%; min-width: 0; min-height: 42px; padding: 10px; border: 1px solid #bcc6d4; border-radius: 8px; background: white; font-size: 16px; }
+    input[type="checkbox"] { width: auto; min-height: auto; }
+    textarea { min-height: 90px; resize: vertical; }
+    label { display: block; font-size: 14px; }
+    label > input, label > select, label > textarea { margin-top: 5px; }
+    small, .muted { color: var(--muted); }
+    nav { display: flex; flex-wrap: nowrap; gap: 7px; margin: 15px auto; padding: 3px 1px 9px; overflow-x: auto; }
+    nav button { flex: 0 0 auto; white-space: nowrap; }
+    nav button.active { border-color: var(--accent); background: #dfebff; color: #164b98; }
+    .card { margin-bottom: 15px; padding: clamp(12px,1.8vw,20px); border:1px solid var(--line); border-radius:12px; background:white; box-shadow: var(--shadow); }
+    .row { display:flex; flex-wrap:wrap; gap:9px; align-items:center; }
+    .grow { flex:1; min-width:170px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .full { grid-column:1 / -1; }
+    .actions { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+    .item { padding:10px 0; border-bottom:1px solid var(--line); }
+    .item:last-child { border-bottom:0; }
+    .item-title { font-size: clamp(15px, 0.65vw + 13px, 19px); font-weight:700; line-height:1.6; overflow-wrap:anywhere; }
+    .item-title a { display:inline-block; padding:2px 0; text-decoration:none; }
+    .meta { margin-top:7px; color:var(--muted); font-size:13px; white-space:pre-wrap; }
+    .url { margin-top:8px; font-size:12px; overflow-wrap:anywhere; }
+    .stars { color:#ae7600; font-weight:700; letter-spacing:2px; }
+    .badge { display:inline-block; margin:3px 4px 0 0; padding:2px 7px; border-radius:5px; background:var(--warning); font-size:12px; }
+    .compact-status { margin-top:2px; color:var(--muted); font-size:12px; }
+    .item-details { margin:5px 0 0; }
+    .item-details > summary { width:fit-content; max-width:100%; min-height:34px; padding:5px 9px; border-radius:6px; background:#f0f4f9; color:#526175; font-size:12px; font-weight:500; }
+    .item-details[open] { padding-bottom:8px; }
+    .item-details[open] > summary { margin-bottom:8px; background:#e2ecfb; }
+    .form-details > summary { min-height:42px; padding:10px 12px; border-radius:7px; background:#edf3fc; color:var(--accent); }
+    .form-details[open] > summary { margin-bottom:12px; }
+    #notice { padding:10px 12px; border-radius:7px; background:#e8effb; font-size:14px; white-space:pre-wrap; overflow-wrap:anywhere; }
+    #entryToolbar { padding-top:10px; padding-bottom:10px; }
+    #entryToolbar p { margin:0; }
+    #filterCard { padding-top:10px; padding-bottom:10px; }
+    #search { min-width: min(100%, 220px); }
+    [hidden] { display:none !important; }
+    details { margin:12px 0; }
+    summary { cursor:pointer; font-weight:700; }
+    pre { max-height:420px; padding:12px; overflow:auto; border-radius:7px; background:#f4f6fa; white-space:pre-wrap; overflow-wrap:anywhere; }
+    .output { min-height:260px; font-family:ui-monospace, monospace; font-size:12px; }
+    .warning { color:#9b3721; }
+    hr { margin:22px 0; border:0; border-top:1px solid var(--line); }
+    .checkgrid { display:flex; flex-wrap:wrap; gap:8px 15px; }
+    .checkgrid label { display:flex; gap:5px; align-items:center; }
+    .checkgrid input { width:auto; margin:0; }
+    #saveInfo { white-space:pre-wrap; overflow-wrap:anywhere; }
+    @media (max-width:640px) {
+      .grid { grid-template-columns:1fr; }
+      .full { grid-column:auto; }
+      #filterCard #search { flex-basis:100%; }
+      #entryToolbar .row { align-items:flex-start; }
+      .item-details .actions button { min-height:42px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="row" style="justify-content:space-between;">
+      <div class="grow"><h1>🎸 弾き語りノート</h1><small>1.2.0／HTML１ファイル版</small></div>
+      <button id="openSettings" type="button">設定・保存・ヘルプ</button>
+    </div>
+  </header>
+
+  <p id="notice" role="status" aria-live="polite">起動しています…</p>
+  <nav id="tabs" aria-label="画面切り替え"></nav>
+
+  <main>
+    <section id="entryToolbar" class="card" hidden>
+      <div class="row">
+        <p class="grow muted">曲名を押すと開きます。各種ボタンは「操作・詳細」にあります。</p>
+        <button id="newEntry" type="button" class="primary">＋ 新規登録</button>
+      </div>
+    </section>
+
+    <section id="entryCard" class="card" hidden>
+      <h2 id="entryHeading">曲の登録</h2>
+      <form id="entryForm">
+        <div class="grid">
+          <label>登録先
+            <select id="entryType">
+              <option value="history">履歴：歌った記録</option>
+              <option value="favorites">お気に入り</option>
+              <option value="requests">リクエスト</option>
+              <option value="repertoire">レパートリー</option>
+            </select>
+          </label>
+          <label>曲URL
+            <input id="entryUrl" type="url" maxlength="4000" placeholder="https://www.ufret.jp/song.php?data=...">
+          </label>
+          <label>アーティスト名
+            <input id="entryArtist" list="artistCandidates" maxlength="500">
+          </label>
+          <label>登録済みアーティストから選択
+            <select id="artistPick"></select>
+          </label>
+          <label>曲名
+            <input id="entryTitle" maxlength="500">
+          </label>
+          <label>日時
+            <input id="entryDate" type="datetime-local">
+          </label>
+          <label>リクエスト主
+            <input id="entryFrom" list="listenerCandidates" maxlength="500">
+          </label>
+          <label>登録済みリスナーから選択
+            <select id="listenerPick"></select>
+          </label>
+          <label>レパートリー習熟度
+            <select id="entryRating">
+              <option value="1">★☆☆☆☆ 1：これから練習</option>
+              <option value="2">★★☆☆☆ 2：部分的に対応</option>
+              <option value="3" selected>★★★☆☆ 3：確認しながら対応</option>
+              <option value="4">★★★★☆ 4：おおむね安定</option>
+              <option value="5">★★★★★ 5：すぐ対応できる</option>
+            </select>
+          </label>
+          <label class="full">メモ（AI分析用出力には含めません）
+            <textarea id="entryNote" maxlength="10000"></textarea>
+          </label>
+        </div>
+
+        <details>
+          <summary>AI分析用の曲情報・自己評価（任意）</summary>
+          <div class="grid">
+            <label>キー
+              <select id="entryKey"></select>
+            </label>
+            <label>好き度
+              <select id="entryLiking"><option value="0">未評価</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+            </label>
+            <label>難しさ
+              <select id="entryDifficulty"><option value="0">未評価</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+            </label>
+            <label>演奏BPM
+              <input id="entryBpm" type="number" min="20" max="400" step="0.1" placeholder="不明なら空欄">
+            </label>
+            <label>音域（最低）
+              <input id="entryLow" maxlength="5" placeholder="例：G3">
+            </label>
+            <label>音域（最高）
+              <input id="entryHigh" maxlength="5" placeholder="例：E5">
+            </label>
+          </div>
+        </details>
+
+        <div class="actions">
+          <button id="entrySubmit" type="submit" class="primary">登録する</button>
+          <button id="entryReset" type="button">入力をリセット</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="filterCard" class="card">
+      <div class="row">
+        <input id="search" class="grow" placeholder="アーティスト・曲名・名前・メモを検索">
+      </div>
+    </section>
+
+    <section id="listPage" class="card">
+      <h2 id="listHeading">履歴</h2>
+      <p id="listExplanation" class="muted">歌った記録の一覧です。</p>
+      <div id="list"></div>
+    </section>
+  </main>
+
+  <datalist id="artistCandidates"></datalist>
+  <datalist id="listenerCandidates"></datalist>
+
+  <script>
+    const STORAGE_KEY = 'ufret-note-v1';
+    const tabs = [
+      { key: 'history', label: '履歴' },
+      { key: 'favorites', label: 'お気に入り' },
+      { key: 'requests', label: 'リクエスト' },
+      { key: 'repertoire', label: 'レパートリー' }
+    ];
+    let appState = loadState();
+    let currentTab = 'history';
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? { ...{history:[], favorites:[], requests:[], repertoire:[]}, ...JSON.parse(raw) } : { history: [], favorites: [], requests: [], repertoire: [] };
+      } catch {
+        return { history: [], favorites: [], requests: [], repertoire: [] };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    function renderTabs() {
+      const nav = document.getElementById('tabs');
+      nav.innerHTML = '';
+      tabs.forEach((tab) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = tab.label;
+        btn.classList.toggle('active', tab.key === currentTab);
+        btn.addEventListener('click', () => {
+          currentTab = tab.key;
+          renderTabs();
+          renderList();
+        });
+        nav.appendChild(btn);
+      });
+    }
+
+    function escapeHtml(value = '') {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function renderList() {
+      const data = appState[currentTab] || [];
+      const list = document.getElementById('list');
+      const headings = { history: '履歴', favorites: 'お気に入り', requests: 'リクエスト', repertoire: 'レパートリー' };
+      document.getElementById('listHeading').textContent = headings[currentTab] || '一覧';
+      document.getElementById('listExplanation').textContent = `${headings[currentTab] || '一覧'}の記録です。`;
+
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const filtered = q ? data.filter((entry) => [entry.title, entry.artist, entry.note, entry.from].join(' ').toLowerCase().includes(q)) : data;
+
+      list.innerHTML = filtered.length ? filtered.map((entry) => `
+        <div class="item">
+          <div class="item-title"><a href="${entry.url || '#'}" target="_blank" rel="noreferrer">${escapeHtml(entry.title || 'タイトル未設定')}</a></div>
+          <div class="meta">${escapeHtml(entry.artist || 'アーティスト未設定')} · ${escapeHtml(entry.date || '日付未設定')}</div>
+          <div class="compact-status"><span class="stars">${'★'.repeat(Number(entry.rating || 0)) || '—'}</span>　${escapeHtml(entry.from || '依頼主未設定')}</div>
+          <div class="item-details">
+            <summary>詳細を見る</summary>
+            <div class="actions">
+              <button type="button" data-action="edit" data-id="${entry.id}">編集</button>
+              <button type="button" data-action="delete" data-id="${entry.id}">削除</button>
+            </div>
+            <div class="meta">${escapeHtml(entry.note || 'メモなし')}</div>
+            ${entry.url ? `<div class="url">${escapeHtml(entry.url)}</div>` : ''}
+          </div>
+        </div>
+      `).join('') : '<p class="muted">まだ記録がありません。</p>';
+    }
+
+    function addEntry(payload) {
+      const list = appState[payload.type] || [];
+      list.push({ ...payload, id: crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random()}` });
+      appState[payload.type] = list;
+      saveState();
+      renderList();
+    }
+
+    function updateEntry(payload) {
+      const list = appState[payload.type] || [];
+      const idx = list.findIndex((item) => item.id === payload.id);
+      if (idx >= 0) list[idx] = payload;
+      appState[payload.type] = list;
+      saveState();
+      renderList();
+    }
+
+    function deleteEntry(id, type) {
+      appState[type] = (appState[type] || []).filter((item) => item.id !== id);
+      saveState();
+      renderList();
+    }
+
+    function bindHandlers() {
+      document.getElementById('search').addEventListener('input', renderList);
+
+      document.getElementById('entryForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const payload = {
+          id: document.getElementById('entryForm').dataset.id || undefined,
+          type: document.getElementById('entryType').value,
+          title: document.getElementById('entryTitle').value.trim(),
+          artist: document.getElementById('entryArtist').value.trim(),
+          url: document.getElementById('entryUrl').value.trim(),
+          from: document.getElementById('entryFrom').value.trim(),
+          date: document.getElementById('entryDate').value,
+          note: document.getElementById('entryNote').value.trim(),
+          rating: document.getElementById('entryRating').value,
+          key: document.getElementById('entryKey').value,
+          liking: document.getElementById('entryLiking').value,
+          difficulty: document.getElementById('entryDifficulty').value,
+          bpm: document.getElementById('entryBpm').value,
+          low: document.getElementById('entryLow').value,
+          high: document.getElementById('entryHigh').value
+        };
+
+        if (!payload.title && !payload.artist && !payload.from && !payload.url) {
+          alert('曲名・アーティスト名・依頼主・URLのいずれかを入力してください。');
+          return;
+        }
+
+        if (payload.id) {
+          updateEntry(payload);
+        } else {
+          addEntry(payload);
+        }
+
+        document.getElementById('entryForm').reset();
+        delete document.getElementById('entryForm').dataset.id;
+        document.getElementById('entryCard').hidden = true;
+        renderList();
+      });
+
+      document.getElementById('entryReset').addEventListener('click', () => {
+        document.getElementById('entryForm').reset();
+        delete document.getElementById('entryForm').dataset.id;
+      });
+
+      document.getElementById('newEntry').addEventListener('click', () => {
+        document.getElementById('entryCard').hidden = false;
+        document.getElementById('entryHeading').textContent = '曲の登録';
+        document.getElementById('entryForm').reset();
+        delete document.getElementById('entryForm').dataset.id;
+      });
+
+      document.getElementById('list').addEventListener('click', (event) => {
+        const { action, id } = event.target.dataset;
+        if (!action || !id) return;
+        const target = (appState[currentTab] || []).find((item) => item.id === id);
+        if (!target) return;
+
+        if (action === 'delete') {
+          deleteEntry(id, currentTab);
+          return;
+        }
+
+        if (action === 'edit') {
+          document.getElementById('entryCard').hidden = false;
+          document.getElementById('entryHeading').textContent = '曲を編集';
+          document.getElementById('entryForm').dataset.id = target.id;
+          document.getElementById('entryType').value = target.type || currentTab;
+          document.getElementById('entryTitle').value = target.title || '';
+          document.getElementById('entryArtist').value = target.artist || '';
+          document.getElementById('entryUrl').value = target.url || '';
+          document.getElementById('entryFrom').value = target.from || '';
+          document.getElementById('entryDate').value = target.date || '';
+          document.getElementById('entryNote').value = target.note || '';
+          document.getElementById('entryRating').value = target.rating || '3';
+          document.getElementById('entryKey').value = target.key || '';
+          document.getElementById('entryLiking').value = target.liking || '0';
+          document.getElementById('entryDifficulty').value = target.difficulty || '0';
+          document.getElementById('entryBpm').value = target.bpm || '';
+          document.getElementById('entryLow').value = target.low || '';
+          document.getElementById('entryHigh').value = target.high || '';
+        }
+      });
+
+      document.getElementById('openSettings').addEventListener('click', () => {
+        alert('設定と保存は browser の localStorage に保持されます。');
+      });
+    }
+
+    function init() {
+      const keyOptions = (window.MUSIC_THEORY_DATA.keys || []).map((item) => item.id);
+      const keySelect = document.getElementById('entryKey');
+      keySelect.innerHTML = '<option value="">未選択</option>' + keyOptions.map((key) => `<option value="${key}">${key}</option>`).join('');
+      renderTabs();
+      renderList();
+      bindHandlers();
+    }
+
+    init();
+  </script>
+</body>
+</html>
