@@ -18,7 +18,7 @@
       margin-top: 1rem;
     }
     .panel-strong {
-      background: #fff;
+      background: rgba(255,255,255,0.82);
       border: 1px solid rgba(148,163,184,0.24);
       border-radius: 20px;
       padding: 1.1rem;
@@ -36,11 +36,29 @@
       border-radius: 14px;
       padding: 0.9rem 0.75rem;
       text-align: center;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .chord-tile:hover {
+      transform: translateY(-1px);
+      border-color: rgba(46,125,255,0.4);
     }
     .chord-tile strong {
       display: block;
       font-size: clamp(1.2rem, 2vw, 1.7rem);
       margin-bottom: 0.2rem;
+    }
+    .selection-box {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      background: #f7f9ff;
+      border: 1px solid rgba(46,125,255,0.12);
+    }
+    .selection-box strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 1.05rem;
     }
     .sidebar { display: grid; gap: 1rem; }
     .preset-list { display: grid; gap: 0.5rem; margin-top: 0.8rem; }
@@ -50,6 +68,12 @@
       background: #fff;
       border-radius: 12px;
       border: 1px solid rgba(46,125,255,0.15);
+    }
+    .preset-list button.active {
+      background: rgba(46,125,255,0.08);
+      border-color: rgba(46,125,255,0.5);
+      color: var(--primary-700);
+      font-weight: 700;
     }
     @media (max-width: 760px) {
       .layout { grid-template-columns: 1fr; }
@@ -73,6 +97,10 @@
       <section class="panel-strong">
         <h2>コード一覧</h2>
         <div class="chord-grid" id="guitarChordGrid"></div>
+        <div class="selection-box" id="selectionBox">
+          <strong>選択中: C</strong>
+          <div class="muted">構成音: C / E / G</div>
+        </div>
         <div class="row" style="margin-top:1rem; flex-wrap:wrap;">
           <span class="badge" style="background:rgba(255,183,77,0.14); color:#8a4b00;"># 音程確認</span>
           <span class="badge" style="background:rgba(46,125,255,0.1); color:var(--primary);"># 再生</span>
@@ -97,36 +125,82 @@
   <script>
     (function () {
       const theory = window.musicTheory;
-      if (!theory) {
-        return;
-      }
+      const data = window.MUSIC_THEORY_DATA;
+      if (!theory || !data) return;
 
       const chords = theory.getCommonChords();
       const tuningPresetList = document.getElementById('tuningPresetList');
       const tuningBadge = document.getElementById('tuningBadge');
       const progressionHint = document.getElementById('progressionHint');
       const chordGrid = document.getElementById('guitarChordGrid');
+      const selectionBox = document.getElementById('selectionBox');
+      const chordMap = {
+        C: ['C', 'E', 'G'],
+        G: ['G', 'B', 'D'],
+        D: ['D', 'F#', 'A'],
+        Am: ['A', 'C', 'E'],
+        Em: ['E', 'G', 'B'],
+        F: ['F', 'A', 'C'],
+        Bm: ['B', 'D', 'F#'],
+        Dm: ['D', 'F', 'A']
+      };
+      const state = { tuningId: 'standard', selectedChord: 'C' };
 
-      chordGrid.innerHTML = chords.map((chord) => `
-        <div class="chord-tile">
-          <strong>${chord.symbol}</strong>
-          <span>${chord.label}</span>
-        </div>
-      `).join('');
+      function renderChordList() {
+        chordGrid.innerHTML = chords.map((chord) => `
+          <button type="button" class="chord-tile" data-chord="${chord.symbol}">
+            <strong>${chord.symbol}</strong>
+            <span>${chord.label}</span>
+          </button>
+        `).join('');
+      }
 
-      const tunings = window.MUSIC_THEORY_DATA.tunings;
-      tuningPresetList.innerHTML = tunings.map((tuning) => `
-        <button type="button" data-tuning="${tuning.id}">${tuning.name}</button>
-      `).join('');
+      function renderPresetList() {
+        tuningPresetList.innerHTML = data.tunings.map((tuning) => `
+          <button type="button" class="${state.tuningId === tuning.id ? 'active' : ''}" data-tuning="${tuning.id}">${tuning.name}</button>
+        `).join('');
+      }
+
+      function renderSelection() {
+        const chord = chords.find((item) => item.symbol === state.selectedChord) || chords[0];
+        const notes = chordMap[chord.symbol] || [chord.symbol];
+        selectionBox.innerHTML = `
+          <strong>選択中: ${chord.symbol}</strong>
+          <div class="muted">構成音: ${notes.join(' / ')}</div>
+        `;
+      }
+
+      function updateProgression() {
+        const key = (data.keys.find((item) => item.id === 'C') || data.keys[0] || { id: 'C' }).id;
+        const progression = theory.getChordProgression(key).join(' → ');
+        progressionHint.textContent = `${key}キーのよく使う進行: ${progression}`;
+      }
+
+      function setTuning(tuningId) {
+        state.tuningId = tuningId;
+        const tuning = theory.getTuning(tuningId);
+        tuningBadge.textContent = 'Tune: ' + tuning.notes.join(' ');
+        renderPresetList();
+      }
 
       tuningPresetList.addEventListener('click', (event) => {
         const button = event.target.closest('[data-tuning]');
         if (!button) return;
-        const tuning = theory.getTuning(button.dataset.tuning);
-        tuningBadge.textContent = 'Tune: ' + tuning.notes.join(' ');
-        const key = window.MUSIC_THEORY_DATA.keys[0]?.id || 'C';
-        progressionHint.textContent = `${key}キーのよく使う進行: ${window.musicTheory.getChordProgression(key).join(' → ')}`;
+        setTuning(button.dataset.tuning);
       });
+
+      chordGrid.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-chord]');
+        if (!button) return;
+        state.selectedChord = button.dataset.chord;
+        renderSelection();
+      });
+
+      renderChordList();
+      renderPresetList();
+      renderSelection();
+      setTuning('standard');
+      updateProgression();
     })();
   </script>
 </body>
