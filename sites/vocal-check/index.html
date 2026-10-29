@@ -141,7 +141,8 @@
 
   <script>
     (function () {
-      const theory = window.MUSIC_THEORY_DATA;
+      const musicTheory = window.musicTheory;
+      const theory = window.MUSIC_THEORY_DATA || musicTheory;
       if (!theory) return;
 
       const pianoGrid = document.getElementById('pianoGrid');
@@ -152,7 +153,7 @@
       const notes = ['A2', 'C3', 'E3', 'G3', 'A3', 'C4', 'E4', 'G4'];
 
       function renderVoiceSelect() {
-        voiceSelect.innerHTML = theory.voiceRanges.map((range) => `
+        voiceSelect.innerHTML = (theory.voiceRanges || []).map((range) => `
           <option value="${range.id}">${range.name}</option>
         `).join('');
         voiceSelect.value = 'tenor';
@@ -160,7 +161,9 @@
 
       function renderVoiceRange() {
         const type = voiceSelect.value;
-        const range = theory.getVoiceRange(type);
+        const range = (musicTheory && typeof musicTheory.getVoiceRange === 'function')
+          ? musicTheory.getVoiceRange(type)
+          : (theory.voiceRanges || []).find((item) => item.id === type) || (theory.voiceRanges || [])[2];
         const lowIndex = notes.indexOf(range.low) >= 0 ? notes.indexOf(range.low) : 0;
         const highIndex = notes.indexOf(range.high) >= 0 ? notes.indexOf(range.high) : notes.length - 1;
 
@@ -174,7 +177,7 @@
           return `<div class="key-box" ${active}>${note}</div>`;
         }).join('');
 
-        const recommendedKey = theory.keys[0] || { id: 'C', relativeMinor: 'Am' };
+        const recommendedKey = (theory.keys && theory.keys[0]) || { id: 'C', relativeMinor: 'Am' };
         resultStats.innerHTML = `
           <div class="stat"><span>最低音</span><strong>${range.low}</strong></div>
           <div class="stat"><span>最高音</span><strong>${range.high}</strong></div>
