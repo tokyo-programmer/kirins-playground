@@ -124,11 +124,14 @@
 
   <script>
     (function () {
-      const theory = window.musicTheory;
-      const data = window.MUSIC_THEORY_DATA;
+      const musicTheory = window.musicTheory;
+      const data = window.MUSIC_THEORY_DATA || musicTheory;
+      const theory = musicTheory || data;
       if (!theory || !data) return;
 
-      const chords = theory.getCommonChords();
+      const chords = (musicTheory && typeof musicTheory.getCommonChords === 'function')
+        ? musicTheory.getCommonChords()
+        : (data.commonChords || []);
       const tuningPresetList = document.getElementById('tuningPresetList');
       const tuningBadge = document.getElementById('tuningBadge');
       const progressionHint = document.getElementById('progressionHint');
@@ -156,7 +159,7 @@
       }
 
       function renderPresetList() {
-        tuningPresetList.innerHTML = data.tunings.map((tuning) => `
+        tuningPresetList.innerHTML = (data.tunings || []).map((tuning) => `
           <button type="button" class="${state.tuningId === tuning.id ? 'active' : ''}" data-tuning="${tuning.id}">${tuning.name}</button>
         `).join('');
       }
@@ -171,15 +174,19 @@
       }
 
       function updateProgression() {
-        const key = (data.keys.find((item) => item.id === 'C') || data.keys[0] || { id: 'C' }).id;
-        const progression = theory.getChordProgression(key).join(' → ');
+        const key = ((data.keys && data.keys.find((item) => item.id === 'C')) || data.keys[0] || { id: 'C' }).id;
+        const progression = (musicTheory && typeof musicTheory.getChordProgression === 'function'
+          ? musicTheory.getChordProgression(key)
+          : (data.commonProgressions && data.commonProgressions[key]) || ['C', 'F', 'G', 'Am']).join(' → ');
         progressionHint.textContent = `${key}キーのよく使う進行: ${progression}`;
       }
 
       function setTuning(tuningId) {
         state.tuningId = tuningId;
-        const tuning = theory.getTuning(tuningId);
-        tuningBadge.textContent = 'Tune: ' + tuning.notes.join(' ');
+        const tuning = (musicTheory && typeof musicTheory.getTuning === 'function')
+          ? musicTheory.getTuning(tuningId)
+          : (data.tunings || []).find((item) => item.id === tuningId) || (data.tunings || [])[0];
+        tuningBadge.textContent = 'Tune: ' + (tuning ? tuning.notes.join(' ') : '');
         renderPresetList();
       }
 
