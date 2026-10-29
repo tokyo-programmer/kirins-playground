@@ -111,7 +111,8 @@
 
   <script>
     (function () {
-      const theory = window.MUSIC_THEORY_DATA;
+      const musicTheory = window.musicTheory;
+      const theory = window.MUSIC_THEORY_DATA || musicTheory;
       if (!theory) return;
 
       const staff = document.getElementById('staff');
@@ -127,8 +128,10 @@
       let meter = 4;
 
       function renderPattern() {
-        const key = (theory.keys[0] || { id: 'C' }).id;
-        const progression = (theory.getChordProgression(key) || ['C', 'F', 'G', 'Am']).join(' → ');
+        const key = (theory.keys && theory.keys[0] ? theory.keys[0].id : 'C');
+        const progression = (musicTheory && typeof musicTheory.getChordProgression === 'function'
+          ? musicTheory.getChordProgression(key)
+          : (theory.commonProgressions && theory.commonProgressions[key]) || ['C', 'F', 'G', 'Am']).join(' → ');
 
         insight.innerHTML = `
           <span class="chip">推奨キー: ${key}</span>
