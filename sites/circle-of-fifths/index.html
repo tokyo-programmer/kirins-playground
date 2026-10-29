@@ -146,6 +146,7 @@
   <script>
     (function () {
       const theory = window.MUSIC_THEORY_DATA;
+      const musicTheory = window.musicTheory;
       if (!theory) return;
 
       const keys = theory.keys;
@@ -187,12 +188,16 @@
 
       function renderDetails() {
         const key = keys.find((item) => item.id === state.selected) || keys[0];
+        const progression = musicTheory && typeof musicTheory.getChordProgression === 'function'
+          ? musicTheory.getChordProgression(key.id)
+          : (theory.commonProgressions && theory.commonProgressions[key.id]) || ['C', 'F', 'G', 'Am'];
+
         centerKey.textContent = key.id;
         currentBadge.textContent = key.id;
         detailCard.innerHTML = `
           <div><strong>${key.id}</strong> の構成音: ${key.notes.join(' ')}</div>
           <div style="margin-top:0.5rem;">相対長調: ${key.relativeMinor}</div>
-          <div style="margin-top:0.5rem;">よく使う進行: ${(theory.getChordProgression(key.id) || ['C','F','G','Am']).join(' → ')}</div>
+          <div style="margin-top:0.5rem;">よく使う進行: ${progression.join(' → ')}</div>
         `;
       }
 
