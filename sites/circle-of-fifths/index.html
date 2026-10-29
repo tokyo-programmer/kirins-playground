@@ -145,9 +145,9 @@
 
   <script>
     (function () {
-      const theory = window.MUSIC_THEORY_DATA;
-      const musicTheory = window.musicTheory;
-      if (!theory) return;
+      const theory = window.MUSIC_THEORY_DATA || window.musicTheory;
+      const musicTheory = window.musicTheory || theory;
+      if (!theory || !theory.keys) return;
 
       const keys = theory.keys;
       const circleNodes = document.getElementById('circleNodes');
