@@ -7,7 +7,7 @@
   <style>
 /* KIRIN-BASE:BEGIN */
 /* ==========================================================
-   kirin-base.css | version=1.10.0 | updated=2026-11-03 | change=C-038 | canonical shared CSS
+   kirin-base.css | version=1.11.0 | updated=2026-11-03 | change=C-039 | canonical shared CSS
    ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
    ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
    ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
@@ -163,6 +163,29 @@ body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-
 body.k-page .item-details>summary{padding:8px 4px!important}
 .score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
 /* KIRIN-FRAME:END */
+/* KIRIN-MOBILE:BEGIN */
+.km-dock,.km-settings{display:none}
+@media(max-width:1024px) and (orientation:portrait){
+html.km-mobile{--kirin-fs-s:13px;--kirin-fs-m:14px;--kirin-fs-l:20px;--kirin-content-inset:10px;--kirin-page-pad:10px}
+.km-mobile body{padding:10px 10px calc(74px + env(safe-area-inset-bottom))!important;font-size:14px;line-height:1.55}
+.km-mobile body.km-open{padding-bottom:calc(36dvh + 86px + env(safe-area-inset-bottom))!important}
+.km-mobile .kx-bar{padding:4px 8px!important;margin-bottom:8px!important;gap:4px 8px;flex-wrap:wrap}.km-mobile .kx-brand{font-size:14px}.km-mobile .kx-theme{min-height:44px;padding:6px 10px!important;font-size:14px}
+.km-mobile h1{font-size:20px!important;line-height:1.35;margin:6px 0 10px!important}.km-mobile h2{font-size:17px!important;line-height:1.4}.km-mobile h3{font-size:15px!important;line-height:1.4}.km-mobile p{line-height:1.6}.km-mobile .desc,.km-mobile .description{font-size:13px!important;margin:6px 0!important}
+.km-mobile .app,.km-mobile .container,.km-mobile .scale-app,.km-mobile .k-app{display:block!important;min-width:0}.km-mobile .k-fold>summary,.km-mobile .panel-summary{padding:6px 10px!important;min-height:44px;gap:6px}.km-mobile .k-fold-hint{font-size:11px;line-height:1.4}.km-mobile .k-fold-body,.km-mobile .panel-collapsible-body{padding:10px!important}
+.km-mobile .km-dock{position:fixed;display:flex;align-items:center;justify-content:center;gap:10px;bottom:0;left:0;right:0;padding:6px 10px calc(6px + env(safe-area-inset-bottom));background:var(--kirin-surface);color:var(--kirin-text);border-top:1px solid var(--kirin-line-strong);z-index:30;box-shadow:0 -2px 12px rgba(0,0,0,.12)}
+.km-mobile .km-dock button{font:700 14px/1.4 var(--kirin-font);min-height:44px;flex:1 1 0;max-width:250px;padding:8px 12px;border:1px solid var(--kirin-line-strong);background:var(--kirin-surface-2);color:var(--kirin-text);border-radius:8px}.km-mobile .km-dock button[aria-expanded=true]{background:var(--kirin-accent);color:var(--kirin-on-accent)}
+.km-mobile .km-settings:not([hidden]){display:block;position:fixed;left:8px;right:8px;bottom:calc(62px + env(safe-area-inset-bottom));height:36dvh;max-height:340px;min-height:160px;overflow-y:auto;overscroll-behavior:contain;padding:0 10px 10px;background:var(--kirin-surface);color:var(--kirin-text);border:1px solid var(--kirin-line-strong);border-radius:12px;box-shadow:0 -4px 18px rgba(0,0,0,.2);z-index:29;box-sizing:border-box}
+.km-mobile .km-panel-head{display:flex;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:8;background:var(--kirin-surface);border-bottom:1px solid var(--kirin-line);padding:6px 0}.km-mobile .km-panel-head strong{font-size:14px}.km-mobile .km-panel-head button{min-height:44px;padding:6px 10px;font:inherit;background:var(--kirin-surface-2);color:var(--kirin-text);border:1px solid var(--kirin-line);border-radius:8px}
+.km-mobile .km-settings .card,.km-mobile .km-settings .panel,.km-mobile .km-settings .k-fold{margin:8px 0!important;box-shadow:none!important}.km-mobile .km-settings>details>summary{display:none}.km-mobile .km-settings .k-fold-body,.km-mobile .km-settings .panel-collapsible-body{padding:8px 0!important}.km-mobile .km-settings .hint,.km-mobile .km-settings .description{font-size:12px!important;line-height:1.55}.km-mobile .km-settings .k-field,.km-mobile .km-settings label{min-width:0}
+.km-mobile .scale-controls,.km-mobile .settings-grid,.km-mobile .display-grid,.km-mobile .k-controls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px 10px!important;align-items:end}.km-mobile .scale-controls label,.km-mobile .k-controls .k-field{flex:none!important;display:grid;gap:5px;font-size:13px;line-height:1.5}.km-mobile input:not([type=checkbox]):not([type=radio]):not([type=range]),.km-mobile select{font-size:16px!important;min-height:44px;padding:6px 8px!important;width:100%;max-width:100%}.km-mobile .scale-actions,.km-mobile .quick-buttons,.km-mobile .btn-row,.km-mobile .audio-actions{gap:8px!important;flex-wrap:wrap!important;margin:8px 0!important;align-items:center}.km-mobile .scale-actions button,.km-mobile .quick-buttons button{font-size:14px;min-height:44px;padding:6px 10px!important}
+.km-mobile .tuning-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.km-mobile .string-control{padding:8px!important;gap:6px!important}.km-mobile .string-control .quick-buttons{margin:2px 0!important;gap:8px!important}.km-mobile .preset-button{padding:8px 10px!important;line-height:1.5}.km-mobile .fretboard-area{margin:6px 0;padding:6px}.km-mobile .fretboard-title{margin-bottom:6px;gap:6px}.km-mobile .fretboard-title span{font-size:12px}.km-mobile .fret-table{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.km-mobile .current-shape{font-size:14px;line-height:1.6}.km-mobile .bottom-bar{position:static!important;margin:8px auto!important;padding:6px!important;width:100%!important}.km-mobile .section-header,.km-mobile .toggle-row{gap:8px}
+.km-mobile .scale-board{grid-template-rows:32px repeat(6,48px)!important}.km-mobile .scale-label,.km-mobile .scale-cell{height:48px!important}.km-mobile .scale-head.scale-label{height:32px!important}.km-mobile .scale-mark{min-height:42px;min-width:42px;font-size:12px}.km-mobile .scale-status{padding:6px 8px;font-size:13px;margin:6px 0}.km-mobile .scale-note-list{gap:4px}.km-mobile .scale-note-list span{padding:3px 6px;font-size:13px}.km-mobile .scale-patterns{gap:6px}.km-mobile .scale-patterns p{font-size:13px;padding:6px 8px}.km-mobile .scale-route{gap:6px 16px;font-size:13px}
+.km-mobile .wheelStage{max-width:380px!important;margin:0 auto!important;min-height:0!important}.km-mobile .wheelFrame{max-width:360px!important;min-height:0!important}.km-mobile .infoSection{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.km-mobile .degreeGuideBlock{grid-column:1/-1}.km-mobile .selectionMain{font-size:22px!important}.km-mobile .selectionSub{font-size:12px!important}.km-mobile .degree-table th,.km-mobile .degree-table td{font-size:13px!important;padding:6px!important}.km-mobile #modulationGears{max-width:280px!important}
+.km-mobile .k-grid{grid-template-columns:1fr!important}.km-mobile .prog-find{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.km-mobile .k-tabs{display:flex;flex-wrap:wrap}.km-mobile .k-tab{flex:1 1 auto;min-height:44px;font-size:13px;padding:6px!important}.km-mobile #tabs{gap:4px!important;overflow-x:auto}.km-mobile #tabs button{font-size:13px;min-height:44px;padding:6px 10px;flex:none}.km-mobile .formgrid,.km-mobile .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.km-mobile .item,.km-mobile .list-row{padding:10px!important}.km-mobile .row{gap:8px}.km-mobile .big{font-size:32px!important}.km-mobile .value{font-size:24px!important}.km-mobile .keyboardWrap{max-width:100%}
+.km-mobile .kx-foot{margin-top:10px!important}.km-mobile .kx-nav{display:flex;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap}.km-mobile .kx-nav a{flex:none;font-size:13px;padding:8px!important}.km-mobile .kx-foot p{font-size:12px;line-height:1.5}.km-mobile [data-km-anchor]{scroll-margin-top:12px}
+}
+@media(max-width:1024px) and (orientation:portrait) and (max-height:800px){.km-mobile .wheelStage{width:min(100%,300px)!important}.km-mobile .wheelFrame{max-width:300px!important}}
+/* KIRIN-MOBILE:END */
 /* KIRIN-COMPONENTS:END */
 /* KIRIN-BASE:END */
     :root {
@@ -717,12 +740,36 @@ body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-
 body.k-page .item-details>summary{padding:8px 4px!important}
 .score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
 /* KIRIN-FRAME:END */
+
+/* KIRIN-MOBILE:BEGIN */
+.km-dock,.km-settings{display:none}
+@media(max-width:1024px) and (orientation:portrait){
+html.km-mobile{--kirin-fs-s:13px;--kirin-fs-m:14px;--kirin-fs-l:20px;--kirin-content-inset:10px;--kirin-page-pad:10px}
+.km-mobile body{padding:10px 10px calc(74px + env(safe-area-inset-bottom))!important;font-size:14px;line-height:1.55}
+.km-mobile body.km-open{padding-bottom:calc(36dvh + 86px + env(safe-area-inset-bottom))!important}
+.km-mobile .kx-bar{padding:4px 8px!important;margin-bottom:8px!important;gap:4px 8px;flex-wrap:wrap}.km-mobile .kx-brand{font-size:14px}.km-mobile .kx-theme{min-height:44px;padding:6px 10px!important;font-size:14px}
+.km-mobile h1{font-size:20px!important;line-height:1.35;margin:6px 0 10px!important}.km-mobile h2{font-size:17px!important;line-height:1.4}.km-mobile h3{font-size:15px!important;line-height:1.4}.km-mobile p{line-height:1.6}.km-mobile .desc,.km-mobile .description{font-size:13px!important;margin:6px 0!important}
+.km-mobile .app,.km-mobile .container,.km-mobile .scale-app,.km-mobile .k-app{display:block!important;min-width:0}.km-mobile .k-fold>summary,.km-mobile .panel-summary{padding:6px 10px!important;min-height:44px;gap:6px}.km-mobile .k-fold-hint{font-size:11px;line-height:1.4}.km-mobile .k-fold-body,.km-mobile .panel-collapsible-body{padding:10px!important}
+.km-mobile .km-dock{position:fixed;display:flex;align-items:center;justify-content:center;gap:10px;bottom:0;left:0;right:0;padding:6px 10px calc(6px + env(safe-area-inset-bottom));background:var(--kirin-surface);color:var(--kirin-text);border-top:1px solid var(--kirin-line-strong);z-index:30;box-shadow:0 -2px 12px rgba(0,0,0,.12)}
+.km-mobile .km-dock button{font:700 14px/1.4 var(--kirin-font);min-height:44px;flex:1 1 0;max-width:250px;padding:8px 12px;border:1px solid var(--kirin-line-strong);background:var(--kirin-surface-2);color:var(--kirin-text);border-radius:8px}.km-mobile .km-dock button[aria-expanded=true]{background:var(--kirin-accent);color:var(--kirin-on-accent)}
+.km-mobile .km-settings:not([hidden]){display:block;position:fixed;left:8px;right:8px;bottom:calc(62px + env(safe-area-inset-bottom));height:36dvh;max-height:340px;min-height:160px;overflow-y:auto;overscroll-behavior:contain;padding:0 10px 10px;background:var(--kirin-surface);color:var(--kirin-text);border:1px solid var(--kirin-line-strong);border-radius:12px;box-shadow:0 -4px 18px rgba(0,0,0,.2);z-index:29;box-sizing:border-box}
+.km-mobile .km-panel-head{display:flex;gap:10px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:8;background:var(--kirin-surface);border-bottom:1px solid var(--kirin-line);padding:6px 0}.km-mobile .km-panel-head strong{font-size:14px}.km-mobile .km-panel-head button{min-height:44px;padding:6px 10px;font:inherit;background:var(--kirin-surface-2);color:var(--kirin-text);border:1px solid var(--kirin-line);border-radius:8px}
+.km-mobile .km-settings .card,.km-mobile .km-settings .panel,.km-mobile .km-settings .k-fold{margin:8px 0!important;box-shadow:none!important}.km-mobile .km-settings>details>summary{display:none}.km-mobile .km-settings .k-fold-body,.km-mobile .km-settings .panel-collapsible-body{padding:8px 0!important}.km-mobile .km-settings .hint,.km-mobile .km-settings .description{font-size:12px!important;line-height:1.55}.km-mobile .km-settings .k-field,.km-mobile .km-settings label{min-width:0}
+.km-mobile .scale-controls,.km-mobile .settings-grid,.km-mobile .display-grid,.km-mobile .k-controls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px 10px!important;align-items:end}.km-mobile .scale-controls label,.km-mobile .k-controls .k-field{flex:none!important;display:grid;gap:5px;font-size:13px;line-height:1.5}.km-mobile input:not([type=checkbox]):not([type=radio]):not([type=range]),.km-mobile select{font-size:16px!important;min-height:44px;padding:6px 8px!important;width:100%;max-width:100%}.km-mobile .scale-actions,.km-mobile .quick-buttons,.km-mobile .btn-row,.km-mobile .audio-actions{gap:8px!important;flex-wrap:wrap!important;margin:8px 0!important;align-items:center}.km-mobile .scale-actions button,.km-mobile .quick-buttons button{font-size:14px;min-height:44px;padding:6px 10px!important}
+.km-mobile .tuning-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.km-mobile .string-control{padding:8px!important;gap:6px!important}.km-mobile .string-control .quick-buttons{margin:2px 0!important;gap:8px!important}.km-mobile .preset-button{padding:8px 10px!important;line-height:1.5}.km-mobile .fretboard-area{margin:6px 0;padding:6px}.km-mobile .fretboard-title{margin-bottom:6px;gap:6px}.km-mobile .fretboard-title span{font-size:12px}.km-mobile .fret-table{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.km-mobile .current-shape{font-size:14px;line-height:1.6}.km-mobile .bottom-bar{position:static!important;margin:8px auto!important;padding:6px!important;width:100%!important}.km-mobile .section-header,.km-mobile .toggle-row{gap:8px}
+.km-mobile .scale-board{grid-template-rows:32px repeat(6,48px)!important}.km-mobile .scale-label,.km-mobile .scale-cell{height:48px!important}.km-mobile .scale-head.scale-label{height:32px!important}.km-mobile .scale-mark{min-height:42px;min-width:42px;font-size:12px}.km-mobile .scale-status{padding:6px 8px;font-size:13px;margin:6px 0}.km-mobile .scale-note-list{gap:4px}.km-mobile .scale-note-list span{padding:3px 6px;font-size:13px}.km-mobile .scale-patterns{gap:6px}.km-mobile .scale-patterns p{font-size:13px;padding:6px 8px}.km-mobile .scale-route{gap:6px 16px;font-size:13px}
+.km-mobile .wheelStage{max-width:380px!important;margin:0 auto!important;min-height:0!important}.km-mobile .wheelFrame{max-width:360px!important;min-height:0!important}.km-mobile .infoSection{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.km-mobile .degreeGuideBlock{grid-column:1/-1}.km-mobile .selectionMain{font-size:22px!important}.km-mobile .selectionSub{font-size:12px!important}.km-mobile .degree-table th,.km-mobile .degree-table td{font-size:13px!important;padding:6px!important}.km-mobile #modulationGears{max-width:280px!important}
+.km-mobile .k-grid{grid-template-columns:1fr!important}.km-mobile .prog-find{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.km-mobile .k-tabs{display:flex;flex-wrap:wrap}.km-mobile .k-tab{flex:1 1 auto;min-height:44px;font-size:13px;padding:6px!important}.km-mobile #tabs{gap:4px!important;overflow-x:auto}.km-mobile #tabs button{font-size:13px;min-height:44px;padding:6px 10px;flex:none}.km-mobile .formgrid,.km-mobile .filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}.km-mobile .item,.km-mobile .list-row{padding:10px!important}.km-mobile .row{gap:8px}.km-mobile .big{font-size:32px!important}.km-mobile .value{font-size:24px!important}.km-mobile .keyboardWrap{max-width:100%}
+.km-mobile .kx-foot{margin-top:10px!important}.km-mobile .kx-nav{display:flex;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap}.km-mobile .kx-nav a{flex:none;font-size:13px;padding:8px!important}.km-mobile .kx-foot p{font-size:12px;line-height:1.5}.km-mobile [data-km-anchor]{scroll-margin-top:12px}
+}
+@media(max-width:1024px) and (orientation:portrait) and (max-height:800px){.km-mobile .wheelStage{width:min(100%,300px)!important}.km-mobile .wheelFrame{max-width:300px!important}}
+/* KIRIN-MOBILE:END */
 </style>
-<script>/* KIRIN-FILE: version=1.10.0; updated=2026-11-03; changeId=C-038 */ window.KIRIN_PAGE_META = Object.freeze({appId:'circle-of-fifths', version:'1.10.0', updated:'2026-11-03', changeId:'C-038'});
+<script>/* KIRIN-FILE: version=1.11.0; updated=2026-11-03; changeId=C-039 */ window.KIRIN_PAGE_META = Object.freeze({appId:'circle-of-fifths', version:'1.11.0', updated:'2026-11-03', changeId:'C-039'});
 /* KIRIN-SHELL-JS:BEGIN */
 (function () {
   'use strict';
-  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.10.0';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.11.0';
   var root = document.documentElement;
   function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
   function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
@@ -810,6 +857,33 @@ body.k-page .item-details>summary{padding:8px 4px!important}
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
 })();
+
+/* KIRIN-MOBILE-JS:BEGIN */
+function initPortraitLayout(){
+ const mq=window.matchMedia('(max-width:1024px) and (orientation:portrait)'),html=document.documentElement,id=window.KIRIN_PAGE_META?.appId;
+ const config={
+ 'scale-practice':{settings:()=>[document.querySelector('.scale-app>details'),document.getElementById('rootPatternControls')],result:()=>document.querySelector('.scale-scroll'),folds:()=>[document.getElementById('routeDetails')],button:'指板へ'},
+ 'guitar-chord-composer':{settings:()=>[document.querySelector('main.app>section.card'),document.getElementById('chordRoot')?.closest('.k-controls'),document.getElementById('barreFret')?.closest('label')],result:()=>document.querySelector('.fretboard-area'),folds:()=>[],button:'指板へ'},
+ 'rhythm-pattern':{settings:()=>[document.getElementById('basicSettingsPanel')],result:()=>document.querySelector('.score-shell'),folds:()=>[document.getElementById('futurePanel')],button:'譜面へ'},
+ 'chord-progressions':{settings:()=>[document.querySelector('.search-settings')],result:()=>document.getElementById('list'),folds:()=>[document.querySelector('.k-lead details')],button:'一覧へ'},
+ 'vocal-range-checker':{settings:()=>[document.querySelector('.noise-settings')],result:()=>document.getElementById('currentNote'),folds:()=>[],button:'測定結果へ'},
+ 'circle-of-fifths':{settings:()=>[document.querySelector('.toolbar'),document.querySelector('.theory-toggles')],result:()=>document.querySelector('.wheelStage'),folds:()=>[...document.querySelectorAll('.infoBlock>details')],button:'円盤へ'},
+ 'hikigatari-note':{settings:()=>[document.getElementById('filterCard')],result:()=>['listPage','artistPage','listenerPage','aiPage','settingsPage','entryCard'].map(n=>document.getElementById(n)).find(e=>e&&!e.hidden),folds:()=>[document.querySelector('.top-help')],button:'一覧・入力へ'}
+ }[id];if(!config)return;
+ const panel=document.createElement('section');panel.className='km-settings';panel.id='kirinMobileSettings';panel.hidden=true;panel.setAttribute('aria-label','縦向き用設定パネル');
+ const head=document.createElement('div');head.className='km-panel-head';const label=document.createElement('strong');label.textContent='設定を変更・上の結果で確認';const close=document.createElement('button');close.type='button';close.textContent='閉じる';head.append(label,close);panel.append(head);
+ const dock=document.createElement('nav');dock.className='km-dock';dock.setAttribute('aria-label','設定と結果の移動');const settings=document.createElement('button'),result=document.createElement('button');settings.type=result.type='button';settings.textContent='設定';settings.setAttribute('aria-controls',panel.id);settings.setAttribute('aria-expanded','false');result.textContent=config.button;dock.append(settings,result);document.body.append(panel,dock);
+ let moved=[],folded=[],active=false;
+ function show(open){panel.hidden=!open;document.body.classList.toggle('km-open',open);settings.setAttribute('aria-expanded',String(open));settings.textContent=open?'設定を閉じる':'設定';}
+ function revealResult(){const el=config.result();if(!el)return;let parent=el.parentElement;while(parent){if(parent.tagName==='DETAILS')parent.open=true;parent=parent.parentElement;}el.setAttribute('data-km-anchor','');el.scrollIntoView({block:'start',behavior:'smooth'});}
+ function syncMode(){const controls=document.getElementById('rootPatternControls');if(active&&controls&&panel.contains(controls))controls.hidden=document.getElementById('scaleMode')?.value!=='route';}
+ function apply(){if(mq.matches&&!active){active=true;html.classList.add('km-mobile');const nodes=config.settings().filter(Boolean);nodes.forEach(el=>{const marker=document.createComment('kirin-mobile-original-position');el.parentNode.insertBefore(marker,el);moved.push({el,marker,open:el.tagName==='DETAILS'?el.open:null,hidden:el.hidden});panel.append(el);if(el.tagName==='DETAILS')el.open=true;});config.folds().filter(Boolean).forEach(el=>{if(el.tagName==='DETAILS'){folded.push({el,open:el.open});el.open=false;}});syncMode();}
+ else if(!mq.matches&&active){show(false);active=false;html.classList.remove('km-mobile');moved.forEach(({el,marker,open,hidden})=>{marker.parentNode.insertBefore(el,marker);marker.remove();if(open!==null)el.open=open;el.hidden=hidden;});moved=[];folded.forEach(({el,open})=>el.open=open);folded=[];}}
+ settings.onclick=()=>{if(!active)return;const open=panel.hidden;show(open);if(open){syncMode();revealResult();}};close.onclick=()=>{show(false);settings.focus();};result.onclick=()=>{show(false);revealResult();};panel.addEventListener('keydown',e=>{if(e.key==='Escape'){show(false);settings.focus();}});document.addEventListener('change',syncMode);
+ const rd=document.getElementById('routeDetails');if(rd)new MutationObserver(syncMode).observe(rd,{attributes:true,attributeFilter:['hidden']});if(mq.addEventListener)mq.addEventListener('change',apply);else mq.addListener(apply);apply();
+}
+setTimeout(initPortraitLayout,30);
+/* KIRIN-MOBILE-JS:END */
 /* KIRIN-SHELL-JS:END */
 </script>
 </head>
@@ -913,7 +987,7 @@ function triads(root,mode='major'){const intervals=mode==='major'?[0,2,4,5,7,9,1
 function compare(root,target,mode='major'){const source=triads(root,mode),dest=triads(target,mode);const common=source.filter(a=>dest.some(b=>b.rootPc===a.rootPc&&b.quality===a.quality));return {source,dest,common,cadence:names[mod(target+7)]+'7 → '+names[mod(target)]+(mode==='minor'?'m':'')};}
 function substitutes(root,mode='major'){const chords=triads(root,mode),groups=mode==='major'?[[0,2,5],[1,3],[4,6]]:[[0,2,5],[1,3],[4,6]];return chords.map((c,i)=>({chord:c,options:groups.find(g=>g.includes(i)).filter(j=>j!==i).map(j=>chords[j]),condition:mode==='major'?'機能が近い候補。旋律・声部進行・前後の和音で適否が変わります。':'自然短音階内の機能が近い候補。短調のV7は別の和声的短音階の扱い。'}));}
 function tritone(root){return names[mod(root+6)]+'7';}
-window.KIRIN_HARMONY=Object.freeze({version:'1.10.0',names,triads,compare,substitutes,tritone});
+window.KIRIN_HARMONY=Object.freeze({version:'1.11.0',names,triads,compare,substitutes,tritone});
 })();
 /* KIRIN-HARMONY:END */
     const mod = (n, m = 12) => ((n % m) + m) % m;
