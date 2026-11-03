@@ -7,7 +7,7 @@
 <style>
 /* KIRIN-BASE:BEGIN */
 /* ==========================================================
-   kirin-base.css | version=1.11.0 | updated=2026-11-03 | change=C-039 | canonical shared CSS
+   kirin-base.css | version=1.11.1 | updated=2026-11-03 | change=C-040 | canonical shared CSS
    ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
    ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
    ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
@@ -186,6 +186,24 @@ html.km-mobile{--kirin-fs-s:13px;--kirin-fs-m:14px;--kirin-fs-l:20px;--kirin-con
 }
 @media(max-width:1024px) and (orientation:portrait) and (max-height:800px){.km-mobile .wheelStage{width:min(100%,300px)!important}.km-mobile .wheelFrame{max-width:300px!important}}
 /* KIRIN-MOBILE:END */
+/* KIRIN-COMPACT-BOARD:BEGIN */
+:root{--kirin-board-label:80px;--kirin-board-cell:56px}
+@media(max-width:1024px) and (orientation:portrait){
+html.km-mobile{--kirin-board-label:68px;--kirin-board-cell:44px}
+.km-mobile .fretboard{grid-template-columns:var(--kirin-board-label) repeat(17,var(--kirin-board-cell))!important;width:calc(var(--kirin-board-label) + 17 * var(--kirin-board-cell))!important;min-width:calc(var(--kirin-board-label) + 17 * var(--kirin-board-cell))!important;grid-template-rows:28px repeat(6,40px)!important;height:268px!important;min-height:268px!important}
+.km-mobile .fretboard-corner,.km-mobile .fret-number{height:28px!important;min-height:28px!important;font-size:12px}
+.km-mobile .string-label,.km-mobile .fret-cell{height:40px!important;min-height:40px!important;max-height:40px;min-width:0!important}
+.km-mobile .string-label,.km-mobile .fretboard-corner{box-sizing:border-box;width:var(--kirin-board-label)!important;font-size:12px;line-height:1.3;padding:2px 4px!important}
+.km-mobile .fret-number.zero-fret,.km-mobile .fret-cell.open{left:var(--kirin-board-label)!important;width:var(--kirin-board-cell)!important}
+.km-mobile .fret-cell{font-size:0!important}.km-mobile .fret-cell.active:before{width:16px;height:16px}.km-mobile .mute-mark{font-size:20px}
+.km-mobile .scale-board{grid-template-columns:var(--kirin-board-label) repeat(var(--kirin-board-count,25),var(--kirin-board-cell))!important;grid-template-rows:28px repeat(6,44px)!important}
+.km-mobile .scale-head{height:28px!important;font-size:12px}.km-mobile .scale-label{width:var(--kirin-board-label)!important;height:44px!important;font-size:12px;line-height:1.3}
+.km-mobile .scale-head.scale-label{height:28px!important}.km-mobile .scale-cell{height:44px!important;min-width:0;box-sizing:border-box}.km-mobile .scale-zero{left:var(--kirin-board-label)!important;width:var(--kirin-board-cell)!important}
+.km-mobile .scale-mark{box-sizing:border-box;min-width:0!important;width:calc(var(--kirin-board-cell) - 4px);min-height:44px!important;height:44px;padding:1px!important;font-size:12px;line-height:1.1;gap:0!important;overflow:hidden}.km-mobile .scale-mark strong{font-size:12px}.km-mobile .scale-degree{font-size:12px;line-height:1.1}
+.km-mobile .scale-scroll,.km-mobile .fretboard-scroll{padding-bottom:8px}.km-mobile .keyboardWrap .keyboard{zoom:.86}
+}
+@media(max-width:600px) and (orientation:portrait){html.km-mobile{--kirin-board-label:60px;--kirin-board-cell:36px}}
+/* KIRIN-COMPACT-BOARD:END */
 /* KIRIN-COMPONENTS:END */
 /* KIRIN-BASE:END */
 /* このページ専用の色（ライト／ダーク） */
@@ -372,12 +390,31 @@ html.km-mobile{--kirin-fs-s:13px;--kirin-fs-m:14px;--kirin-fs-l:20px;--kirin-con
 }
 @media(max-width:1024px) and (orientation:portrait) and (max-height:800px){.km-mobile .wheelStage{width:min(100%,300px)!important}.km-mobile .wheelFrame{max-width:300px!important}}
 /* KIRIN-MOBILE:END */
+
+/* KIRIN-COMPACT-BOARD:BEGIN */
+:root{--kirin-board-label:80px;--kirin-board-cell:56px}
+@media(max-width:1024px) and (orientation:portrait){
+html.km-mobile{--kirin-board-label:68px;--kirin-board-cell:44px}
+.km-mobile .fretboard{grid-template-columns:var(--kirin-board-label) repeat(17,var(--kirin-board-cell))!important;width:calc(var(--kirin-board-label) + 17 * var(--kirin-board-cell))!important;min-width:calc(var(--kirin-board-label) + 17 * var(--kirin-board-cell))!important;grid-template-rows:28px repeat(6,40px)!important;height:268px!important;min-height:268px!important}
+.km-mobile .fretboard-corner,.km-mobile .fret-number{height:28px!important;min-height:28px!important;font-size:12px}
+.km-mobile .string-label,.km-mobile .fret-cell{height:40px!important;min-height:40px!important;max-height:40px;min-width:0!important}
+.km-mobile .string-label,.km-mobile .fretboard-corner{box-sizing:border-box;width:var(--kirin-board-label)!important;font-size:12px;line-height:1.3;padding:2px 4px!important}
+.km-mobile .fret-number.zero-fret,.km-mobile .fret-cell.open{left:var(--kirin-board-label)!important;width:var(--kirin-board-cell)!important}
+.km-mobile .fret-cell{font-size:0!important}.km-mobile .fret-cell.active:before{width:16px;height:16px}.km-mobile .mute-mark{font-size:20px}
+.km-mobile .scale-board{grid-template-columns:var(--kirin-board-label) repeat(var(--kirin-board-count,25),var(--kirin-board-cell))!important;grid-template-rows:28px repeat(6,44px)!important}
+.km-mobile .scale-head{height:28px!important;font-size:12px}.km-mobile .scale-label{width:var(--kirin-board-label)!important;height:44px!important;font-size:12px;line-height:1.3}
+.km-mobile .scale-head.scale-label{height:28px!important}.km-mobile .scale-cell{height:44px!important;min-width:0;box-sizing:border-box}.km-mobile .scale-zero{left:var(--kirin-board-label)!important;width:var(--kirin-board-cell)!important}
+.km-mobile .scale-mark{box-sizing:border-box;min-width:0!important;width:calc(var(--kirin-board-cell) - 4px);min-height:44px!important;height:44px;padding:1px!important;font-size:12px;line-height:1.1;gap:0!important;overflow:hidden}.km-mobile .scale-mark strong{font-size:12px}.km-mobile .scale-degree{font-size:12px;line-height:1.1}
+.km-mobile .scale-scroll,.km-mobile .fretboard-scroll{padding-bottom:8px}.km-mobile .keyboardWrap .keyboard{zoom:.86}
+}
+@media(max-width:600px) and (orientation:portrait){html.km-mobile{--kirin-board-label:60px;--kirin-board-cell:36px}}
+/* KIRIN-COMPACT-BOARD:END */
 </style>
-<script>/* KIRIN-FILE: version=1.11.0; updated=2026-11-03; changeId=C-039 */ window.KIRIN_PAGE_META = Object.freeze({appId:'guitar-chord-composer', version:'1.11.0', updated:'2026-11-03', changeId:'C-039'});
+<script>/* KIRIN-FILE: version=1.11.1; updated=2026-11-03; changeId=C-040 */ window.KIRIN_PAGE_META = Object.freeze({appId:'guitar-chord-composer', version:'1.11.1', updated:'2026-11-03', changeId:'C-040'});
 /* KIRIN-SHELL-JS:BEGIN */
 (function () {
   'use strict';
-  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.11.0';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.11.1';
   var root = document.documentElement;
   function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
   function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
@@ -613,7 +650,7 @@ setTimeout(initPortraitLayout,30);
 /* KIRIN-GUITAR-THEORY:BEGIN */
 (function () {
 'use strict';
-const version='1.11.0';
+const version='1.11.1';
 const presets=[
 {id:"standard",name:"レギュラー",description:"E A D G B E",notes:["E2","A2","D3","G3","B3","E4"],preferFlats:false},
 {id:"half-step-down",name:"半音下げ",description:"Eb Ab Db Gb Bb Eb",notes:["Eb2","Ab2","Db3","Gb3","Bb3","Eb4"],preferFlats:true},
@@ -1101,7 +1138,7 @@ let guideForms=[],guideIndex=0,guideSnapshot='';
 function guideChanged(){if(guideSnapshot&&guideSnapshot!==frets.join(','))document.getElementById('formStatus').textContent='押弦を変更しました。結果は現在の実音から再判定しています。';}
 function tuningChanged(i,value){try{const api=window.KIRIN_GUITAR_THEORY,m=api.toMidi(value);if(m<24||m>88)throw new Error('C1〜E6の範囲で入力');tuningNotes[i]=api.note(m,value.includes('b')||value.includes('♭'));const p=api.matchPreset(tuningNotes);selectedPresetId=p?p.id:'custom';guideForms=[];guideSnapshot='';document.getElementById('nextForm').disabled=true;document.getElementById('previousForm').disabled=true;renderPresetButton();renderFretboard();renderFretTable();renderResultOnly();renderTuningGrid();document.getElementById('formStatus').textContent='チューニング変更後はフォームを再生成してください。';}catch(e){document.getElementById('tuningMatch').textContent=e.message;}}
 function renderTuningGrid(){const grid=document.getElementById('tuningGrid'),api=window.KIRIN_GUITAR_THEORY;grid.replaceChildren();tuningNotes.forEach((n,i)=>{const wrap=document.createElement('div');wrap.className='string-control';const label=document.createElement('label');label.textContent=(6-i)+'弦';const sel=document.createElement('select');sel.id='tuningNote'+i;sel.className='k-select';sel.setAttribute('aria-label',(6-i)+'弦の開放音');for(let m=24;m<=88;m++)sel.add(new Option(api.note(m,getPreferFlats()),String(m)));sel.value=String(api.toMidi(n));sel.onchange=()=>tuningChanged(i,api.note(Number(sel.value),getPreferFlats()));label.append(sel);wrap.append(label);const actions=document.createElement('div');actions.className='quick-buttons';for(const [d,text] of [[-1,'−'],[1,'＋']]){const b=document.createElement('button');b.type='button';b.textContent=text;b.setAttribute('aria-label',(6-i)+'弦を半音'+(d>0?'上げる':'下げる'));b.onclick=()=>tuningChanged(i,api.note(api.toMidi(tuningNotes[i])+d,getPreferFlats()));actions.append(b);}wrap.append(actions);grid.append(wrap);});const p=api.matchPreset(tuningNotes);document.getElementById('tuningMatch').textContent=p?'既存プリセットと一致：'+p.name:'カスタム：既存プリセットと一致しません';}
-function focusGuideFrets(){const sc=document.querySelector(".fretboard-scroll"),num=document.querySelectorAll(".fret-number"),board=document.getElementById("fretboard");const pos=frets.filter(v=>v>0),low=pos.length?Math.min(...pos):0;if(sc&&board&&num[low]){const target=low===0?0:80+56*low-136-12;sc.scrollTo({left:Math.max(0,target),behavior:"smooth"});}}
+function focusGuideFrets(){const sc=document.querySelector(".fretboard-scroll"),num=document.querySelectorAll(".fret-number"),board=document.getElementById("fretboard");const pos=frets.filter(v=>v>0),low=pos.length?Math.min(...pos):0;if(sc&&board&&num[low]){const target=low===0?0:(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--kirin-board-cell"))||56)*Math.max(0,low-1)-12;sc.scrollTo({left:Math.max(0,target),behavior:"smooth"});}}
 function showGuideForm(){const f=guideForms[guideIndex];document.getElementById('previousForm').disabled=!f||guideIndex===0;document.getElementById('nextForm').disabled=!f||guideIndex>=guideForms.length-1;document.getElementById('formPosition').textContent=f?(guideIndex+1)+' / '+guideForms.length+'（'+f.low+'〜'+f.hi+'フレット）':'0 / 0';if(!f){document.getElementById('formStatus').textContent='条件内で全構成音のそろうフォームなし。別の種類やチューニングを選んでください。';return;}setShape(f.frets);focusGuideFrets();guideSnapshot=frets.join(',');document.getElementById('formStatus').textContent='生成フォーム：'+frets.map(formatFret).join(' ')+'（6弦→1弦）。実音の判定結果は下に表示。';}
 function findGuideForms(){guideForms=window.KIRIN_GUITAR_THEORY.forms(tuningNotes,Number(document.getElementById('chordRoot').value),document.getElementById('chordQuality').value);guideIndex=0;showGuideForm();}
 function setupGuide(){const root=document.getElementById('chordRoot'),q=document.getElementById('chordQuality');SHARP_NAMES.forEach((n,i)=>root.add(new Option(n,String(i))));CHORD_TYPES.forEach(t=>q.add(new Option(t.symbol==='maj7'?'M7（メジャー7）':(t.symbol||'メジャー'),t.symbol)));root.onchange=findGuideForms;q.onchange=findGuideForms;document.getElementById('findForms').onclick=findGuideForms;document.getElementById('previousForm').onclick=()=>{if(guideIndex>0){guideIndex--;showGuideForm();}};document.getElementById('nextForm').onclick=()=>{if(guideIndex<guideForms.length-1){guideIndex++;showGuideForm();}};}

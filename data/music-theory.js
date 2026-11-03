@@ -1,7 +1,7 @@
 /* KIRIN-GUITAR-THEORY:BEGIN */
 (function () {
 'use strict';
-const version='1.11.0';
+const version='1.11.1';
 const presets=[
 {id:"standard",name:"レギュラー",description:"E A D G B E",notes:["E2","A2","D3","G3","B3","E4"],preferFlats:false},
 {id:"half-step-down",name:"半音下げ",description:"Eb Ab Db Gb Bb Eb",notes:["Eb2","Ab2","Db3","Gb3","Bb3","Eb4"],preferFlats:true},
@@ -71,7 +71,7 @@ function forms(tuning,root,symbol){
 window.KIRIN_GUITAR_THEORY=Object.freeze({version,presets,types,toMidi,note,matchPreset,detect,forms});
 })();
 /* KIRIN-GUITAR-THEORY:END */
-/* KIRIN-FILE: appId=music-theory; version=1.11.0; updated=2026-11-03; changeId=C-039 */ (function () {
+/* KIRIN-FILE: appId=music-theory; version=1.11.1; updated=2026-11-03; changeId=C-040 */ (function () {
   const keyOrder = [
     { id: 'C', name: 'C', relativeMinor: 'Am', notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'], position: 0 },
     { id: 'G', name: 'G', relativeMinor: 'Em', notes: ['G', 'A', 'B', 'C', 'D', 'E', 'F#'], position: 1 },
@@ -284,7 +284,7 @@ window.KIRIN_GUITAR_THEORY=Object.freeze({version,presets,types,toMidi,note,matc
   }
 
   const theory = {
-    version: '1.11.0',
+    version: '1.11.1',
     keys: keyOrder,
     circleOfFifths,
     commonChords,
@@ -357,7 +357,7 @@ function triads(root,mode='major'){const intervals=mode==='major'?[0,2,4,5,7,9,1
 function compare(root,target,mode='major'){const source=triads(root,mode),dest=triads(target,mode);const common=source.filter(a=>dest.some(b=>b.rootPc===a.rootPc&&b.quality===a.quality));return {source,dest,common,cadence:names[mod(target+7)]+'7 → '+names[mod(target)]+(mode==='minor'?'m':'')};}
 function substitutes(root,mode='major'){const chords=triads(root,mode),groups=mode==='major'?[[0,2,5],[1,3],[4,6]]:[[0,2,5],[1,3],[4,6]];return chords.map((c,i)=>({chord:c,options:groups.find(g=>g.includes(i)).filter(j=>j!==i).map(j=>chords[j]),condition:mode==='major'?'機能が近い候補。旋律・声部進行・前後の和音で適否が変わります。':'自然短音階内の機能が近い候補。短調のV7は別の和声的短音階の扱い。'}));}
 function tritone(root){return names[mod(root+6)]+'7';}
-window.KIRIN_HARMONY=Object.freeze({version:'1.11.0',names,triads,compare,substitutes,tritone});
+window.KIRIN_HARMONY=Object.freeze({version:'1.11.1',names,triads,compare,substitutes,tritone});
 })();
 /* KIRIN-HARMONY:END */
 /* KIRIN-SCALE-THEORY:BEGIN */
@@ -378,6 +378,6 @@ for(const w of windows)visit(1,from,[from],w);if(!seen.size&&!windows.some(w=>w.
 while(current.midi+12<=Math.max(...all.map(p=>p.midi))){const targetString=current.string>2?current.string-2:1,to=all.find(p=>p.string===targetString&&p.midi===current.midi+12);if(!to)break;const candidates=makeCandidates(current,to);if(!candidates.length)break;let index=choices[current.midi];if(typeof index==='string')index=candidates.findIndex(c=>c.key===index);index=Number.isInteger(index)&&index>=0?index:0;index%=candidates.length;const selected=candidates[index];blocks.push({octave:blocks.length+1,start:current,end:to,points:selected.points,candidates,index,width,extended:selected.extended});path=path.concat(selected.points.slice(1));current=to;}
 const groups=[];let group=[];path.forEach(p=>{if(group.length&&p.string!==group[0].string){groups.push(group);group=[];}group.push(p);});if(group.length)groups.push(group);return {path:path.map((p,i)=>({...p,order:i+1})),complete:current.string===1&&blocks.length>0,groups:groups.map(g=>({string:g[0].string,frets:g.map(p=>p.fret),gaps:g.slice(1).map((p,i)=>p.fret-g[i].fret)})),octaves:(current.midi-first.midi)/12,blocks,width};}
 function spell(rootName,degree){const natural={C:0,D:2,E:4,F:5,G:7,A:9,B:11},letters='CDEFGAB',root=mod(natural[rootName[0]]+(rootName.includes('#')?1:rootName.includes('b')?-1:0)),match=degree.match(/^([♭♯]*)([1-7])$/),step=Number(match[2])-1,shift=[...match[1]].reduce((a,c)=>a+(c==='♯'?1:-1),0),target=mod(root+[0,2,4,5,7,9,11][step]+shift),letter=letters[(letters.indexOf(rootName[0])+step)%7];let diff=mod(target-natural[letter]);if(diff>6)diff-=12;return letter+(diff>0?'♯'.repeat(diff):'♭'.repeat(-diff));}
-window.KIRIN_SCALE_THEORY=Object.freeze({version:'1.11.0',scales:Object.freeze(scales),get,points,block,roots,route,spell});
+window.KIRIN_SCALE_THEORY=Object.freeze({version:'1.11.1',scales:Object.freeze(scales),get,points,block,roots,route,spell});
 })();
 /* KIRIN-SCALE-THEORY:END */
