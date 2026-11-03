@@ -1,0 +1,2647 @@
+<!DOCTYPE html>
+<!--
+[TMTP v1.0]
+Protocol Name : Tempo Modular Transfer Protocol
+Edit Timestamp : 2026-07-11 JST
+Target File : rhythm_helper_v13_advanced_toggle_bar_beat_collapsible_full.html
+Script Version : v13+
+Part : 1 / 4
+Module Name : HTML / CSS / Main Layout
+Role : head, style, 基本設定, 譜面風表示, メモ/テキスト出力
+Patch Mode : Sequential Append
+-->
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>リズムパターン作成</title>
+  <style>
+/* KIRIN-BASE:BEGIN */
+/* ==========================================================
+   kirin-base.css | version=1.10.0 | updated=2026-11-03 | change=C-038 | canonical shared CSS
+   ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
+   ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
+   ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
+   ・COMPONENTS: .k-* の部品。body など素の要素には触れない
+   ・ライト／ダークは <html data-theme="light|dark"> で決まる。SHELL-JS が保存値→OS設定の順で必ず設定する
+   ========================================================== */
+/* KIRIN-TOKENS:BEGIN */
+:root {
+  color-scheme: light;
+  --kirin-font: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --kirin-mono: ui-monospace, Consolas, Menlo, monospace;
+  --kirin-radius: 12px;
+  --kirin-radius-sm: 8px;
+  --kirin-fs-s: clamp(12px, 0.15vw + 11px, 14px);
+  --kirin-fs-m: clamp(14px, 0.3vw + 13px, 17px);
+  --kirin-fs-l: clamp(20px, 0.7vw + 15px, 26px);
+  --kirin-page-max: 1800px;
+  --kirin-page-pad: clamp(6px, 1vw, 14px);
+  --kirin-gap: 12px;
+  --kirin-bg: #f3f5f8;
+  --kirin-bg-2: #e8edf5;
+  --kirin-surface: #ffffff;
+  --kirin-surface-2: #f0f4f9;
+  --kirin-line: #dce1e8;
+  --kirin-line-strong: #bcc6d4;
+  --kirin-text: #202838;
+  --kirin-muted: #647084;
+  --kirin-accent: #245bb5;
+  --kirin-accent-text: #245bb5;
+  --kirin-accent-soft: #e2ecfb;
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ac2434;
+  --kirin-danger-solid: #b42318;
+  --kirin-ok: #1a7f37;
+  --kirin-warn: #9a6700;
+  --kirin-warn-soft: #fff1cf;
+  --kirin-neutral: #475569;
+  --kirin-hover: #edf3fc;
+  --kirin-fg-rgb: 15, 23, 42;
+  --kirin-overlay: rgba(15, 23, 42, 0.45);
+  --kirin-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kirin-bg: #0b1020;
+  --kirin-bg-2: #162042;
+  --kirin-surface: #131b36;
+  --kirin-surface-2: #1a2447;
+  --kirin-line: rgba(148, 163, 184, 0.22);
+  --kirin-line-strong: rgba(148, 163, 184, 0.45);
+  --kirin-text: #eef3ff;
+  --kirin-muted: #a9b5d6;
+  --kirin-accent: #3b82f6;
+  --kirin-accent-text: #8fb4ff;
+  --kirin-accent-soft: rgba(126, 162, 255, 0.18);
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ff8c7a;
+  --kirin-danger-solid: #c2413a;
+  --kirin-ok: #9fe870;
+  --kirin-warn: #fbbf24;
+  --kirin-warn-soft: rgba(251, 191, 36, 0.16);
+  --kirin-neutral: #64748b;
+  --kirin-hover: rgba(126, 162, 255, 0.12);
+  --kirin-fg-rgb: 255, 255, 255;
+  --kirin-overlay: rgba(0, 0, 0, 0.6);
+  --kirin-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+}
+/* KIRIN-TOKENS:END */
+/* KIRIN-SHELL:BEGIN */
+.kx-bar, .kx-foot { box-sizing: border-box; width: 100%; max-width: var(--kirin-page-max); margin: 0 auto 8px; font: var(--kirin-fs-m)/1.5 var(--kirin-font); color: var(--kirin-text); }
+.kx-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 6px 10px; background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius-sm); }
+.kx-brand { padding: 6px 2px; color: var(--kirin-accent-text); font-weight: 800; text-decoration: none; }
+.kx-theme { min-height: 40px; padding: 4px 14px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface-2); color: var(--kirin-text); font: inherit; cursor: pointer; }
+.kx-theme:hover { background: var(--kirin-hover); }
+.kx-foot { margin-top: 8px; margin-bottom: 0; padding: 10px 2px 0; border-top: 1px solid var(--kirin-line); }
+.kx-foot p { margin: 8px 0 0; color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+.kx-nav { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.kx-nav a { display: inline-block; padding: 10px 8px; color: var(--kirin-accent-text); text-decoration: none; border-bottom: 2px solid transparent; }
+.kx-nav a:hover { background: var(--kirin-hover); }
+.kx-nav a[aria-current="page"] { color: var(--kirin-text); font-weight: 800; border-bottom-color: var(--kirin-accent); }
+.kx-theme:focus-visible, .kx-brand:focus-visible, .kx-nav a:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+@media (max-width: 480px) { .kx-nav a { padding: 11px 6px; } }
+/* KIRIN-SHELL:END */
+/* KIRIN-COMPONENTS:BEGIN */
+.k-body { margin: 0; padding: var(--kirin-page-pad); font-family: var(--kirin-font); font-size: var(--kirin-fs-m); line-height: 1.7; color: var(--kirin-text); background: var(--kirin-bg); }
+.k-body, .k-body * { box-sizing: border-box; }
+.k-body a { color: var(--kirin-accent-text); }
+.k-app { max-width: var(--kirin-page-max); margin: 0 auto; }
+.k-body, .k-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.k-body > .k-app, .k-page > .k-grow { flex: 1 0 auto; width: 100%; }
+.k-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 8px 0 14px; }
+.k-eyebrow { margin: 0; color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 800; letter-spacing: 0.08em; }
+.k-title { margin: 4px 0; font-size: var(--kirin-fs-l); line-height: 1.25; }
+.k-lead { margin: 6px 0 0; color: var(--kirin-muted); }
+.k-card { background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius); padding: 14px; box-shadow: var(--kirin-shadow); }
+.k-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 22px; margin-bottom: 8px; }
+.k-field { display: grid; gap: 5px; min-width: 0; font-size: var(--kirin-fs-m); }
+.k-field > span { color: var(--kirin-muted); font-size: var(--kirin-fs-s); font-weight: 700; }
+.k-select, .k-input { min-height: 44px; max-width: 100%; padding: 8px 10px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: 16px; }
+.k-btn { min-height: 44px; padding: 8px 12px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-btn:hover { background: var(--kirin-hover); }
+.k-btn--sm { min-height: 36px; padding: 4px 10px; font-size: var(--kirin-fs-s); }
+.k-btn:focus-visible, .k-select:focus-visible, .k-input:focus-visible, .k-tab:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+.k-tabs { display: inline-flex; overflow: hidden; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); }
+.k-tab { min-height: 42px; padding: 6px 14px; border: 0; border-right: 1px solid var(--kirin-line); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-tab:last-child { border-right: 0; }
+.k-tab:hover { background: var(--kirin-hover); }
+.k-tab[aria-pressed="true"] { background: var(--kirin-accent); color: var(--kirin-on-accent); font-weight: 700; }
+.k-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--kirin-accent-soft); color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 700; white-space: nowrap; }
+.k-muted { color: var(--kirin-muted); }
+.k-grid { display: grid; gap: var(--kirin-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.k-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--kirin-line); color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+@media (max-width: 600px) {
+  .k-controls { gap: 12px; }
+  .k-controls > .k-field { flex: 1 1 100%; }
+  .k-tabs { display: flex; width: 100%; }
+  .k-tab { flex: 1 1 0; padding: 6px 4px; }
+  .k-select, .k-input { width: 100%; }
+}
+
+/* KIRIN-FOLD-CSS:BEGIN */
+.k-fold {border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface);margin:8px 0;color:var(--kirin-text);}
+.k-fold > summary, .k-fold-toggle {display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;padding:8px 12px;cursor:pointer;font:700 var(--kirin-fs-m)/1.5 var(--kirin-font);color:var(--kirin-text);background:var(--kirin-surface-2);border-radius:var(--kirin-radius-sm);}
+.k-fold > summary {list-style:none;} .k-fold > summary::-webkit-details-marker {display:none;}
+.k-fold > summary::before {content:'▸';color:var(--kirin-accent-text);} .k-fold[open] > summary::before {content:'▾';}
+.k-fold-hint {font:400 var(--kirin-fs-s)/1.5 var(--kirin-font);color:var(--kirin-muted);letter-spacing:0;}
+.k-fold-body {padding:10px 12px;} .k-fold > summary:focus-visible,.k-fold-toggle:focus-visible {outline:2px solid var(--kirin-accent);outline-offset:2px;}
+.k-playing {outline:3px solid var(--kirin-accent);outline-offset:-3px;background:var(--kirin-accent-soft)!important;}
+.k-override-badge {padding:4px 8px;border:2px solid var(--kirin-warn);border-radius:8px;background:var(--kirin-warn-soft);color:var(--kirin-text);}
+.k-fold-toggle {width:100%;border:1px solid var(--kirin-line-strong);justify-content:flex-start;}
+/* KIRIN-FOLD-CSS:END */
+[hidden]{display:none!important}
+.k-fold-body{min-width:0}.k-fold-body>h2:first-child{margin-top:0}.k-fold-toggle:after{content:none!important}.k-fold-hint{white-space:nowrap}
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+/* KIRIN-COMPONENTS:END */
+/* KIRIN-BASE:END */
+    :root {
+      --bg: var(--kirin-bg);
+      --panel: var(--kirin-surface);
+      --panel2: var(--kirin-surface-2);
+      --panel3: var(--kirin-bg);
+      --line: var(--kirin-line);
+      --line-soft: rgba(148,163,184,0.10);
+      --line-strong: rgba(96,165,250,0.42);
+      --text: var(--kirin-text);
+      --sub: var(--kirin-muted);
+      --accent: var(--kirin-accent-text);
+      --danger: var(--kirin-danger);
+
+      --rest: #64748b;
+      --hit: #22c55e;
+      --ghost: #a78bfa;
+      --accentHit: #f59e0b;
+      --hold: #38bdf8;
+
+      --bar-width: 420px;
+      --bar-gap: 8px;
+
+      --lane-left-width: 82px;
+      --lane-row-gap: 10px;
+
+      --simple-height: 40px;
+      --simple-top-gap: 1px;
+      --simple-bottom-height: 4px;
+
+      --pitch-height: 308px;
+
+      --header-caption-height: 28px;
+      --header-beat-height: 34px;
+      --header-sub-height: 28px;
+
+      --settings-max-width: 1140px;
+
+      --radius-panel: 14px;
+      --radius-box: 12px;
+      --radius-input: 8px;
+      --radius-btn: 8px;
+      --radius-small: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, var(--kirin-bg-2) 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: var(--kirin-font);
+    }
+
+    .container {
+      width: 100%; max-width: var(--kirin-page-max);
+      margin: 0 auto;
+      padding: var(--kirin-page-pad);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: var(--kirin-fs-l);
+      font-weight: 800;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: var(--kirin-fs-m);
+    }
+
+    .muted {
+      color: var(--sub);
+      font-size: var(--kirin-fs-m);
+    }
+
+    .panel {
+      background: color-mix(in srgb, var(--kirin-surface) 96%, transparent);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-panel);
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+    }
+
+    .panel-collapsible {
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-panel);
+      background: color-mix(in srgb, var(--kirin-surface) 96%, transparent);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+      margin-bottom: 14px;
+      margin-top: 0;
+    }
+
+    .panel-summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 14px 16px;
+      user-select: none;
+      background: rgba(var(--kirin-fg-rgb),0.02);
+      border-bottom: 1px solid rgba(var(--kirin-fg-rgb),0.08);
+    }
+
+    .panel-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .panel-summary-title {
+      font-size: var(--kirin-fs-m);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .panel-summary-note {
+      font-size: var(--kirin-fs-s);
+      color: var(--sub);
+    }
+
+    .panel-summary-icon {
+      margin-left: auto;
+      color: var(--sub);
+      transition: transform 0.18s ease;
+    }
+
+    .panel-collapsible:not([open]) .panel-summary-icon {
+      transform: rotate(-90deg);
+    }
+
+    .panel-collapsible-body {
+      padding: 14px;
+    }
+
+    .panel-collapsible > summary {
+      margin: 0;
+      border: none;
+      background: rgba(var(--kirin-fg-rgb),0.02);
+    }
+
+    .settings-grid {
+      max-width: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      justify-content: start;
+    }
+
+    .display-grid {
+      max-width: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      justify-content: start;
+      margin-top: 10px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      color: var(--sub);
+      font-size: var(--kirin-fs-m);
+    }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--kirin-surface-2);
+      color: var(--text);
+      border-radius: var(--radius-input);
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(96,165,250,0.45);
+      box-shadow: 0 0 0 3px rgba(96,165,250,0.12);
+    }
+
+    select option[disabled] {
+      color: #6b7280;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      border-radius: var(--radius-btn);
+      padding: 9px 12px;
+      background: var(--kirin-accent);
+      color: var(--kirin-on-accent);
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    button:hover { filter: brightness(1.06); }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: none !important;
+    }
+
+    .btn-sub { background: #475569; }
+    .btn-danger { background: var(--danger); }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .advanced-toggle-wrap {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .advanced-toggle-card {
+      min-height: 44px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      background: var(--kirin-surface-2);
+      border-radius: var(--radius-input);
+      padding: 8px 10px;
+      color: var(--text);
+    }
+
+    .advanced-toggle-card input {
+      width: auto;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .advanced-toggle-text {
+      display: grid;
+      gap: 2px;
+      line-height: 1.2;
+    }
+
+    .advanced-toggle-text strong {
+      font-size: var(--kirin-fs-m);
+      color: var(--text);
+    }
+
+    .advanced-toggle-text span {
+      font-size: var(--kirin-fs-s);
+      color: var(--sub);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      margin-top: 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      background: rgba(var(--kirin-fg-rgb),0.03);
+      padding: 4px 9px;
+      border-radius: 999px;
+      color: var(--sub);
+      font-size: var(--kirin-fs-m);
+    }
+
+    .legend-symbol {
+      font-weight: 700;
+      min-width: 1.2em;
+      text-align: center;
+    }
+
+    .score-shell {
+      overflow-x: auto;
+      padding-bottom: 14px;
+    }
+
+    .score-canvas {
+      width: max-content;
+      min-width: 100%;
+      display: grid;
+      gap: 12px;
+    }
+
+    .lane-row {
+      display: flex;
+      gap: var(--lane-row-gap);
+      align-items: flex-start;
+    }
+
+    .lane-left {
+      width: var(--lane-left-width);
+      flex: 0 0 auto;
+      display: grid;
+      gap: 0;
+      align-items: start;
+    }
+
+    .lane-left-caption-spacer {
+      width: 100%;
+      height: calc(var(--header-caption-height) + 4px);
+    }
+
+    .lane-left-head {
+      width: 100%;
+      height: calc(var(--header-beat-height) + var(--header-sub-height));
+      border: 1px solid var(--line);
+      background: rgba(var(--kirin-fg-rgb),0.03);
+      display: grid;
+      grid-template-rows: var(--header-beat-height) var(--header-sub-height);
+      align-items: stretch;
+      justify-items: center;
+      overflow: hidden;
+    }
+
+    .lane-left-head.simple-only {
+      border-radius: var(--radius-box);
+    }
+
+    .lane-left-head.stack-top {
+      border-radius: var(--radius-box) var(--radius-box) 0 0;
+      border-bottom: none;
+    }
+
+    .lane-label-main {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: var(--kirin-fs-m);
+      line-height: 1.2;
+      text-align: center;
+      padding: 0 4px;
+    }
+
+    .lane-label-sub {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      font-size: var(--kirin-fs-s);
+      margin-top: 0;
+      text-align: center;
+      border-top: 1px solid var(--line-soft);
+      padding: 0 4px;
+    }
+
+    .pitch-label-col {
+      width: 100%;
+      height: var(--pitch-height);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--panel3);
+      display: grid;
+    }
+
+    .pitch-label-col.stack-bottom {
+      border-top: none;
+      border-radius: 0 0 var(--radius-box) var(--radius-box);
+    }
+
+    .pitch-label-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--kirin-accent-text);
+      font-size: var(--kirin-fs-s);
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .pitch-label-cell:first-child {
+      border-top: none;
+    }
+
+    .bars-row {
+      display: flex;
+      gap: var(--bar-gap);
+      align-items: flex-start;
+    }
+
+    .lane-bar-unit {
+      width: var(--bar-width);
+      flex: 0 0 auto;
+    }
+
+    .lane-bar-title-row {
+      height: var(--header-caption-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 4px;
+      border-radius: 8px;
+    }
+
+    .lane-bar-title-row.editable {
+      cursor: pointer;
+    }
+
+    .lane-bar-title-row.editable:hover {
+      background: rgba(var(--kirin-fg-rgb),0.04);
+    }
+
+    .lane-bar-title {
+      color: var(--sub);
+      font-size: var(--kirin-fs-m);
+      text-align: center;
+      padding: 0 34px 0 4px;
+      line-height: 1.2;
+    }
+
+    .bar-config-btn {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 1px solid rgba(148,163,184,0.16);
+      background: rgba(var(--kirin-fg-rgb),0.03);
+      color: var(--sub);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: var(--kirin-fs-s);
+      cursor: pointer;
+      opacity: 0.9;
+    }
+
+    .bar-config-btn:hover {
+      opacity: 1;
+      background: rgba(var(--kirin-fg-rgb),0.06);
+      filter: none;
+    }
+
+    .bar-config-btn.active {
+      background: rgba(96,165,250,0.18);
+      border-color: var(--line-strong);
+      color: var(--kirin-accent-text);
+    }
+
+    .lane-bar-box {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-box);
+      overflow: hidden;
+      background: var(--panel3);
+    }
+
+    .bar-head-beats {
+      display: grid;
+      height: var(--header-beat-height);
+      border-bottom: 1px solid rgba(148,163,184,0.14);
+      background: rgba(96,165,250,0.06);
+    }
+
+    .bar-head-beat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: var(--kirin-fs-m);
+      border-right: 1px solid rgba(148,163,184,0.14);
+      position: relative;
+    }
+
+    .bar-head-beat:last-child { border-right: none; }
+
+    .bar-head-beat.editable {
+      cursor: pointer;
+    }
+
+    .bar-head-beat.editable:hover {
+      background: rgba(var(--kirin-fg-rgb),0.05);
+    }
+
+    .bar-head-beat.has-override {
+      background: rgba(96,165,250,0.12);
+      color: var(--kirin-accent-text);
+    }
+
+    .bar-head-subs {
+      display: grid;
+      height: var(--header-sub-height);
+      border-bottom: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .bar-head-sub {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sub);
+      font-size: var(--kirin-fs-s);
+      border-right: 1px solid rgba(148,163,184,0.10);
+    }
+
+    .bar-head-sub.beat-start {
+      box-shadow: inset 2px 0 0 var(--line-strong);
+    }
+
+    .bar-head-sub:last-child {
+      border-right: none;
+    }
+
+    .simple-bar-body {
+      width: 100%;
+      height: var(--simple-height);
+      display: grid;
+      background: linear-gradient(to bottom, rgba(var(--kirin-fg-rgb),0.016), rgba(var(--kirin-fg-rgb),0.010));
+    }
+
+    .simple-step {
+      height: 100%;
+      display: grid;
+      grid-template-rows: var(--simple-top-gap) 1fr var(--simple-bottom-height);
+      border-right: 1px solid var(--line-soft);
+      user-select: none;
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+
+    .simple-step:hover {
+      background: rgba(var(--kirin-fg-rgb),0.04);
+    }
+
+    .simple-step.beat-start {
+      box-shadow: inset 2px 0 0 var(--line-strong);
+    }
+
+    .simple-step:last-child {
+      border-right: none;
+    }
+
+    .simple-step-top {
+      background: transparent;
+    }
+
+    .simple-step-main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 0;
+    }
+
+    .simple-step-bottom {
+      border-top: 1px solid rgba(148,163,184,0.12);
+      background: rgba(var(--kirin-fg-rgb),0.015);
+    }
+
+    .simple-symbol {
+      line-height: 1;
+      font-size: var(--kirin-fs-m);
+      font-weight: 700;
+      min-width: 1.2em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pitch-detail-body {
+      width: 100%;
+      height: var(--pitch-height);
+      display: grid;
+      background: var(--panel3);
+    }
+
+    .pitch-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-right: 1px solid rgba(148,163,184,0.09);
+      border-top: 1px solid rgba(148,163,184,0.09);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s ease;
+    }
+
+    .pitch-cell:hover {
+      background: rgba(var(--kirin-fg-rgb),0.04);
+    }
+
+    .pitch-cell.top-row {
+      border-top: none;
+    }
+
+    .pitch-cell.last-col {
+      border-right: none;
+    }
+
+    .pitch-cell.beat-start {
+      box-shadow: inset 2px 0 0 var(--line-strong);
+    }
+
+    .note-symbol {
+      font-size: var(--kirin-fs-m);
+      font-weight: 700;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .state-rest   { color: var(--rest); }
+    .state-hit    { color: var(--hit); }
+    .state-ghost  { color: var(--ghost); }
+    .state-accent { color: var(--accentHit); }
+    .state-hold   { color: var(--hold); }
+
+    .memo-output-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .saved-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .saved-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(var(--kirin-fg-rgb),0.03);
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .saved-meta {
+      display: grid;
+      gap: 4px;
+    }
+
+    .saved-title {
+      font-weight: 700;
+    }
+
+    .saved-sub {
+      font-size: var(--kirin-fs-s);
+      color: var(--sub);
+      line-height: 1.4;
+    }
+
+    .saved-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: rgba(var(--kirin-fg-rgb),0.02);
+      margin-top: 8px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: var(--kirin-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.hidden {
+      display: none;
+    }
+
+    .modal-card {
+      width: min(560px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-panel);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: var(--kirin-fs-m);
+    }
+
+    .modal-body {
+      padding: 14px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      padding: 0 14px 14px;
+      flex-wrap: wrap;
+    }
+
+    .modal-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      transition: opacity 0.15s ease;
+    }
+
+    .modal-grid.one-col {
+      grid-template-columns: 1fr;
+    }
+
+    .modal-grid.disabled {
+      opacity: 0.45;
+    }
+
+    .inline-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+      font-size: var(--kirin-fs-m);
+    }
+
+    .inline-check input {
+      width: auto;
+      margin: 0;
+    }
+
+    .modal-note {
+      margin-top: 12px;
+      color: var(--sub);
+      font-size: var(--kirin-fs-m);
+      line-height: 1.5;
+    }
+
+    .icon-btn {
+      background: transparent;
+      color: var(--sub);
+      border: 1px solid var(--line);
+      padding: 5px 10px;
+      border-radius: var(--radius-btn);
+    }
+
+    .icon-btn:hover {
+      background: rgba(var(--kirin-fg-rgb),0.05);
+      filter: none;
+    }
+
+    @media (max-width: 1180px) {
+      .settings-grid {
+        grid-template-columns: repeat(3, minmax(140px, 1fr));
+      }
+      .display-grid {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .settings-grid,
+      .display-grid,
+      .memo-output-grid,
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+.lane-bar-title-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;height:auto!important;min-height:44px}.lane-bar-title{padding:0;flex:1 1 90px;overflow-wrap:anywhere}.bar-config-btn{position:static!important;transform:none!important;flex:0 0 44px;min-height:44px;min-width:44px}.modal-header,.modal-footer,.quick-buttons{display:flex;flex-wrap:wrap;gap:8px}.modal-header h3{flex:1;min-width:0}.modal-footer button,.quick-buttons button{position:static;min-height:44px;max-width:100%;white-space:normal;flex:0 1 auto}.panel-summary{height:auto;min-height:44px;display:flex;flex-wrap:wrap;gap:8px}.panel-summary-icon{display:none}.panel-summary-title{min-width:0}.controls{gap:12px}.panel h2{line-height:1.5}button{box-sizing:border-box}.modal-card{max-height:90vh;overflow:auto} .quick-buttons label{display:inline-flex;align-items:center;gap:6px;max-width:100%;white-space:normal}.quick-buttons input[type=checkbox]{width:auto;margin:0}
+
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+
+#rhythmPlayback .quick-buttons{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 12px;overflow:visible;padding:0}#rhythmPlayback .quick-buttons label{display:inline-flex!important;flex-direction:row!important;align-items:center;gap:8px;margin:0;line-height:1.5;min-height:44px;color:var(--kirin-text)}#rhythmPlayback .quick-buttons input[type=checkbox]{width:18px;height:18px;flex:none}#rhythmPlayStatus{margin:8px 0 0;line-height:1.7;overflow-wrap:anywhere}#rhythmPlayback .quick-buttons button{flex:0 0 auto}
+
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+</style>
+<script>/* KIRIN-FILE: version=1.10.0; updated=2026-11-03; changeId=C-038 */ window.KIRIN_PAGE_META = Object.freeze({appId:'rhythm-pattern', version:'1.10.0', updated:'2026-11-03', changeId:'C-038'});
+/* KIRIN-SHELL-JS:BEGIN */
+(function () {
+  'use strict';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.10.0';
+  var root = document.documentElement;
+  function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    try { window.dispatchEvent(new CustomEvent('kirin-theme-change', { detail: t })); } catch (e) {}
+  }
+  setTheme(savedTheme() || sysTheme());
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var follow = function () { if (!savedTheme()) { setTheme(sysTheme()); paint(); } };
+    if (mq.addEventListener) mq.addEventListener('change', follow); else if (mq.addListener) mq.addListener(follow);
+  }
+  var PAGES = [
+    ['https://kirinplayglound.wixsite.com/my-site', 'トップ'], ['circle-of-fifths.html', '5度圏ルーレット'], ['guitar-chord-composer.html', 'ギターコード作成'],
+    ['hikigatari-note.html', '弾き語りノート'], ['rhythm-pattern.html', 'リズムパターン作成'],
+    ['vocal-range-checker.html', 'ボーカル音域チェッカー'], ['chord-progressions.html', 'コード進行一覧'], ['scale-practice.html', 'スケール練習']
+  ];
+  var btn = null;
+  function paint() {
+    if (!btn) return;
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = dark ? 'ライトにする' : 'ダークにする';
+    btn.setAttribute('aria-label', dark ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え');
+  }
+  function build() {
+    if (document.querySelector('.kx-bar')) return;
+    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    var bar = document.createElement('div');
+    bar.className = 'kx-bar';
+    var brand = document.createElement('a');
+    brand.className = 'kx-brand';
+    brand.href = 'https://kirinplayglound.wixsite.com/my-site'; brand.target = '_top';
+    brand.textContent = 'キリンの遊び場';
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'kx-theme';
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      setTheme(next);
+      paint();
+    });
+    bar.appendChild(brand); var back=document.createElement('a');back.className='kx-brand';back.textContent='戻る';back.href='https://kirinplayglound.wixsite.com/my-site';back.target='_top';bar.appendChild(back);
+    bar.appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild);
+    var foot = document.createElement('footer');
+    foot.className = 'kx-foot';
+    var nav = document.createElement('nav');
+    nav.className = 'kx-nav';
+    nav.setAttribute('aria-label', 'ほかのページ');
+    PAGES.forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = /^https:/.test(p[0]) ? p[0] : p[0] + '?v=' + RELEASE_VERSION; if (/^https:/.test(p[0])) a.target = '_top';
+      a.textContent = p[1];
+      if (p[0] === here) a.setAttribute('aria-current', 'page');
+      nav.appendChild(a);
+    });
+    foot.appendChild(nav);
+    var note = document.createElement('p');
+    note.textContent = 'キリンの遊び場　データはこの端末のブラウザにだけ保存されます。';
+    foot.appendChild(note);
+    document.body.appendChild(foot);
+
+    paint();
+  }
+
+  function foldAll(){
+    function decorate(d){const sum=d.querySelector(':scope > summary');if(!sum)return;d.classList.add('k-fold');if(!sum.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';sum.appendChild(h);}}
+    function wrap(el,title,open){if(el.closest('details')||el.querySelector(':scope > details.k-fold'))return;const d=document.createElement('details'),sum=document.createElement('summary'),body=document.createElement('div');d.open=open;sum.textContent=title;body.className='k-fold-body';while(el.firstChild)body.appendChild(el.firstChild);el.appendChild(d);d.append(sum,body);decorate(d);}
+    const id=window.KIRIN_PAGE_META&&window.KIRIN_PAGE_META.appId;
+    if(id==='rhythm-pattern')document.querySelectorAll('.panel:not(details)').forEach(el=>wrap(el,el.querySelector('h2')?.childNodes[0]?.textContent?.trim()||'譜面・試聴',true));
+    if(id==='vocal-range-checker')document.querySelectorAll('.card').forEach((el,i)=>wrap(el,el.querySelector('.sub')?.textContent||['測定操作','現在の音','音域','鍵盤','検出音'][i]||'音域情報',true));
+    if(id==='circle-of-fifths'){const el=document.querySelector('.wheelStage');if(el)wrap(el,'五度圏ルーレット',true);document.querySelectorAll('.theory-panel').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'調の比較',true));}
+    
+    document.querySelectorAll('a').forEach(a=>{const text=a.textContent.trim();if(['戻る','トップ','キリンの遊び場'].includes(text)){a.href='https://kirinplayglound.wixsite.com/my-site';a.target='_top';}});
+    if(id==='guitar-chord-composer')document.querySelectorAll('main > section.card').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'設定と結果',true));
+    if(id==='circle-of-fifths')document.querySelectorAll('.infoBlock').forEach((el,i)=>{if(i>=2)wrap(el,i===2?'凡例と表記の説明':'度数ガイド',true);});
+    if(id==='vocal-range-checker'){const el=document.getElementById('detectedList')?.parentElement;if(el)wrap(el,'検出した音の一覧',true);}
+    if(id==='chord-progressions'){const el=document.querySelector('.k-lead');if(el)wrap(el,'使い方と説明',true);}
+    document.querySelectorAll('details').forEach(decorate); new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.matches('details'))decorate(node);node.querySelectorAll('details').forEach(decorate);}}).observe(document.body,{childList:true,subtree:true});
+    document.querySelectorAll('.collapse-toggle').forEach(b=>{b.classList.add('k-fold-toggle');if(!b.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';b.appendChild(h);}const content=document.getElementById(b.id.replace('Toggle','Content'));if(content){b.setAttribute('aria-controls',content.id);const update=()=>b.setAttribute('aria-expanded',String(!content.hidden));update();new MutationObserver(update).observe(content,{attributes:true,attributeFilter:['hidden']});}});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(foldAll,0));else setTimeout(foldAll,0);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+/* KIRIN-SHELL-JS:END */
+</script>
+</head>
+<body class="k-page">
+  <div class="container k-grow">
+    <h1>リズムパターン作成</h1>
+
+    <details class="panel panel-collapsible" id="basicSettingsPanel" open>
+      <summary class="panel-summary">
+        <span class="panel-summary-title">基本設定</span>
+        
+        <span class="panel-summary-icon">▾</span>
+      </summary>
+
+      <div class="panel-collapsible-body">
+        <div class="settings-grid">
+          <label>
+            パターン名
+            <input type="text" id="patternName" value="新規パターン" />
+          </label>
+
+          <label>
+            BPM
+            <input type="number" id="bpm" min="20" max="300" value="120" />
+          </label>
+
+          <label>
+            拍子の分子
+            <input type="number" id="beatsPerBar" min="1" max="12" value="4" />
+          </label>
+
+          <label>
+            拍子の分母
+            <select id="beatUnit">
+              <option value="2">2</option>
+              <option value="4" selected>4</option>
+              <option value="8">8</option>
+            </select>
+          </label>
+
+          <label>
+            1拍あたりの分割数
+            <select id="subdivision">
+              <option value="1">1（分割なし）</option>
+              <option value="2">2（8分系）</option>
+              <option value="3">3（3連系）</option>
+              <option value="4" selected>4（16分系）</option>
+              <option value="6">6（6連系）</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="display-grid">
+          <label>
+            小節数
+            <input type="number" id="bars" min="1" max="16" value="4" />
+          </label>
+
+          <label>
+            リズム表示
+            <select id="rhythmDisplayMode">
+              <option value="hidden">非表示</option>
+              <option value="simple" selected>簡略</option>
+              <option value="detail" disabled>詳細（未対応）</option>
+            </select>
+          </label>
+
+          <label>
+            ベース表示
+            <select id="bassDisplayMode">
+              <option value="hidden" selected>非表示</option>
+              <option value="simple">簡略</option>
+              <option value="detail">詳細</option>
+            </select>
+          </label>
+
+          <label>
+            メロディ表示
+            <select id="melodyDisplayMode">
+              <option value="hidden" selected>非表示</option>
+              <option value="simple">簡略</option>
+              <option value="detail">詳細</option>
+            </select>
+          </label>
+
+          <label>
+            詳細設定
+            <div class="advanced-toggle-text">
+              <span>ONのときだけ小節・拍の個別設定を編集
+            　<input type="checkbox" id="advancedEditing">
+              </span>
+            </div>
+          </label>
+        </div>
+
+        <div class="btn-row">
+          <button id="buildBtn">譜面を作成 / 更新</button>
+          <button class="btn-sub" id="clearBtn">現在の譜面をクリア</button>
+        </div>
+      </div>
+    </details>
+
+    <div class="panel">
+      <h2>譜面風表示
+        <span class="panel-summary-note">クリックで順送り：</span>
+        <span class="legend-item"><span class="legend-symbol state-rest">-</span>休符</span>
+        <span class="muted">→</span>
+        <span class="legend-item"><span class="legend-symbol state-hit">●</span>通常</span>
+        <span class="muted">→</span>
+        <span class="legend-item"><span class="legend-symbol state-ghost">○</span>ゴースト</span>
+        <span class="muted">→</span>
+        <span class="legend-item"><span class="legend-symbol state-accent">▲</span>アクセント</span>
+        <span class="muted">→</span>
+        <span class="legend-item"><span class="legend-symbol state-hold">~</span>保持</span>
+      </h2>
+      <div class="score-shell">
+        <div id="scoreContainer" class="score-canvas"></div>
+      </div>
+    </div>
+
+    <details class="panel panel-collapsible" id="memoPanel">
+      <summary class="panel-summary">
+        <span class="panel-summary-title">メモ / テキスト出力</span>
+        
+        <span class="panel-summary-icon">▾</span>
+      </summary>
+
+      <div class="panel-collapsible-body">
+        <div class="memo-output-grid">
+          <div>
+            <label>
+              メモ
+              <textarea id="memo" placeholder="リズムの意図、変化案、小節ごとのアイデアを書いておけます。"></textarea>
+            </label>
+          </div>
+          <div>
+            <label>
+              パターンテキスト
+              <textarea id="patternText" readonly></textarea>
+            </label>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button id="exportTextBtn">テキスト更新</button>
+          <button class="btn-sub" id="copyTextBtn">テキストをコピー</button>
+        </div>
+      </div>
+    </details>
+    <details class="panel panel-collapsible" id="savePanel">
+      <summary class="panel-summary">
+        <span class="panel-summary-title">保存 / 読み込み</span>
+        
+        <span class="panel-summary-icon">▾</span>
+      </summary>
+
+      <div class="panel-collapsible-body">
+        <div class="btn-row">
+          <button id="saveBtn">現在のパターンを保存</button>
+        </div>
+        <div id="savedList" class="saved-list"></div>
+      </div>
+    </details>
+
+<section class="panel" id="rhythmPlayback"><h2>試聴と再生位置</h2><div class="quick-buttons"><button type="button" id="rhythmPlay">再生</button><button type="button" id="rhythmStop">停止</button><label><input type="checkbox" id="rhythmMetronome" checked>メトロノーム</label></div><div class="quick-buttons"><label><input type="checkbox" id="muteRhythm">リズムをミュート</label><label><input type="checkbox" id="muteBass">ベースをミュート</label><label><input type="checkbox" id="muteMelody">メロディをミュート</label></div><p id="rhythmPlayStatus" role="status">BPMは四分音符基準。拍子・拍分割・強弱と保持を反映し、再生位置を譜面で強調します。</p></section>
+<details class="panel panel-collapsible" id="futurePanel"><summary class="panel-summary"><span class="panel-summary-title">今後の予定・確認</span></summary><div class="panel-collapsible-body"><ul><li>MIDI／JSONファイル書き出し</li><li>リズムレーンの詳細表示</li><li>端末ごとの聴感・遅延・拍子上書き・旧データ互換の実機確認</li></ul></div></details>
+  </div>
+
+  <div id="barConfigModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="barConfigTitle">小節別設定</h3>
+        <button type="button" id="closeBarConfigBtn" class="icon-btn">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="inline-check">
+          <input type="checkbox" id="barOverrideEnabled">
+          この小節だけ設定を上書きする
+        </label>
+
+        <div id="barOverrideFields" class="modal-grid">
+          <label>
+            分子
+            <input type="number" id="barNumerator" min="1" max="12" value="4">
+          </label>
+          <label>
+            分母
+            <select id="barDenominator">
+              <option value="2">2</option>
+              <option value="4" selected>4</option>
+              <option value="8">8</option>
+            </select>
+          </label>
+          <label>
+            1拍あたりの分割数
+            <select id="barSubdivision">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="modal-note">
+          ※ 小節全体の拍子 / 分割数を上書きします。<br>
+          ※ 拍別設定は拍番号クリックから別管理できます。
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="saveBarConfigBtn">保存</button>
+        <button id="resetBarConfigBtn" type="button" class="btn-sub">全体設定に戻す</button>
+        <button id="cancelBarConfigBtn" type="button" class="btn-sub">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="beatConfigModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="beatConfigTitle">拍別設定</h3>
+        <button type="button" id="closeBeatConfigBtn" class="icon-btn">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="inline-check">
+          <input type="checkbox" id="beatOverrideEnabled">
+          この拍だけ設定を上書きする
+        </label>
+
+        <div id="beatOverrideFields" class="modal-grid one-col">
+          <label>
+            この拍の分割数
+            <select id="beatSubdivision">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="modal-note">
+          ※ 例: 3拍目だけ 3 にすると、その拍だけ3連符的な分割になります。<br>
+          ※ 現時点では拍別設定は「分割数のみ」です。
+        </div>
+      </div>
+
+      <label class="field">拍内の音量（強弱）<select id="beatStrength"><option value="0.5">弱く</option><option value="1" selected>通常</option><option value="1.5">強く</option></select></label>
+      <div class="modal-footer">
+        <button id="saveBeatConfigBtn">保存</button>
+        <button id="resetBeatConfigBtn" type="button" class="btn-sub">拍の上書きを解除</button>
+        <button id="cancelBeatConfigBtn" type="button" class="btn-sub">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "rhythmPatternsV13AdvancedToggleBarBeat";
+
+    const STATE_ORDER = ["rest", "hit", "ghost", "accent", "hold"];
+    const SYMBOL_MAP = {
+      rest: "-",
+      hit: "●",
+      ghost: "○",
+      accent: "▲",
+      hold: "~"
+    };
+
+    const LANE_META = {
+      melody: {
+        key: "melody",
+        label: "メロディ",
+        type: "pitch",
+        rows: ["C5", "B4", "A4", "G4", "F4", "E4", "D4", "C4"],
+        defaultPitch: 4,
+        allowDetail: true
+      },
+      bass: {
+        key: "bass",
+        label: "ベース",
+        type: "pitch",
+        rows: ["G2", "F2", "E2", "D2", "C2", "B1", "A1", "G1"],
+        defaultPitch: 4,
+        allowDetail: true
+      },
+      rhythm: {
+        key: "rhythm",
+        label: "リズム",
+        type: "rhythm",
+        rows: [],
+        defaultPitch: null,
+        allowDetail: false
+      }
+    };
+
+    const els = {
+      patternName: document.getElementById("patternName"),
+      bpm: document.getElementById("bpm"),
+      beatsPerBar: document.getElementById("beatsPerBar"),
+      beatUnit: document.getElementById("beatUnit"),
+      subdivision: document.getElementById("subdivision"),
+      bars: document.getElementById("bars"),
+      advancedEditing: document.getElementById("advancedEditing"),
+      rhythmDisplayMode: document.getElementById("rhythmDisplayMode"),
+      bassDisplayMode: document.getElementById("bassDisplayMode"),
+      melodyDisplayMode: document.getElementById("melodyDisplayMode"),
+      memo: document.getElementById("memo"),
+      patternText: document.getElementById("patternText"),
+      scoreContainer: document.getElementById("scoreContainer"),
+      savedList: document.getElementById("savedList"),
+
+      barConfigModal: document.getElementById("barConfigModal"),
+      barConfigTitle: document.getElementById("barConfigTitle"),
+      barOverrideEnabled: document.getElementById("barOverrideEnabled"),
+      barOverrideFields: document.getElementById("barOverrideFields"),
+      barNumerator: document.getElementById("barNumerator"),
+      barDenominator: document.getElementById("barDenominator"),
+      barSubdivision: document.getElementById("barSubdivision"),
+      saveBarConfigBtn: document.getElementById("saveBarConfigBtn"),
+      resetBarConfigBtn: document.getElementById("resetBarConfigBtn"),
+      cancelBarConfigBtn: document.getElementById("cancelBarConfigBtn"),
+      closeBarConfigBtn: document.getElementById("closeBarConfigBtn"),
+
+      beatConfigModal: document.getElementById("beatConfigModal"),
+      beatConfigTitle: document.getElementById("beatConfigTitle"),
+      beatOverrideEnabled: document.getElementById("beatOverrideEnabled"),
+      beatOverrideFields: document.getElementById("beatOverrideFields"),
+      beatSubdivision: document.getElementById("beatSubdivision"),
+      saveBeatConfigBtn: document.getElementById("saveBeatConfigBtn"),
+      resetBeatConfigBtn: document.getElementById("resetBeatConfigBtn"),
+      cancelBeatConfigBtn: document.getElementById("cancelBeatConfigBtn"),
+      closeBeatConfigBtn: document.getElementById("closeBeatConfigBtn")
+    };
+
+    let currentData = {
+      rhythm: [],
+      bass: [],
+      melody: []
+    };
+
+    let currentBarSettings = {
+      melody: [],
+      bass: [],
+      rhythm: []
+    };
+
+    let currentBeatSettings = {
+      melody: [],
+      bass: [],
+      rhythm: []
+    };
+
+    let activeBarConfigTarget = null;
+    let activeBeatConfigTarget = null;
+
+    function clamp(v, min, max) {
+      return Math.min(max, Math.max(min, v));
+    }
+
+    function makeRhythmStep(state = "rest") {
+      return { state };
+    }
+
+    function makePitchStep(defaultPitch, state = "rest") {
+      return { state, pitch: defaultPitch, touched: false };
+    }
+
+    function makeDefaultStepForLane(laneKey) {
+      if (laneKey === "rhythm") return makeRhythmStep("rest");
+      return makePitchStep(LANE_META[laneKey].defaultPitch, "rest");
+    }
+
+    function cloneLaneStep(laneKey, step) {
+      if (laneKey === "rhythm") {
+        return { state: step?.state || "rest" };
+      }
+      return {
+        state: step?.state || "rest",
+        pitch: Number.isInteger(step?.pitch) ? step.pitch : LANE_META[laneKey].defaultPitch,
+        touched: !!step?.touched
+      };
+    }
+
+    function sanitizeDisplayMode(laneKey, mode) {
+      if (laneKey === "rhythm" && mode === "detail") return "simple";
+      return mode;
+    }
+
+    function getSettings() {
+      return {
+        patternName: els.patternName.value.trim() || "新規パターン",
+        bpm: clamp(parseInt(els.bpm.value, 10) || 120, 20, 300),
+        beatsPerBar: clamp(parseInt(els.beatsPerBar.value, 10) || 4, 1, 12),
+        beatUnit: parseInt(els.beatUnit.value, 10) || 4,
+        subdivision: clamp(parseInt(els.subdivision.value, 10) || 4, 1, 12),
+        bars: clamp(parseInt(els.bars.value, 10) || 4, 1, 16),
+        advancedEditing: !!els.advancedEditing.checked,
+        melodyDisplayMode: sanitizeDisplayMode("melody", els.melodyDisplayMode.value),
+        bassDisplayMode: sanitizeDisplayMode("bass", els.bassDisplayMode.value),
+        rhythmDisplayMode: sanitizeDisplayMode("rhythm", els.rhythmDisplayMode.value)
+      };
+    }
+
+    function nextState(state) {
+      const idx = STATE_ORDER.indexOf(state);
+      return STATE_ORDER[(idx + 1) % STATE_ORDER.length];
+    }
+
+    function normalizeTrack(track, total, factory) {
+      const normalized = Array.isArray(track) ? [...track] : [];
+      if (normalized.length > total) return normalized.slice(0, total);
+      while (normalized.length < total) normalized.push(factory());
+      return normalized;
+    }
+
+    function ensureBarSettingsLength(barCount) {
+      ["melody", "bass", "rhythm"].forEach(laneKey => {
+        if (!Array.isArray(currentBarSettings[laneKey])) currentBarSettings[laneKey] = [];
+        currentBarSettings[laneKey] = currentBarSettings[laneKey].slice(0, barCount);
+        while (currentBarSettings[laneKey].length < barCount) {
+          currentBarSettings[laneKey].push(null);
+        }
+      });
+    }
+
+    function sanitizeBarSettingsObject(raw, barCount) {
+      const result = { melody: [], bass: [], rhythm: [] };
+      ["melody", "bass", "rhythm"].forEach(laneKey => {
+        const src = Array.isArray(raw?.[laneKey]) ? raw[laneKey] : [];
+        result[laneKey] = src.slice(0, barCount).map(item => {
+          if (!item || !item.enabled) return null;
+          return {
+            enabled: true,
+            numerator: clamp(parseInt(item.numerator, 10) || 4, 1, 12),
+            denominator: [2, 4, 8].includes(parseInt(item.denominator, 10))
+              ? parseInt(item.denominator, 10)
+              : 4,
+            subdivision: clamp(parseInt(item.subdivision, 10) || 4, 1, 12)
+          };
+        });
+        while (result[laneKey].length < barCount) result[laneKey].push(null);
+      });
+      return result;
+    }
+
+    function getBarOverride(laneKey, barIndex) {
+      const row = currentBarSettings[laneKey]?.[barIndex];
+      return row && row.enabled ? row : null;
+    }
+
+    function getEffectiveBarConfig(laneKey, barIndex, settings) {
+      const override = getBarOverride(laneKey, barIndex);
+      if (override) {
+        return {
+          numerator: Number(override.numerator) || settings.beatsPerBar,
+          denominator: Number(override.denominator) || settings.beatUnit,
+          subdivision: Number(override.subdivision) || settings.subdivision
+        };
+      }
+      return {
+        numerator: settings.beatsPerBar,
+        denominator: settings.beatUnit,
+        subdivision: settings.subdivision
+      };
+    }
+
+    function ensureBeatSettingsShape(settings) {
+      ["melody", "bass", "rhythm"].forEach(laneKey => {
+        if (!Array.isArray(currentBeatSettings[laneKey])) currentBeatSettings[laneKey] = [];
+        currentBeatSettings[laneKey] = currentBeatSettings[laneKey].slice(0, settings.bars);
+
+        for (let barIndex = 0; barIndex < settings.bars; barIndex++) {
+          const barCfg = getEffectiveBarConfig(laneKey, barIndex, settings);
+          const count = barCfg.numerator;
+
+          if (!Array.isArray(currentBeatSettings[laneKey][barIndex])) {
+            currentBeatSettings[laneKey][barIndex] = [];
+          }
+
+          currentBeatSettings[laneKey][barIndex] = currentBeatSettings[laneKey][barIndex]
+            .slice(0, count)
+            .map(item => {
+              if (!item || !item.enabled) return null;
+              return {
+                enabled: true,
+                strength: [0.5,1,1.5].includes(Number(item.strength)) ? Number(item.strength) : 1,
+              subdivision: clamp(parseInt(item.subdivision, 10) || barCfg.subdivision, 1, 12)
+              };
+            });
+
+          while (currentBeatSettings[laneKey][barIndex].length < count) {
+            currentBeatSettings[laneKey][barIndex].push(null);
+          }
+        }
+      });
+    }
+
+    function sanitizeBeatSettingsObject(raw, settings) {
+      const result = { melody: [], bass: [], rhythm: [] };
+
+      ["melody", "bass", "rhythm"].forEach(laneKey => {
+        const srcLane = Array.isArray(raw?.[laneKey]) ? raw[laneKey] : [];
+        result[laneKey] = srcLane.slice(0, settings.bars);
+
+        for (let barIndex = 0; barIndex < settings.bars; barIndex++) {
+          const barCfg = getEffectiveBarConfig(laneKey, barIndex, settings);
+          const count = barCfg.numerator;
+          const srcBar = Array.isArray(result[laneKey][barIndex]) ? result[laneKey][barIndex] : [];
+
+          result[laneKey][barIndex] = srcBar.slice(0, count).map(item => {
+            if (!item || !item.enabled) return null;
+            return {
+              enabled: true,
+              strength: [0.5,1,1.5].includes(Number(item.strength)) ? Number(item.strength) : 1,
+              subdivision: clamp(parseInt(item.subdivision, 10) || barCfg.subdivision, 1, 12)
+            };
+          });
+
+          while (result[laneKey][barIndex].length < count) {
+            result[laneKey][barIndex].push(null);
+          }
+        }
+      });
+
+      return result;
+    }
+
+    function getBeatOverride(laneKey, barIndex, beatIndex) {
+      const row = currentBeatSettings[laneKey]?.[barIndex]?.[beatIndex];
+      return row && row.enabled ? row : null;
+    }
+
+    function getEffectiveBeatSubdivision(laneKey, barIndex, beatIndex, settings, barCfg = null) {
+      const base = barCfg || getEffectiveBarConfig(laneKey, barIndex, settings);
+      const override = getBeatOverride(laneKey, barIndex, beatIndex);
+      return override ? (Number(override.subdivision) || base.subdivision) : base.subdivision;
+    }
+
+    function getLaneLayout(laneKey, settings) {
+      const bars = [];
+      let offset = 0;
+
+      for (let barIndex = 0; barIndex < settings.bars; barIndex++) {
+        const baseBarCfg = getEffectiveBarConfig(laneKey, barIndex, settings);
+        const beats = [];
+        let localOffset = 0;
+
+        for (let beatIndex = 0; beatIndex < baseBarCfg.numerator; beatIndex++) {
+          const subdivision = getEffectiveBeatSubdivision(
+            laneKey,
+            barIndex,
+            beatIndex,
+            settings,
+            baseBarCfg
+          );
+
+          beats.push({
+            beatIndex,
+            subdivision,
+            steps: subdivision,
+            localOffset,
+            globalOffset: offset + localOffset
+          });
+
+          localOffset += subdivision;
+        }
+
+        bars.push({
+          barIndex,
+          offset,
+          steps: localOffset,
+          numerator: baseBarCfg.numerator,
+          denominator: baseBarCfg.denominator,
+          subdivision: baseBarCfg.subdivision,
+          beats
+        });
+
+        offset += localOffset;
+      }
+
+      return { bars, totalSteps: offset };
+    }
+
+    function getBeatStartOffsets(barCfg) {
+      return barCfg.beats.map(beat => beat.localOffset);
+    }
+
+    function remapLaneTrackByBar(laneKey, oldLayout, newLayout) {
+      const oldTrack = currentData[laneKey] || [];
+      const next = [];
+
+      newLayout.bars.forEach((newBar, barIndex) => {
+        const oldBar = oldLayout?.bars?.[barIndex];
+        const oldSlice = oldBar
+          ? oldTrack.slice(oldBar.offset, oldBar.offset + oldBar.steps)
+          : [];
+
+        for (let i = 0; i < newBar.steps; i++) {
+          next.push(
+            oldSlice[i]
+              ? cloneLaneStep(laneKey, oldSlice[i])
+              : makeDefaultStepForLane(laneKey)
+          );
+        }
+      });
+
+      currentData[laneKey] = next;
+    }
+
+    function normalizeData() {
+      const settings = getSettings();
+      ensureBarSettingsLength(settings.bars);
+      ensureBeatSettingsShape(settings);
+
+      const rhythmLayout = getLaneLayout("rhythm", settings);
+      const bassLayout = getLaneLayout("bass", settings);
+      const melodyLayout = getLaneLayout("melody", settings);
+
+      currentData.rhythm = normalizeTrack(
+        currentData.rhythm || [],
+        rhythmLayout.totalSteps,
+        () => makeRhythmStep("rest")
+      ).map(step => ({
+        state: step.state || "rest"
+      }));
+
+      currentData.bass = normalizeTrack(
+        currentData.bass || [],
+        bassLayout.totalSteps,
+        () => makePitchStep(LANE_META.bass.defaultPitch, "rest")
+      ).map(step => ({
+        state: step.state || "rest",
+        pitch: Number.isInteger(step.pitch) ? step.pitch : LANE_META.bass.defaultPitch,
+        touched: !!step.touched
+      }));
+
+      currentData.melody = normalizeTrack(
+        currentData.melody || [],
+        melodyLayout.totalSteps,
+        () => makePitchStep(LANE_META.melody.defaultPitch, "rest")
+      ).map(step => ({
+        state: step.state || "rest",
+        pitch: Number.isInteger(step.pitch) ? step.pitch : LANE_META.melody.defaultPitch,
+        touched: !!step.touched
+      }));
+    }
+    function buildScore() {
+      if(window.KIRIN_RHYTHM_STOP)window.KIRIN_RHYTHM_STOP();
+      normalizeData();
+      const settings = getSettings();
+
+      els.scoreContainer.innerHTML = "";
+
+      const wrap = document.createElement("div");
+      wrap.className = "score-canvas";
+
+      if (settings.melodyDisplayMode !== "hidden") {
+        wrap.appendChild(buildLaneRow("melody", settings.melodyDisplayMode, settings));
+      }
+
+      if (settings.bassDisplayMode !== "hidden") {
+        wrap.appendChild(buildLaneRow("bass", settings.bassDisplayMode, settings));
+      }
+
+      if (settings.rhythmDisplayMode !== "hidden") {
+        wrap.appendChild(buildLaneRow("rhythm", settings.rhythmDisplayMode, settings));
+      }
+
+      els.scoreContainer.appendChild(wrap);
+      updatePatternText();
+    }
+
+    function buildLaneRow(laneKey, mode, settings) {
+      const meta = LANE_META[laneKey];
+      const row = document.createElement("div");
+      row.className = "lane-row";
+
+      const left = document.createElement("div");
+      left.className = "lane-left";
+
+      const captionSpacer = document.createElement("div");
+      captionSpacer.className = "lane-left-caption-spacer";
+      left.appendChild(captionSpacer);
+
+      const head = document.createElement("div");
+      head.className = "lane-left-head";
+
+      const main = document.createElement("div");
+      main.className = "lane-label-main";
+      main.textContent = meta.label;
+
+      const sub = document.createElement("div");
+      sub.className = "lane-label-sub";
+      sub.textContent = mode === "detail" ? "詳細" : "簡略";
+
+      head.appendChild(main);
+      head.appendChild(sub);
+
+      if (meta.type === "pitch" && mode === "detail") {
+        head.classList.add("stack-top");
+      } else {
+        head.classList.add("simple-only");
+      }
+      left.appendChild(head);
+
+      if (meta.type === "pitch" && mode === "detail") {
+        const labels = buildPitchLabels(meta.rows);
+        labels.classList.add("stack-bottom");
+        left.appendChild(labels);
+      }
+
+      const barsRow = document.createElement("div");
+      barsRow.className = "bars-row";
+
+      const layout = getLaneLayout(laneKey, settings);
+
+      layout.bars.forEach(barCfg => {
+        const unit = document.createElement("div");
+        unit.className = "lane-bar-unit";
+
+        const headerParts = buildBarHeader(laneKey, barCfg, settings);
+        unit.appendChild(headerParts.titleRow);
+
+        const steps = currentData[laneKey].slice(barCfg.offset, barCfg.offset + barCfg.steps);
+        const beatStarts = getBeatStartOffsets(barCfg);
+
+        if (meta.type === "pitch" && mode === "detail") {
+          headerParts.box.appendChild(
+            buildPitchDetailBody(laneKey, steps, meta.rows, beatStarts, barCfg.offset)
+          );
+        } else {
+          headerParts.box.appendChild(
+            buildSimpleBody(laneKey, steps, beatStarts, barCfg.offset)
+          );
+        }
+
+        unit.appendChild(headerParts.box);
+        barsRow.appendChild(unit);
+      });
+
+      row.appendChild(left);
+      row.appendChild(barsRow);
+      return row;
+    }
+
+    function buildBarHeader(laneKey, barCfg, settings) {
+      const titleRow = document.createElement("div");
+      titleRow.className = "lane-bar-title-row";
+
+      const title = document.createElement("div");
+      title.className = "lane-bar-title";
+
+      const barOverride = getBarOverride(laneKey, barCfg.barIndex);
+      const beatOverrideCount = barCfg.beats.filter(beat =>
+        getBeatOverride(laneKey, barCfg.barIndex, beat.beatIndex)
+      ).length;
+
+      let titleText = `${barCfg.barIndex + 1}小節目`;
+      if (barOverride) {
+        titleText += ` (${barOverride.numerator}/${barOverride.denominator}, sub=${barOverride.subdivision})`;
+      }
+      if (beatOverrideCount > 0) {
+        titleText += ` / 拍設定${beatOverrideCount}`;
+      }
+      title.textContent = titleText;
+      if(barOverride){title.classList.add("k-override-badge");title.setAttribute("aria-label",titleText+" 小節上書きあり");}
+
+      if (settings.advancedEditing) {
+        titleRow.classList.add("editable");
+        titleRow.title = "クリックで小節設定";
+        titleRow.addEventListener("click", () => openBarConfigModal(laneKey, barCfg.barIndex));
+      }
+
+      const menuBtn = document.createElement("button");
+      menuBtn.type = "button";
+      menuBtn.className = "bar-config-btn";
+      if (barOverride || beatOverrideCount > 0) menuBtn.classList.add("active");
+      menuBtn.textContent = "⋯";
+      menuBtn.title = settings.advancedEditing ? "小節設定を開く" : "詳細設定ONで使用可能";
+      menuBtn.disabled = !settings.advancedEditing;
+      menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!settings.advancedEditing) return;
+        openBarConfigModal(laneKey, barCfg.barIndex);
+      });
+
+      titleRow.appendChild(title);
+      titleRow.appendChild(menuBtn);
+
+      const box = document.createElement("div");
+      box.className = "lane-bar-box";
+
+      const beatRow = document.createElement("div");
+      beatRow.className = "bar-head-beats";
+      beatRow.style.gridTemplateColumns = `repeat(${barCfg.steps}, 1fr)`;
+
+      barCfg.beats.forEach(beat => {
+        const cell = document.createElement("div");
+        cell.className = "bar-head-beat";
+        cell.style.gridColumn = `span ${beat.subdivision}`;
+        cell.textContent = String(beat.beatIndex + 1);
+
+        const beatOverride = getBeatOverride(laneKey, barCfg.barIndex, beat.beatIndex);
+        if (beatOverride) {
+          cell.classList.add("has-override");
+          cell.title = `拍設定あり: sub=${beatOverride.subdivision} / 強弱=${beatOverride.strength || 1}`;
+        }
+
+        if (settings.advancedEditing) {
+          cell.classList.add("editable");
+          cell.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openBeatConfigModal(laneKey, barCfg.barIndex, beat.beatIndex);
+          });
+        }
+
+        beatRow.appendChild(cell);
+      });
+
+      const subRow = document.createElement("div");
+      subRow.className = "bar-head-subs";
+      subRow.style.gridTemplateColumns = `repeat(${barCfg.steps}, 1fr)`;
+
+      barCfg.beats.forEach(beat => {
+        for (let sub = 0; sub < beat.subdivision; sub++) {
+          const cell = document.createElement("div");
+          cell.className = "bar-head-sub";
+          if (sub === 0) cell.classList.add("beat-start");
+          cell.textContent = String(sub + 1);
+          subRow.appendChild(cell);
+        }
+      });
+
+      box.appendChild(beatRow);
+      box.appendChild(subRow);
+
+      return { titleRow, box };
+    }
+
+    function buildSimpleBody(laneKey, steps, beatStarts, startIndex) {
+      const body = document.createElement("div");
+      body.className = "simple-bar-body";
+      body.style.gridTemplateColumns = `repeat(${steps.length}, 1fr)`;
+
+      const beatStartSet = new Set(beatStarts);
+
+      steps.forEach((step, i) => {
+        const cell = document.createElement("div");
+        cell.className = "simple-step";
+        cell.dataset.lane = laneKey; cell.dataset.step = String(startIndex+i);
+        if (beatStartSet.has(i)) cell.classList.add("beat-start");
+
+        const top = document.createElement("div");
+        top.className = "simple-step-top";
+
+        const main = document.createElement("div");
+        main.className = "simple-step-main";
+
+        const symbol = document.createElement("div");
+        symbol.className = `simple-symbol state-${step.state}`;
+        symbol.textContent = step.state === "hold" ? "━" : (SYMBOL_MAP[step.state] || "-");
+
+        const bottom = document.createElement("div");
+        bottom.className = "simple-step-bottom";
+
+        main.appendChild(symbol);
+        cell.appendChild(top);
+        cell.appendChild(main);
+        cell.appendChild(bottom);
+
+        cell.addEventListener("click", () => {
+          const idx = startIndex + i;
+          if (currentData[laneKey][idx] && "touched" in currentData[laneKey][idx]) {
+            currentData[laneKey][idx].touched = true;
+          }
+          currentData[laneKey][idx].state = nextState(currentData[laneKey][idx].state);
+          buildScore();
+        });
+
+        body.appendChild(cell);
+      });
+
+      return body;
+    }
+
+    function buildPitchLabels(rows) {
+      const col = document.createElement("div");
+      col.className = "pitch-label-col";
+      col.style.gridTemplateRows = `repeat(${rows.length}, 1fr)`;
+
+      rows.forEach(name => {
+        const cell = document.createElement("div");
+        cell.className = "pitch-label-cell";
+        cell.textContent = name;
+        col.appendChild(cell);
+      });
+
+      return col;
+    }
+
+    function buildPitchDetailBody(laneKey, steps, rows, beatStarts, startIndex) {
+      const body = document.createElement("div");
+      body.className = "pitch-detail-body";
+      body.style.gridTemplateColumns = `repeat(${steps.length}, 1fr)`;
+      body.style.gridTemplateRows = `repeat(${rows.length}, 1fr)`;
+
+      const beatStartSet = new Set(beatStarts);
+
+      for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        for (let colIndex = 0; colIndex < steps.length; colIndex++) {
+          const globalIndex = startIndex + colIndex;
+          const step = currentData[laneKey][globalIndex];
+
+          const cell = document.createElement("div");
+          cell.className = "pitch-cell";
+          cell.dataset.lane = laneKey; cell.dataset.step = String(globalIndex);
+          if (rowIndex === 0) cell.classList.add("top-row");
+          if (colIndex === steps.length - 1) cell.classList.add("last-col");
+          if (beatStartSet.has(colIndex)) cell.classList.add("beat-start");
+
+          const shouldRender =
+            step.pitch === rowIndex &&
+            (step.state !== "rest" || step.touched);
+
+          if (shouldRender) {
+            const note = document.createElement("div");
+            note.className = `note-symbol state-${step.state}`;
+            note.textContent = step.state === "hold" ? "━" : SYMBOL_MAP[step.state];
+            cell.appendChild(note);
+          }
+
+          cell.addEventListener("click", () => handlePitchDetailClick(laneKey, globalIndex, rowIndex));
+          body.appendChild(cell);
+        }
+      }
+
+      return body;
+    }
+
+    function handlePitchDetailClick(laneKey, stepIndex, rowIndex) {
+      const step = currentData[laneKey][stepIndex];
+      step.touched = true;
+
+      if (step.pitch === rowIndex) {
+        step.state = nextState(step.state);
+      } else {
+        step.pitch = rowIndex;
+        step.state = "hit";
+      }
+
+      buildScore();
+    }
+
+    function toggleBarOverrideFields() {
+      const enabled = els.barOverrideEnabled.checked;
+      els.barNumerator.disabled = !enabled;
+      els.barDenominator.disabled = !enabled;
+      els.barSubdivision.disabled = !enabled;
+      els.barOverrideFields.classList.toggle("disabled", !enabled);
+    }
+
+    function toggleBeatOverrideFields() {
+      const enabled = els.beatOverrideEnabled.checked;
+      els.beatSubdivision.disabled = !enabled;
+      els.beatOverrideFields.classList.toggle("disabled", !enabled);
+    }
+
+    function openBarConfigModal(laneKey, barIndex) {
+      if (!getSettings().advancedEditing) return;
+
+      activeBarConfigTarget = { laneKey, barIndex };
+
+      const settings = getSettings();
+      const current = currentBarSettings[laneKey]?.[barIndex];
+      const effective = getEffectiveBarConfig(laneKey, barIndex, settings);
+
+      els.barConfigTitle.textContent =
+        `${LANE_META[laneKey].label} ${barIndex + 1}小節目の設定`;
+
+      els.barOverrideEnabled.checked = !!(current && current.enabled);
+      els.barNumerator.value = effective.numerator;
+      els.barDenominator.value = effective.denominator;
+      els.barSubdivision.value = effective.subdivision;
+
+      toggleBarOverrideFields();
+      els.barConfigModal.classList.remove("hidden");
+    }
+
+    function closeBarConfigModal() {
+      els.barConfigModal.classList.add("hidden");
+      activeBarConfigTarget = null;
+    }
+
+    function openBeatConfigModal(laneKey, barIndex, beatIndex) {
+      if (!getSettings().advancedEditing) return;
+
+      activeBeatConfigTarget = { laneKey, barIndex, beatIndex };
+
+      const settings = getSettings();
+      ensureBeatSettingsShape(settings);
+
+      const barCfg = getEffectiveBarConfig(laneKey, barIndex, settings);
+      const current = currentBeatSettings[laneKey]?.[barIndex]?.[beatIndex];
+      const effectiveSubdivision =
+        getEffectiveBeatSubdivision(laneKey, barIndex, beatIndex, settings, barCfg);
+
+      els.beatConfigTitle.textContent =
+        `${LANE_META[laneKey].label} ${barIndex + 1}小節目 ${beatIndex + 1}拍目の設定`;
+
+      els.beatOverrideEnabled.checked = !!(current && current.enabled);
+      els.beatSubdivision.value = effectiveSubdivision;
+      document.getElementById("beatStrength").value = String(current?.strength || 1);
+
+      toggleBeatOverrideFields();
+      els.beatConfigModal.classList.remove("hidden");
+    }
+
+    function closeBeatConfigModal() {
+      els.beatConfigModal.classList.add("hidden");
+      activeBeatConfigTarget = null;
+    }
+
+    function saveBarConfig() {
+      if (!activeBarConfigTarget) return;
+
+      const { laneKey, barIndex } = activeBarConfigTarget;
+      const settingsBefore = getSettings();
+      const oldLayout = getLaneLayout(laneKey, settingsBefore);
+
+      ensureBarSettingsLength(settingsBefore.bars);
+
+      const enabled = els.barOverrideEnabled.checked;
+
+      if (!enabled) {
+        currentBarSettings[laneKey][barIndex] = null;
+      } else {
+        currentBarSettings[laneKey][barIndex] = {
+          enabled: true,
+          numerator: clamp(
+            parseInt(els.barNumerator.value, 10) || settingsBefore.beatsPerBar,
+            1,
+            12
+          ),
+          denominator: [2, 4, 8].includes(parseInt(els.barDenominator.value, 10))
+            ? parseInt(els.barDenominator.value, 10)
+            : settingsBefore.beatUnit,
+          subdivision: clamp(
+            parseInt(els.barSubdivision.value, 10) || settingsBefore.subdivision,
+            1,
+            12
+          )
+        };
+      }
+
+      const settingsAfter = getSettings();
+      ensureBeatSettingsShape(settingsAfter);
+      const newLayout = getLaneLayout(laneKey, settingsAfter);
+      remapLaneTrackByBar(laneKey, oldLayout, newLayout);
+
+      buildScore();
+      closeBarConfigModal();
+    }
+
+    function resetBarConfig() {
+      if (!activeBarConfigTarget) return;
+
+      const { laneKey, barIndex } = activeBarConfigTarget;
+      const settingsBefore = getSettings();
+      const oldLayout = getLaneLayout(laneKey, settingsBefore);
+
+      ensureBarSettingsLength(settingsBefore.bars);
+      currentBarSettings[laneKey][barIndex] = null;
+
+      const settingsAfter = getSettings();
+      ensureBeatSettingsShape(settingsAfter);
+      const newLayout = getLaneLayout(laneKey, settingsAfter);
+      remapLaneTrackByBar(laneKey, oldLayout, newLayout);
+
+      buildScore();
+      closeBarConfigModal();
+    }
+
+    function saveBeatConfig() {
+      if (!activeBeatConfigTarget) return;
+
+      const { laneKey, barIndex, beatIndex } = activeBeatConfigTarget;
+      const settingsBefore = getSettings();
+      const oldLayout = getLaneLayout(laneKey, settingsBefore);
+
+      ensureBeatSettingsShape(settingsBefore);
+
+      const enabled = els.beatOverrideEnabled.checked;
+
+      if (!enabled) {
+        currentBeatSettings[laneKey][barIndex][beatIndex] = null;
+      } else {
+        currentBeatSettings[laneKey][barIndex][beatIndex] = {
+          enabled: true,
+          strength: Number(document.getElementById("beatStrength").value),
+          subdivision: clamp(
+            parseInt(els.beatSubdivision.value, 10) || settingsBefore.subdivision,
+            1,
+            12
+          )
+        };
+      }
+
+      const settingsAfter = getSettings();
+      ensureBeatSettingsShape(settingsAfter);
+      const newLayout = getLaneLayout(laneKey, settingsAfter);
+      remapLaneTrackByBar(laneKey, oldLayout, newLayout);
+
+      buildScore();
+      closeBeatConfigModal();
+    }
+
+    function resetBeatConfig() {
+      if (!activeBeatConfigTarget) return;
+
+      const { laneKey, barIndex, beatIndex } = activeBeatConfigTarget;
+      const settingsBefore = getSettings();
+      const oldLayout = getLaneLayout(laneKey, settingsBefore);
+
+      ensureBeatSettingsShape(settingsBefore);
+      currentBeatSettings[laneKey][barIndex][beatIndex] = null;
+
+      const settingsAfter = getSettings();
+      ensureBeatSettingsShape(settingsAfter);
+      const newLayout = getLaneLayout(laneKey, settingsAfter);
+      remapLaneTrackByBar(laneKey, oldLayout, newLayout);
+
+      buildScore();
+      closeBeatConfigModal();
+    }
+
+    function clearCurrentPattern() {
+      currentData = {
+        rhythm: [],
+        bass: [],
+        melody: []
+      };
+
+      currentBarSettings = {
+        rhythm: [],
+        bass: [],
+        melody: []
+      };
+
+      currentBeatSettings = {
+        rhythm: [],
+        bass: [],
+        melody: []
+      };
+
+      activeBarConfigTarget = null;
+      activeBeatConfigTarget = null;
+
+      closeBarConfigModal();
+      closeBeatConfigModal();
+
+      buildScore();
+      updatePatternText();
+    }
+    function laneToText(laneKey, settings, isPitch = false, rowNames = []) {
+      const track = currentData[laneKey];
+      const layout = getLaneLayout(laneKey, settings);
+      const chunks = [];
+
+      layout.bars.forEach(barCfg => {
+        const slice = track.slice(barCfg.offset, barCfg.offset + barCfg.steps);
+
+        const text = slice.map(step => {
+          if (!isPitch) return SYMBOL_MAP[step.state];
+          if (step.state === "rest") return SYMBOL_MAP[step.state];
+          const pitchName = rowNames[step.pitch] ?? "?";
+          return `${SYMBOL_MAP[step.state]}(${pitchName})`;
+        }).join(" ");
+
+        const barOverride = getBarOverride(laneKey, barCfg.barIndex);
+        const beatParts = barCfg.beats
+          .map(beat => {
+            const beatOverride = getBeatOverride(laneKey, barCfg.barIndex, beat.beatIndex);
+            return beatOverride ? `${beat.beatIndex + 1}拍=sub${beatOverride.subdivision}` : null;
+          })
+          .filter(Boolean);
+
+        let header = `[${barCfg.barIndex + 1}`;
+        if (barOverride) {
+          header += `: ${barOverride.numerator}/${barOverride.denominator}, sub=${barOverride.subdivision}`;
+        }
+        if (beatParts.length) {
+          header += ` | ${beatParts.join(", ")}`;
+        }
+        header += `]`;
+
+        chunks.push(`${header} ${text}`);
+      });
+
+      return chunks.join("\n");
+    }
+
+    function summarizeLaneOverrides(laneKey, settings) {
+      const layout = getLaneLayout(laneKey, settings);
+      const parts = layout.bars
+        .filter(barCfg => getBarOverride(laneKey, barCfg.barIndex))
+        .map(barCfg => {
+          const ov = getBarOverride(laneKey, barCfg.barIndex);
+          return `${barCfg.barIndex + 1}小節目=${ov.numerator}/${ov.denominator}, sub=${ov.subdivision}`;
+        });
+
+      return parts.length ? parts.join(" / ") : "なし";
+    }
+
+    function summarizeBeatOverrides(laneKey, settings) {
+      const layout = getLaneLayout(laneKey, settings);
+      const parts = [];
+
+      layout.bars.forEach(barCfg => {
+        barCfg.beats.forEach(beat => {
+          const ov = getBeatOverride(laneKey, barCfg.barIndex, beat.beatIndex);
+          if (ov) {
+            parts.push(`${barCfg.barIndex + 1}小節目${beat.beatIndex + 1}拍=sub${ov.subdivision}`);
+          }
+        });
+      });
+
+      return parts.length ? parts.join(" / ") : "なし";
+    }
+
+    function updatePatternText() {
+      normalizeData();
+      const settings = getSettings();
+
+      const lines = [];
+      lines.push(`パターン名: ${settings.patternName}`);
+      lines.push(`BPM: ${settings.bpm}`);
+      lines.push(`全体拍子: ${settings.beatsPerBar}/${settings.beatUnit}`);
+      lines.push(`全体分割数: ${settings.subdivision}`);
+      lines.push(`小節数: ${settings.bars}`);
+      lines.push(`詳細設定: ${settings.advancedEditing ? "ON" : "OFF"}`);
+      lines.push(`表示順: メロディ → ベース → リズム`);
+      lines.push(`メロディ表示: ${settings.melodyDisplayMode}`);
+      lines.push(`ベース表示: ${settings.bassDisplayMode}`);
+      lines.push(`リズム表示: ${settings.rhythmDisplayMode}`);
+      lines.push("");
+      lines.push(`メロディ小節別設定: ${summarizeLaneOverrides("melody", settings)}`);
+      lines.push(`ベース小節別設定: ${summarizeLaneOverrides("bass", settings)}`);
+      lines.push(`リズム小節別設定: ${summarizeLaneOverrides("rhythm", settings)}`);
+      lines.push(`メロディ拍別設定: ${summarizeBeatOverrides("melody", settings)}`);
+      lines.push(`ベース拍別設定: ${summarizeBeatOverrides("bass", settings)}`);
+      lines.push(`リズム拍別設定: ${summarizeBeatOverrides("rhythm", settings)}`);
+      lines.push("");
+
+      lines.push("【メロディ】");
+      lines.push(laneToText("melody", settings, true, LANE_META.melody.rows));
+      lines.push("");
+
+      lines.push("【ベース】");
+      lines.push(laneToText("bass", settings, true, LANE_META.bass.rows));
+      lines.push("");
+
+      lines.push("【リズム】");
+      lines.push(laneToText("rhythm", settings, false));
+      lines.push("");
+
+      if (els.memo.value.trim()) {
+        lines.push("【メモ】");
+        lines.push(els.memo.value.trim());
+      }
+
+      els.patternText.value = lines.join("\n");
+    }
+
+    function getSavedPatterns() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function setSavedPatterns(list) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function saveCurrentPattern() {
+      normalizeData();
+      const settings = getSettings();
+      const saved = getSavedPatterns();
+      const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+
+      saved.unshift({
+        id,
+        createdAt: new Date().toISOString(),
+        settings,
+        memo: els.memo.value,
+        data: JSON.parse(JSON.stringify(currentData)),
+        barSettings: JSON.parse(JSON.stringify(currentBarSettings)),
+        beatSettings: JSON.parse(JSON.stringify(currentBeatSettings))
+      });
+
+      setSavedPatterns(saved);
+      renderSavedPatterns();
+      alert("保存しました。");
+    }
+
+    function loadPattern(id) {
+      const saved = getSavedPatterns();
+      const item = saved.find(x => x.id === id);
+      if (!item) return;
+
+      els.patternName.value = item.settings?.patternName || "新規パターン";
+      els.bpm.value = item.settings?.bpm ?? 120;
+      els.beatsPerBar.value = item.settings?.beatsPerBar ?? 4;
+      els.beatUnit.value = item.settings?.beatUnit ?? 4;
+      els.subdivision.value = item.settings?.subdivision ?? 4;
+      els.bars.value = item.settings?.bars ?? 4;
+      els.advancedEditing.checked = !!item.settings?.advancedEditing;
+
+      els.rhythmDisplayMode.value = sanitizeDisplayMode(
+        "rhythm",
+        item.settings?.rhythmDisplayMode ?? "simple"
+      );
+      els.bassDisplayMode.value = sanitizeDisplayMode(
+        "bass",
+        item.settings?.bassDisplayMode ?? "hidden"
+      );
+      els.melodyDisplayMode.value = sanitizeDisplayMode(
+        "melody",
+        item.settings?.melodyDisplayMode ?? "hidden"
+      );
+
+      els.memo.value = item.memo || "";
+
+      currentData = {
+        rhythm: Array.isArray(item.data?.rhythm) ? item.data.rhythm : [],
+        bass: Array.isArray(item.data?.bass) ? item.data.bass : [],
+        melody: Array.isArray(item.data?.melody) ? item.data.melody : []
+      };
+
+      currentBarSettings = sanitizeBarSettingsObject(
+        item.barSettings || { melody: [], bass: [], rhythm: [] },
+        item.settings?.bars ?? 4
+      );
+
+      currentBeatSettings = sanitizeBeatSettingsObject(
+        item.beatSettings || { melody: [], bass: [], rhythm: [] },
+        {
+          beatsPerBar: item.settings?.beatsPerBar ?? 4,
+          beatUnit: item.settings?.beatUnit ?? 4,
+          subdivision: item.settings?.subdivision ?? 4,
+          bars: item.settings?.bars ?? 4
+        }
+      );
+
+      buildScore();
+    }
+
+    function deletePattern(id) {
+      const next = getSavedPatterns().filter(x => x.id !== id);
+      setSavedPatterns(next);
+      renderSavedPatterns();
+    }
+
+    function renderSavedPatterns() {
+      const saved = getSavedPatterns();
+      els.savedList.innerHTML = "";
+
+      if (saved.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "muted";
+        empty.textContent = "まだ保存されたパターンはありません。";
+        els.savedList.appendChild(empty);
+        return;
+      }
+
+      saved.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "saved-item";
+
+        const meta = document.createElement("div");
+        meta.className = "saved-meta";
+
+        const title = document.createElement("div");
+        title.className = "saved-title";
+        title.textContent = item.settings?.patternName || "名称未設定";
+
+        const hasBarOverrides = ["melody", "bass", "rhythm"].some(laneKey =>
+          Array.isArray(item.barSettings?.[laneKey]) &&
+          item.barSettings[laneKey].some(v => v && v.enabled)
+        );
+
+        const hasBeatOverrides = ["melody", "bass", "rhythm"].some(laneKey =>
+          Array.isArray(item.beatSettings?.[laneKey]) &&
+          item.beatSettings[laneKey].some(bar =>
+            Array.isArray(bar) && bar.some(v => v && v.enabled)
+          )
+        );
+
+        const sub = document.createElement("div");
+        sub.className = "saved-sub";
+        sub.textContent =
+          `${item.settings?.bpm ?? 120} BPM / ` +
+          `${item.settings?.beatsPerBar ?? 4}/${item.settings?.beatUnit ?? 4} / ` +
+          `分割 ${item.settings?.subdivision ?? 4} / ` +
+          `${item.settings?.bars ?? 4}小節` +
+          (hasBarOverrides ? " / 小節別設定あり" : "") +
+          (hasBeatOverrides ? " / 拍別設定あり" : "");
+
+        meta.appendChild(title);
+        meta.appendChild(sub);
+
+        const actions = document.createElement("div");
+        actions.className = "saved-actions";
+
+        const loadBtn = document.createElement("button");
+        loadBtn.textContent = "読み込み";
+        loadBtn.addEventListener("click", () => loadPattern(item.id));
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "削除";
+        deleteBtn.className = "btn-danger";
+        deleteBtn.addEventListener("click", () => {
+          if (confirm("この保存データを削除しますか？")) {
+            deletePattern(item.id);
+          }
+        });
+
+        actions.appendChild(loadBtn);
+        actions.appendChild(deleteBtn);
+
+        row.appendChild(meta);
+        row.appendChild(actions);
+        els.savedList.appendChild(row);
+      });
+    }
+
+    document.getElementById("buildBtn").addEventListener("click", buildScore);
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      if (confirm("現在の譜面・小節別設定・拍別設定をすべてクリアしますか？")) {
+        clearCurrentPattern();
+      }
+    });
+
+    document.getElementById("exportTextBtn").addEventListener("click", updatePatternText);
+
+    document.getElementById("copyTextBtn").addEventListener("click", async () => {
+      updatePatternText();
+      try {
+        await navigator.clipboard.writeText(els.patternText.value);
+        alert("テキストをコピーしました。");
+      } catch {
+        alert("コピーに失敗しました。");
+      }
+    });
+
+    document.getElementById("saveBtn").addEventListener("click", saveCurrentPattern);
+
+    [
+      els.bpm,
+      els.beatsPerBar,
+      els.beatUnit,
+      els.subdivision,
+      els.bars,
+      els.advancedEditing,
+      els.rhythmDisplayMode,
+      els.bassDisplayMode,
+      els.melodyDisplayMode
+    ].forEach(el => {
+      el.addEventListener("change", buildScore);
+    });
+
+    els.barOverrideEnabled.addEventListener("change", toggleBarOverrideFields);
+    els.saveBarConfigBtn.addEventListener("click", saveBarConfig);
+    els.resetBarConfigBtn.addEventListener("click", resetBarConfig);
+    els.cancelBarConfigBtn.addEventListener("click", closeBarConfigModal);
+    els.closeBarConfigBtn.addEventListener("click", closeBarConfigModal);
+
+    els.barConfigModal.addEventListener("click", (e) => {
+      if (e.target === els.barConfigModal) {
+        closeBarConfigModal();
+      }
+    });
+
+    els.beatOverrideEnabled.addEventListener("change", toggleBeatOverrideFields);
+    els.saveBeatConfigBtn.addEventListener("click", saveBeatConfig);
+    els.resetBeatConfigBtn.addEventListener("click", resetBeatConfig);
+    els.cancelBeatConfigBtn.addEventListener("click", closeBeatConfigModal);
+    els.closeBeatConfigBtn.addEventListener("click", closeBeatConfigModal);
+
+    els.beatConfigModal.addEventListener("click", (e) => {
+      if (e.target === els.beatConfigModal) {
+        closeBeatConfigModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+
+      if (!els.beatConfigModal.classList.contains("hidden")) {
+        closeBeatConfigModal();
+        return;
+      }
+
+      if (!els.barConfigModal.classList.contains("hidden")) {
+        closeBarConfigModal();
+      }
+    });
+
+    els.rhythmDisplayMode.value = "simple";
+    els.bassDisplayMode.value = "hidden";
+    els.melodyDisplayMode.value = "hidden";
+
+    buildScore();
+    renderSavedPatterns();
+  </script>
+<script>
+
+/* KIRIN-RHYTHM-EXT:BEGIN version=1.10.0 changeId=C-038 */
+let rhythmAudio=null,rhythmSources=[],rhythmFrame=0,rhythmEvents=[],rhythmStarted=0;
+function stopRhythm(){cancelAnimationFrame(rhythmFrame);for(const o of rhythmSources){try{o.stop();}catch(e){}}rhythmSources=[];document.querySelectorAll('.k-playing').forEach(n=>n.classList.remove('k-playing'));document.getElementById('rhythmPlayStatus').textContent='停止中';}
+window.KIRIN_RHYTHM_STOP=stopRhythm;
+function rhythmTimeline(){const settings=getSettings(),events=[];for(const lane of ['rhythm','bass','melody']){let time=0;const layout=getLaneLayout(lane,settings);for(const bar of layout.bars)for(const beat of bar.beats){const duration=60/settings.bpm*4/bar.denominator/beat.subdivision;const strength=getBeatOverride(lane,bar.barIndex,beat.beatIndex)?.strength||1;for(let j=0;j<beat.subdivision;j++){const index=bar.offset+beat.localOffset+j;const step=currentData[lane][index];if(step)events.push({lane,index,time,duration,state:step.state,pitch:step.pitch,strength});time+=duration;}}}return events;}
+function rhythmTone(event,start,length){const ctx=rhythmAudio,o=ctx.createOscillator(),g=ctx.createGain();let frequency=180;let volume=0.1;if(event.lane!=='rhythm'){const text=LANE_META[event.lane].rows[event.pitch];const m=text?.match(/^([A-G])(#?)(\d+)$/);if(!m)return;const midi=(Number(m[3])+1)*12+({C:0,D:2,E:4,F:5,G:7,A:9,B:11}[m[1]])+(m[2]?1:0);frequency=440*Math.pow(2,(midi-69)/12);o.type='triangle';}else{o.type='sine';length=Math.min(length,0.12);frequency=event.state==='accent'?240:150;}volume*=event.strength*(event.state==='accent'?1.4:event.state==='ghost'?0.35:1);o.frequency.value=frequency;g.gain.setValueAtTime(0,start);g.gain.linearRampToValueAtTime(volume,start+0.005);g.gain.exponentialRampToValueAtTime(0.0001,start+Math.max(0.03,length));o.connect(g);g.connect(ctx.destination);o.start(start);o.stop(start+length+0.04);rhythmSources.push(o);o.onended=()=>{o.disconnect();g.disconnect();};}
+async function playRhythm(){stopRhythm();try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)throw new Error('音声APIが利用できません');if(!rhythmAudio)rhythmAudio=new AC();await rhythmAudio.resume();rhythmEvents=rhythmTimeline();rhythmStarted=rhythmAudio.currentTime+0.06;let total=0;for(const lane of ['rhythm','bass','melody']){const mute=document.getElementById('mute'+lane[0].toUpperCase()+lane.slice(1)).checked;const list=rhythmEvents.filter(e=>e.lane===lane);for(let i=0;i<list.length;i++){const e=list[i];total=Math.max(total,e.time+e.duration);if(mute||e.state==='rest'||e.state==='hold')continue;let length=e.duration*0.8;if(lane!=='rhythm'){for(let j=i+1;j<list.length&&list[j].state==='hold';j++)length+=list[j].duration;}rhythmTone(e,rhythmStarted+e.time,length);}}
+ if(document.getElementById('rhythmMetronome').checked){const beat=60/getSettings().bpm;for(let time=0;time<total;time+=beat){const e={lane:'rhythm',state:'ghost',strength:0.5};rhythmTone(e,rhythmStarted+time,0.04);}}
+ function tick(){const time=rhythmAudio.currentTime-rhythmStarted;document.querySelectorAll('.k-playing').forEach(n=>n.classList.remove('k-playing'));for(const lane of ['rhythm','bass','melody']){const e=rhythmEvents.find(e=>e.lane===lane&&time>=e.time&&time<e.time+e.duration);if(e)document.querySelectorAll('[data-lane="'+lane+'"][data-step="'+e.index+'"]').forEach(n=>n.classList.add('k-playing'));}document.getElementById('rhythmPlayStatus').textContent='再生中 '+Math.max(0,time).toFixed(1)+' / '+total.toFixed(1)+'秒';if(time<total)rhythmFrame=requestAnimationFrame(tick);else stopRhythm();}tick();}catch(e){document.getElementById('rhythmPlayStatus').textContent=e.message;}}
+document.getElementById('rhythmPlay').onclick=playRhythm;document.getElementById('rhythmStop').onclick=stopRhythm;
+for(const id of ['muteRhythm','muteBass','muteMelody','rhythmMetronome'])document.getElementById(id).onchange=stopRhythm;
+
+/* KIRIN-RHYTHM-EXT:END */
+</script>
+</body>
+</html>

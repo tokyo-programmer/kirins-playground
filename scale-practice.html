@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>スケール練習</title><style>
+/* KIRIN-BASE:BEGIN */
+/* ==========================================================
+   kirin-base.css | version=1.10.0 | updated=2026-11-03 | change=C-038 | canonical shared CSS
+   ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
+   ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
+   ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
+   ・COMPONENTS: .k-* の部品。body など素の要素には触れない
+   ・ライト／ダークは <html data-theme="light|dark"> で決まる。SHELL-JS が保存値→OS設定の順で必ず設定する
+   ========================================================== */
+/* KIRIN-TOKENS:BEGIN */
+:root {
+  color-scheme: light;
+  --kirin-font: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --kirin-mono: ui-monospace, Consolas, Menlo, monospace;
+  --kirin-radius: 12px;
+  --kirin-radius-sm: 8px;
+  --kirin-fs-s: clamp(12px, 0.15vw + 11px, 14px);
+  --kirin-fs-m: clamp(14px, 0.3vw + 13px, 17px);
+  --kirin-fs-l: clamp(20px, 0.7vw + 15px, 26px);
+  --kirin-page-max: 1800px;
+  --kirin-page-pad: clamp(6px, 1vw, 14px);
+  --kirin-gap: 12px;
+  --kirin-bg: #f3f5f8;
+  --kirin-bg-2: #e8edf5;
+  --kirin-surface: #ffffff;
+  --kirin-surface-2: #f0f4f9;
+  --kirin-line: #dce1e8;
+  --kirin-line-strong: #bcc6d4;
+  --kirin-text: #202838;
+  --kirin-muted: #647084;
+  --kirin-accent: #245bb5;
+  --kirin-accent-text: #245bb5;
+  --kirin-accent-soft: #e2ecfb;
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ac2434;
+  --kirin-danger-solid: #b42318;
+  --kirin-ok: #1a7f37;
+  --kirin-warn: #9a6700;
+  --kirin-warn-soft: #fff1cf;
+  --kirin-neutral: #475569;
+  --kirin-hover: #edf3fc;
+  --kirin-fg-rgb: 15, 23, 42;
+  --kirin-overlay: rgba(15, 23, 42, 0.45);
+  --kirin-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kirin-bg: #0b1020;
+  --kirin-bg-2: #162042;
+  --kirin-surface: #131b36;
+  --kirin-surface-2: #1a2447;
+  --kirin-line: rgba(148, 163, 184, 0.22);
+  --kirin-line-strong: rgba(148, 163, 184, 0.45);
+  --kirin-text: #eef3ff;
+  --kirin-muted: #a9b5d6;
+  --kirin-accent: #3b82f6;
+  --kirin-accent-text: #8fb4ff;
+  --kirin-accent-soft: rgba(126, 162, 255, 0.18);
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ff8c7a;
+  --kirin-danger-solid: #c2413a;
+  --kirin-ok: #9fe870;
+  --kirin-warn: #fbbf24;
+  --kirin-warn-soft: rgba(251, 191, 36, 0.16);
+  --kirin-neutral: #64748b;
+  --kirin-hover: rgba(126, 162, 255, 0.12);
+  --kirin-fg-rgb: 255, 255, 255;
+  --kirin-overlay: rgba(0, 0, 0, 0.6);
+  --kirin-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+}
+/* KIRIN-TOKENS:END */
+/* KIRIN-SHELL:BEGIN */
+.kx-bar, .kx-foot { box-sizing: border-box; width: 100%; max-width: var(--kirin-page-max); margin: 0 auto 8px; font: var(--kirin-fs-m)/1.5 var(--kirin-font); color: var(--kirin-text); }
+.kx-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 6px 10px; background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius-sm); }
+.kx-brand { padding: 6px 2px; color: var(--kirin-accent-text); font-weight: 800; text-decoration: none; }
+.kx-theme { min-height: 40px; padding: 4px 14px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface-2); color: var(--kirin-text); font: inherit; cursor: pointer; }
+.kx-theme:hover { background: var(--kirin-hover); }
+.kx-foot { margin-top: 8px; margin-bottom: 0; padding: 10px 2px 0; border-top: 1px solid var(--kirin-line); }
+.kx-foot p { margin: 8px 0 0; color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+.kx-nav { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.kx-nav a { display: inline-block; padding: 10px 8px; color: var(--kirin-accent-text); text-decoration: none; border-bottom: 2px solid transparent; }
+.kx-nav a:hover { background: var(--kirin-hover); }
+.kx-nav a[aria-current="page"] { color: var(--kirin-text); font-weight: 800; border-bottom-color: var(--kirin-accent); }
+.kx-theme:focus-visible, .kx-brand:focus-visible, .kx-nav a:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+@media (max-width: 480px) { .kx-nav a { padding: 11px 6px; } }
+/* KIRIN-SHELL:END */
+/* KIRIN-COMPONENTS:BEGIN */
+.k-body { margin: 0; padding: var(--kirin-page-pad); font-family: var(--kirin-font); font-size: var(--kirin-fs-m); line-height: 1.7; color: var(--kirin-text); background: var(--kirin-bg); }
+.k-body, .k-body * { box-sizing: border-box; }
+.k-body a { color: var(--kirin-accent-text); }
+.k-app { max-width: var(--kirin-page-max); margin: 0 auto; }
+.k-body, .k-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.k-body > .k-app, .k-page > .k-grow { flex: 1 0 auto; width: 100%; }
+.k-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 8px 0 14px; }
+.k-eyebrow { margin: 0; color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 800; letter-spacing: 0.08em; }
+.k-title { margin: 4px 0; font-size: var(--kirin-fs-l); line-height: 1.25; }
+.k-lead { margin: 6px 0 0; color: var(--kirin-muted); }
+.k-card { background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius); padding: 14px; box-shadow: var(--kirin-shadow); }
+.k-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 22px; margin-bottom: 8px; }
+.k-field { display: grid; gap: 5px; min-width: 0; font-size: var(--kirin-fs-m); }
+.k-field > span { color: var(--kirin-muted); font-size: var(--kirin-fs-s); font-weight: 700; }
+.k-select, .k-input { min-height: 44px; max-width: 100%; padding: 8px 10px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: 16px; }
+.k-btn { min-height: 44px; padding: 8px 12px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-btn:hover { background: var(--kirin-hover); }
+.k-btn--sm { min-height: 36px; padding: 4px 10px; font-size: var(--kirin-fs-s); }
+.k-btn:focus-visible, .k-select:focus-visible, .k-input:focus-visible, .k-tab:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+.k-tabs { display: inline-flex; overflow: hidden; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); }
+.k-tab { min-height: 42px; padding: 6px 14px; border: 0; border-right: 1px solid var(--kirin-line); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-tab:last-child { border-right: 0; }
+.k-tab:hover { background: var(--kirin-hover); }
+.k-tab[aria-pressed="true"] { background: var(--kirin-accent); color: var(--kirin-on-accent); font-weight: 700; }
+.k-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--kirin-accent-soft); color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 700; white-space: nowrap; }
+.k-muted { color: var(--kirin-muted); }
+.k-grid { display: grid; gap: var(--kirin-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.k-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--kirin-line); color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+@media (max-width: 600px) {
+  .k-controls { gap: 12px; }
+  .k-controls > .k-field { flex: 1 1 100%; }
+  .k-tabs { display: flex; width: 100%; }
+  .k-tab { flex: 1 1 0; padding: 6px 4px; }
+  .k-select, .k-input { width: 100%; }
+}
+
+/* KIRIN-FOLD-CSS:BEGIN */
+.k-fold {border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface);margin:8px 0;color:var(--kirin-text);}
+.k-fold > summary, .k-fold-toggle {display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;padding:8px 12px;cursor:pointer;font:700 var(--kirin-fs-m)/1.5 var(--kirin-font);color:var(--kirin-text);background:var(--kirin-surface-2);border-radius:var(--kirin-radius-sm);}
+.k-fold > summary {list-style:none;} .k-fold > summary::-webkit-details-marker {display:none;}
+.k-fold > summary::before {content:'▸';color:var(--kirin-accent-text);} .k-fold[open] > summary::before {content:'▾';}
+.k-fold-hint {font:400 var(--kirin-fs-s)/1.5 var(--kirin-font);color:var(--kirin-muted);letter-spacing:0;}
+.k-fold-body {padding:10px 12px;} .k-fold > summary:focus-visible,.k-fold-toggle:focus-visible {outline:2px solid var(--kirin-accent);outline-offset:2px;}
+.k-playing {outline:3px solid var(--kirin-accent);outline-offset:-3px;background:var(--kirin-accent-soft)!important;}
+.k-override-badge {padding:4px 8px;border:2px solid var(--kirin-warn);border-radius:8px;background:var(--kirin-warn-soft);color:var(--kirin-text);}
+.k-fold-toggle {width:100%;border:1px solid var(--kirin-line-strong);justify-content:flex-start;}
+/* KIRIN-FOLD-CSS:END */
+[hidden]{display:none!important}
+.k-fold-body{min-width:0}.k-fold-body>h2:first-child{margin-top:0}.k-fold-toggle:after{content:none!important}.k-fold-hint{white-space:nowrap}
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+/* KIRIN-COMPONENTS:END */
+/* KIRIN-BASE:END */
+.scale-app{max-width:var(--kirin-page-max);margin:0 auto;min-width:0}.scale-app h1{font-size:var(--kirin-fs-l);margin:8px 0}.scale-app p{line-height:1.7}.scale-app>.k-fold{margin:12px 0;border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}.scale-controls{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px 16px}.scale-controls label{display:grid;gap:8px;flex:1 1 180px;min-width:0}.scale-controls select{width:100%;font-size:16px}.scale-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:12px}.scale-actions button{flex:none;min-height:44px;line-height:1.5}.scale-status{padding:10px 12px;background:var(--kirin-surface-2);border-radius:8px}.scale-scroll{overflow-x:auto;overflow-y:hidden;max-width:100%;padding-bottom:12px;isolation:isolate}.scale-board{display:grid;position:relative;width:max-content;border:1px solid var(--kirin-line);background:var(--kirin-surface)}.scale-head{height:32px;display:grid;place-items:center;background:var(--kirin-surface-2);font-size:14px;z-index:1}.scale-label{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:sticky;left:0;width:80px;z-index:6;background:var(--kirin-surface-2);font-size:14px;font-weight:700;line-height:1.5;box-shadow:2px 0 3px rgba(0,0,0,.16)}.scale-head.scale-label{height:32px}.scale-cell{height:56px;position:relative;display:grid;place-items:center;border-right:2px solid var(--kirin-line-strong);background:transparent}.scale-cell:after{content:'';height:1px;position:absolute;left:0;right:0;top:50%;background:var(--kirin-muted)}.scale-zero{position:sticky;left:80px;z-index:5!important;width:56px;background:var(--kirin-surface-2);box-shadow:2px 0 3px rgba(0,0,0,.16)}.scale-mark{position:relative;z-index:3;display:grid;place-items:center;gap:1px;min-width:42px;min-height:46px;padding:2px 4px!important;border:1px solid var(--kirin-accent);border-radius:8px;background:var(--kirin-accent-soft);color:var(--kirin-accent-text);font:inherit;font-size:12px;line-height:1.2;cursor:pointer}.scale-mark.root{background:var(--kirin-accent);color:var(--kirin-on-accent)}.scale-mark strong{font-size:15px}.scale-degree{font-weight:800;font-size:12px}.scale-route{display:flex;gap:8px 20px;flex-wrap:wrap;padding-left:24px;line-height:1.7}.scale-route li{padding:4px 8px;background:var(--kirin-surface-2);border-radius:8px}.scale-hide{display:none!important}.scale-inspect{min-height:26px}.scale-note-list{display:flex;gap:8px;flex-wrap:wrap}.scale-note-list span{padding:4px 8px;background:var(--kirin-surface-2);border-radius:8px}#degreeToggle[aria-pressed=true]{background:var(--kirin-accent);color:var(--kirin-on-accent)}
+
+.scale-mark.scale-context{opacity:.48;background:var(--kirin-surface);color:var(--kirin-muted);border:1px dashed var(--kirin-line-strong)}
+
+.scale-patterns{display:flex;flex-wrap:wrap;gap:10px}.scale-patterns p{margin:0;padding:8px 12px;border:1px solid var(--kirin-line);background:var(--kirin-surface-2);border-radius:8px;line-height:1.7}
+</style><script>window.KIRIN_PAGE_META={appId:'scale-practice',version:'1.10.0',updated:'2026-11-03',changeId:'C-038'};</script></head><body><main class="scale-app">
+<h1>スケール練習</h1><p>△＝ルート、○＝その他の構成音。キーとスケールを選び、指板の位置と上行の流れを確認します。</p>
+<details class="k-fold" open><summary>キー・スケール・表示設定</summary><div class="k-fold-body"><div class="scale-controls"><label>キー<select class="k-select" id="scaleKey"></select></label><label>スケール<select class="k-select" id="scaleType"></select></label><label>チューニング<select class="k-select" id="scaleTuning"></select></label><label>表示モード<select class="k-select" id="scaleMode"><option value="all">全体：0〜24フレット</option><option value="block">ブロック：数フレットで弦を移動</option><option value="route">ルート：6／5／4弦から1弦側へ上行</option></select></label><label id="blockStartLabel">ブロック開始<select class="k-select" id="blockStart"></select></label><label id="blockWidthLabel">ブロック幅<select class="k-select" id="blockWidth"><option value="4">4フレット</option><option value="5" selected>5フレット</option><option value="6">6フレット</option></select></label><label id="routeWidthLabel">ルート間の幅<select class="k-select" id="routeWidth"><option value="4">4フレット幅（最大差3）</option><option value="5" selected>5フレット幅（最大差4）</option></select></label><label id="rootStringLabel">開始弦<select class="k-select" id="rootString"><option value="6">6弦</option><option value="5">5弦</option><option value="4">4弦</option></select></label><label id="rootFretLabel">開始ルート<select class="k-select" id="rootFret"></select></label></div><div class="scale-actions"><button class="k-btn" type="button" id="previousPosition">前の位置</button><button class="k-btn" type="button" id="nextPosition">次の位置</button><button class="k-btn" type="button" id="degreeToggle" aria-pressed="false">度数表示 OFF</button><button class="k-btn" type="button" id="scaleReset">初期設定に戻す</button></div><p class="scale-status" id="scaleStatus" role="status"></p></div></details>
+<details class="k-fold" open><summary>フレットボード</summary><div class="k-fold-body"><div class="scale-note-list" id="scaleNotes"></div><p>横スクロール中も弦番号・開放音・0フレットは固定表示です。記号をクリックすると弦とフレットを確認できます。</p><div class="scale-scroll" tabindex="0" aria-label="ギターフレットボード。横にスクロールできます"><div class="scale-board" id="scaleBoard"></div></div><p class="scale-inspect" id="scaleInspect" role="status"></p></div></details>
+<details class="k-fold" open id="routeDetails"><summary>上行ルートの順番</summary><div class="k-fold-body"><p>濃い番号は6弦から1弦までの全練習ルート、薄い記号は参考音です。1オクターブのブロックを順につなぎ、横方向と1弦側へ移動します。各音は順番に弾くもので同時押弦ではありません。次のルートはオクターブ奏法の位置を通ります。区間内は4／5フレット幅の同音位置を優先し、番号の順に弾きます。</p><ol class="scale-route" id="scaleRoute"></ol><div id="rootPatternControls"><h3>ルートを押してパターンを選ぶ</h3><div class="scale-controls"><label>変更するルート区間<select class="k-select" id="patternBlock"></select></label><label>運指パターン<select class="k-select" id="patternVariant"></select></label></div><div class="scale-actions"><button class="k-btn" type="button" id="previousPattern">前のパターン</button><button class="k-btn" type="button" id="nextPattern">次のパターン</button><span id="patternNotice" role="status"></span></div><p>番号付きの開始ルート△をクリックすると、その区間だけ次の候補へ切り替わります。音の高さ・順番と前後のルートは変わりません。4／5フレット幅に収まらない区間は「移動付き」と表示します。</p></div><h3>ルートから次のルートへのブロック</h3><div id="octaveBlocks" class="scale-patterns"></div><h3>各ブロック内の弦ごとの形</h3><div id="scalePatterns" class="scale-patterns"></div><p>形は最初のフレットを0とした相対位置です。同じ弦に複数の形がある場合は手の位置を移して続けます。指番号の例：全音・全音は1・2・4、全音・半音は1・3・4、半音・全音は1・2・4（1＝人差し指、4＝小指）。無理な伸張は避け、自分の手に合わせてください。</p></div></details>
+<details class="k-fold"><summary>スケールの説明・練習方法</summary><div class="k-fold-body"><p id="scaleDescription"></p><ul><li>全体：0〜24フレットの構成音をすべて表示します。</li><li>ブロック：4／5／6フレット幅の構成音を表示します。弦間を移動するポジション練習用です。0フレットは位置の基準として残します。</li><li>ルート：指定ルートから音を飛ばさず1弦側へ上行します。通過ルートは実音が12半音上のオクターブ位置を選びます（6→4弦、5→3弦、4→2弦）。2弦まで来た後は1弦のオクターブ位置へつなぎます。標準以外のチューニングも実音で照合します。従来の厳密な「到達フレットより高い位置のみ」は、同音を隣の細い弦へ移す操作と衝突するため撤回し、区間ごとの幅と音列を優先します。4／5フレット幅のルート間候補を最大16種類用意します。候補が1つだけの区間や、指定幅で成立せず移動付きになる区間もあります。オクターブ位置と高フレット条件により同じ弦で位置を移す場合があります。薄い記号は開始前も含む構成音の参考表示です。</li><li>度数はルートを1とした長音階基準の1・2・♭3等です。初期OFF。対称音階・ブルースの同音異名はマスターの代表表記です。</li><li>経路は練習用の候補で、指番号や唯一の正しい運指ではありません。1弦まで到達しても、24フレット以内の次のルートへ続けて約3〜4オクターブの全経路を表示します。開始音が高い場合など、実際に出せる範囲は短くなります。24フレット内に条件を満たす経路が見つからない場合は途中表示します。探索は形の類似・幅・移動量を点数化した練習候補で、最適な運指を保証しません。</li><li>設定は再読込で初期化。テーマだけ既存のkirin-themeへ保存します。公開・実機での弾きやすさは別途確認してください。</li></ul></div></details></main><script>
+/* KIRIN-GUITAR-THEORY:BEGIN */
+(function () {
+'use strict';
+const version='1.10.0';
+const presets=[
+{id:"standard",name:"レギュラー",description:"E A D G B E",notes:["E2","A2","D3","G3","B3","E4"],preferFlats:false},
+{id:"half-step-down",name:"半音下げ",description:"Eb Ab Db Gb Bb Eb",notes:["Eb2","Ab2","Db3","Gb3","Bb3","Eb4"],preferFlats:true},
+{id:"whole-step-down",name:"全音下げ",description:"D G C F A D",notes:["D2","G2","C3","F3","A3","D4"],preferFlats:false},
+{id:"drop-d",name:"Drop D",description:"D A D G B E",notes:["D2","A2","D3","G3","B3","E4"],preferFlats:false},
+{id:"drop-c",name:"Drop C",description:"C G C F A D",notes:["C2","G2","C3","F3","A3","D4"],preferFlats:false},
+{id:"dadgad",name:"DADGAD",description:"D A D G A D",notes:["D2","A2","D3","G3","A3","D4"],preferFlats:false},
+{id:"open-g",name:"Open G",description:"D G D G B D",notes:["D2","G2","D3","G3","B3","D4"],preferFlats:false},
+{id:"open-d",name:"Open D",description:"D A D F# A D",notes:["D2","A2","D3","F#3","A3","D4"],preferFlats:false},
+{id:"open-e",name:"Open E",description:"E B E G# B E",notes:["E2","B2","E3","G#3","B3","E4"],preferFlats:false}
+];
+presets.push(
+{id:'drop-c-sharp',name:'ドロップC♯',notes:['C#2','G#2','C#3','F#3','A#3','D#4'],preferFlats:false},
+{id:'drop-b',name:'ドロップB',notes:['B1','F#2','B2','E3','G#3','C#4'],preferFlats:false},
+{id:'drop-a',name:'ドロップA',notes:['A1','E2','A2','D3','F#3','B3'],preferFlats:false},
+{id:'open-c',name:'オープンC',notes:['C2','G2','C3','G3','C4','E4'],preferFlats:false},
+{id:'double-drop-d',name:'ダブルドロップD',notes:['D2','A2','D3','G3','B3','D4'],preferFlats:false},
+{id:'open-d-minor',name:'オープンDマイナー',notes:['D2','A2','D3','F3','A3','D4'],preferFlats:false});
+presets.forEach(p=>{p.description=p.notes.join(' ');p.name=p.name.replace('Drop ','ドロップ').replace('Open ','オープン');});
+const types=[
+{symbol:"",intervals:[0,4,7],priority:100},
+{symbol:"m",intervals:[0,3,7],priority:99},
+{symbol:"5",intervals:[0,7],priority:86},
+{symbol:"sus2",intervals:[0,2,7],priority:84},
+{symbol:"sus4",intervals:[0,5,7],priority:84},
+{symbol:"6",intervals:[0,4,7,9],priority:82},
+{symbol:"m6",intervals:[0,3,7,9],priority:82},
+{symbol:"7",intervals:[0,4,7,10],priority:90},
+{symbol:"maj7",intervals:[0,4,7,11],priority:90},
+{symbol:"m7",intervals:[0,3,7,10],priority:90},
+{symbol:"mMaj7",intervals:[0,3,7,11],priority:72},
+{symbol:"dim",intervals:[0,3,6],priority:72},
+{symbol:"aug",intervals:[0,4,8],priority:72},
+{symbol:"m7b5",intervals:[0,3,6,10],priority:75},
+{symbol:"dim7",intervals:[0,3,6,9],priority:70},
+{symbol:"add9",intervals:[0,2,4,7],priority:80},
+{symbol:"madd9",intervals:[0,2,3,7],priority:78},
+{symbol:"9",intervals:[0,2,4,7,10],priority:76},
+{symbol:"m9",intervals:[0,2,3,7,10],priority:76},
+{symbol:"maj9",intervals:[0,2,4,7,11],priority:74},
+{symbol:"11",intervals:[0,2,4,5,7,10],priority:62},
+{symbol:"13",intervals:[0,2,4,7,9,10],priority:60}
+];
+const mod=n=>((n%12)+12)%12;
+function toMidi(value){const m=String(value).trim().replace(/♯/g,'#').replace(/♭/g,'b').match(/^([A-Ga-g])([#b]?)(-?\d+)$/);if(!m)throw new Error('音名はE2、C#3、Bb3の形式で入力してください');return (Number(m[3])+1)*12+({C:0,D:2,E:4,F:5,G:7,A:9,B:11}[m[1].toUpperCase()])+(m[2]==='#'?1:m[2]==='b'?-1:0);}
+function note(m,flats=false){return (flats?['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']:['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'])[mod(m)]+(Math.floor(m/12)-1);}
+function matchPreset(notes){const m=notes.map(toMidi);return presets.find(p=>p.notes.every((n,i)=>toMidi(n)===m[i]))||null;}
+function detect(notes,flats=false,slash=true){
+ if(!notes.length)return [];const names=flats?['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']:['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+ const pcs=[...new Set(notes.map(n=>mod(n.midi)))];const bass=mod(Math.min(...notes.map(n=>n.midi)));const out=[];
+ for(let root=0;root<12;root++){const played=pcs.map(p=>mod(p-root));if(!played.includes(0))continue;
+ for(const ct of types){const missing=ct.intervals.filter(n=>!played.includes(n));const extra=played.filter(n=>!ct.intervals.includes(n));const exact=!missing.length&&!extra.length;
+ if(!exact&&(played.length<2||missing.length>1||extra.length>1))continue;
+ const name=names[root]+ct.symbol+(slash&&root!==bass?'/'+names[bass]:'');
+ out.push({name,type:exact?'exact':'near',score:(exact?3000:100)+ct.priority+(root===bass?8:0)-missing.length*30-extra.length*30,detail:exact?'全構成音が完全一致'+(root!==bass?'／最低音 '+names[bass]:''):'近似：不足音程 '+missing.join(',')+'／追加音程 '+extra.join(',')});}}
+ if(slash){const low=notes.reduce((a,b)=>a.midi<=b.midi?a:b);const body=notes.filter(n=>n!==low);const bp=[...new Set(body.map(n=>mod(n.midi)))];for(let root=0;root<12;root++)for(const ct of types){if(root===bass||ct.intervals.includes(mod(bass-root)))continue;const ints=bp.map(p=>mod(p-root));if(ints.length===ct.intervals.length&&ct.intervals.every(n=>ints.includes(n)))out.push({name:names[root]+ct.symbol+'/'+names[bass],type:'on',score:2000+ct.priority,detail:'和音に含まれない最低音を分離した完全一致'});}}
+ out.sort((a,b)=>b.score-a.score);return out.filter((v,i)=>out.findIndex(x=>x.name===v.name)===i).slice(0,8);
+}
+function forms(tuning,root,symbol){
+ const type=types.find(t=>t.symbol===symbol);if(!type)return [];const open=tuning.map(toMidi),want=type.intervals.map(n=>mod(n+root));const found=new Map();
+ for(let start=0;start<=16;start++){const opts=open.map(n=>{const o=[null];for(let f=Math.max(0,start);f<=Math.min(16,start+3);f++)if(want.includes(mod(n+f)))o.push(f);if(start>0&&want.includes(mod(n)))o.push(0);return o;});
+ function visit(i,shape){if(i<6){for(const f of opts[i])visit(i+1,shape.concat(f));return;}const played=shape.map((f,j)=>f===null?null:open[j]+f).filter(n=>n!==null);if(played.length<Math.max(3,want.length))return;const pcs=[...new Set(played.map(mod))];if(pcs.length!==want.length||!want.every(n=>pcs.includes(n)))return;const pos=shape.filter(n=>n>0);const low=pos.length?Math.min(...pos):0,hi=pos.length?Math.max(...pos):0;if(hi-low>3)return;const count=shape.filter(n=>n!==null).length;const bass=mod(Math.min(...played));const score=(bass===root?40:0)+count*8-shape.filter(n=>n>0).length*2-(hi-low)*3;const key=shape.join(',');found.set(key,{frets:shape,low,hi,score});}
+ visit(0,[]);}
+ const all=[...found.values()].sort((a,b)=>a.low-b.low||b.score-a.score||a.hi-b.hi);const groups=new Map();for(const x of all){const n=groups.get(x.low)||[];if(n.length<2){n.push(x);groups.set(x.low,n);}}
+ return [...groups.values()].flat().slice(0,32);
+}
+window.KIRIN_GUITAR_THEORY=Object.freeze({version,presets,types,toMidi,note,matchPreset,detect,forms});
+})();
+/* KIRIN-GUITAR-THEORY:END */
+/* KIRIN-SCALE-THEORY:BEGIN */
+(function(){
+'use strict';
+const scales=[{"id":"major","name":"メジャー（アイオニアン）","family":"長短音階・モード","intervals":[0,2,4,5,7,9,11],"degrees":["1","2","3","4","5","6","7"],"description":"長音階。W-W-H-W-W-W-H。","source":"https://openmusictheory.github.io/scales"},{"id":"natural-minor","name":"ナチュラルマイナー（エオリアン）","family":"長短音階・モード","intervals":[0,2,3,5,7,8,10],"degrees":["1","2","♭3","4","5","♭6","♭7"],"description":"自然短音階。","source":"https://openmusictheory.github.io/scales"},{"id":"harmonic-minor","name":"ハーモニックマイナー","family":"長短音階","intervals":[0,2,3,5,7,8,11],"degrees":["1","2","♭3","4","5","♭6","7"],"description":"自然短音階の第7音を半音上げる。","source":"https://openmusictheory.github.io/scales"},{"id":"melodic-minor","name":"メロディックマイナー（上行形）","family":"長短音階","intervals":[0,2,3,5,7,9,11],"degrees":["1","2","♭3","4","5","6","7"],"description":"上行形の固定音列。クラシックの下行形は自然短音階を選択。","source":"https://openmusictheory.github.io/scales"},{"id":"dorian","name":"ドリアン","family":"モード","intervals":[0,2,3,5,7,9,10],"degrees":["1","2","♭3","4","5","6","♭7"],"description":"自然短音階に対し第6音が高い。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/intro-to-diatonic-modes-and-the-chromatic-scale/"},{"id":"phrygian","name":"フリジアン","family":"モード","intervals":[0,1,3,5,7,8,10],"degrees":["1","♭2","♭3","4","5","♭6","♭7"],"description":"自然短音階に対し第2音が低い。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/intro-to-diatonic-modes-and-the-chromatic-scale/"},{"id":"lydian","name":"リディアン","family":"モード","intervals":[0,2,4,6,7,9,11],"degrees":["1","2","3","♯4","5","6","7"],"description":"長音階の第4音を半音上げる。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/intro-to-diatonic-modes-and-the-chromatic-scale/"},{"id":"mixolydian","name":"ミクソリディアン","family":"モード","intervals":[0,2,4,5,7,9,10],"degrees":["1","2","3","4","5","6","♭7"],"description":"長音階の第7音を半音下げる。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/intro-to-diatonic-modes-and-the-chromatic-scale/"},{"id":"locrian","name":"ロクリアン","family":"モード","intervals":[0,1,3,5,6,8,10],"degrees":["1","♭2","♭3","4","♭5","♭6","♭7"],"description":"減5度を含む7音のモード。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/intro-to-diatonic-modes-and-the-chromatic-scale/"},{"id":"major-pentatonic","name":"メジャーペンタトニック","family":"五音音階","intervals":[0,2,4,7,9],"degrees":["1","2","3","5","6"],"description":"長音階から第4・第7音を除いた5音。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/collections/"},{"id":"minor-pentatonic","name":"マイナーペンタトニック","family":"五音音階","intervals":[0,3,5,7,10],"degrees":["1","♭3","4","5","♭7"],"description":"自然短音階から第2・第6音を除いた5音。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/collections/"},{"id":"minor-blues","name":"マイナーブルース","family":"ブルース","intervals":[0,3,5,6,7,10],"degrees":["1","♭3","4","♯4","5","♭7"],"description":"マイナーペンタに♯4（♭5と同音）を追加した一般的な6音形。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/blues-melodies-and-the-blues-scale/"},{"id":"major-blues","name":"メジャーブルース","family":"ブルース","intervals":[0,2,3,4,7,9],"degrees":["1","2","♯2","3","5","6"],"description":"メジャーペンタに♯2（♭3と同音）を追加した6音形。ブルースの実際の音程には揺れがある。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/blues-melodies-and-the-blues-scale/"},{"id":"whole-tone","name":"ホールトーン（全音音階）","family":"対称音階","intervals":[0,2,4,6,8,10],"degrees":["1","2","3","♯4","♯5","♭7"],"description":"全音6音。度数は練習用の代表表記で、綴りは文脈により異なる。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/collections/"},{"id":"octatonic-half-whole","name":"ディミニッシュ（半音・全音）","family":"対称音階","intervals":[0,1,3,4,6,7,9,10],"degrees":["1","♭2","♭3","3","♯4","5","6","♭7"],"description":"半音と全音が交互の8音。度数は代表表記。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/collections/"},{"id":"octatonic-whole-half","name":"ディミニッシュ（全音・半音）","family":"対称音階","intervals":[0,2,3,5,6,8,9,11],"degrees":["1","2","♭3","4","♭5","♭6","6","7"],"description":"全音と半音が交互の8音。度数は代表表記。","source":"https://viva.pressbooks.pub/openmusictheory/chapter/collections/"},{"id":"chromatic","name":"クロマチック（半音階）","family":"半音階","intervals":[0,1,2,3,4,5,6,7,8,9,10,11],"degrees":["1","♭2","2","♭3","3","4","♭5","5","♭6","6","♭7","7"],"description":"12半音。度数は代表表記、厳密な音名綴りは文脈による。","source":"https://openmusictheory.github.io/scales"}];
+scales.forEach(s=>{Object.freeze(s.intervals);Object.freeze(s.degrees);Object.freeze(s);});
+const mod=n=>((n%12)+12)%12;
+function get(id){const s=scales.find(s=>s.id===id);if(!s)throw new Error('Unknown scale: '+id);return s;}
+function points(tuning,root,id){const s=get(id),g=window.KIRIN_GUITAR_THEORY;return tuning.flatMap((n,i)=>Array.from({length:25},(_,f)=>({string:6-i,fret:f,midi:g.toMidi(n)+f}))).filter(p=>s.intervals.includes(mod(p.midi-root))).map(p=>({...p,root:mod(p.midi-root)===0,degree:s.degrees[s.intervals.indexOf(mod(p.midi-root))]}));}
+function block(tuning,root,id,start,width){return points(tuning,root,id).filter(p=>p.fret>=start&&p.fret<start+width);}
+function roots(tuning,root,id,string){return points(tuning,root,id).filter(p=>p.string===string&&p.root).sort((a,b)=>a.fret-b.fret);}
+function route(tuning,root,id,string,start,options={}){
+const all=points(tuning,root,id),first=roots(tuning,root,id,string).find(p=>p.fret>=start),width=options.width===4?4:5,choices=options.choices||{};if(!first)return {path:[],complete:false,groups:[],octaves:0,blocks:[]};const scale=get(id),blocks=[];let current=first,path=[first];
+function makeCandidates(from,to){const tones=scale.intervals.map(n=>from.midi+n).concat(from.midi+12);const seen=new Map(),windows=[];for(let lo=0;lo<=25-width;lo++)if(from.fret>=lo&&from.fret<lo+width&&to.fret>=lo&&to.fret<lo+width)windows.push({lo,hi:lo+width-1,extended:false});if(!windows.length)windows.push({lo:Math.max(0,Math.min(from.fret,to.fret)-1),hi:Math.min(24,Math.max(from.fret,to.fret)+1),extended:true});
+function visit(i,last,chain,window){if(i===tones.length){const key=chain.map(p=>p.string+':'+p.fret).join(','),score=chain.reduce((s,p,j)=>j?s+Math.abs(p.fret-chain[j-1].fret)*.4+(p.string!==chain[j-1].string?0:1):s,0);seen.set(key,{points:chain,low:Math.min(...chain.map(p=>p.fret)),high:Math.max(...chain.map(p=>p.fret)),extended:window.extended,score,key});return;}const opts=i===tones.length-1?[to]:all.filter(p=>p.midi===tones[i]&&p.string<=last.string&&p.string>=last.string-1&&p.string>=to.string&&p.fret>=window.lo&&p.fret<=window.hi&&Math.abs(p.fret-last.fret)<=5);for(const p of opts){if(p.string>last.string||Math.abs(p.fret-last.fret)>5)continue;visit(i+1,p,chain.concat(p),window);}}
+for(const w of windows)visit(1,from,[from],w);if(!seen.size&&!windows.some(w=>w.extended)){const w={lo:Math.max(0,Math.min(from.fret,to.fret)-2),hi:Math.min(24,Math.max(from.fret,to.fret)+3),extended:true};visit(1,from,[from],w);}return [...seen.values()].sort((a,b)=>a.extended-b.extended||a.score-b.score||a.key.localeCompare(b.key)).slice(0,16);}
+while(current.midi+12<=Math.max(...all.map(p=>p.midi))){const targetString=current.string>2?current.string-2:1,to=all.find(p=>p.string===targetString&&p.midi===current.midi+12);if(!to)break;const candidates=makeCandidates(current,to);if(!candidates.length)break;let index=choices[current.midi];if(typeof index==='string')index=candidates.findIndex(c=>c.key===index);index=Number.isInteger(index)&&index>=0?index:0;index%=candidates.length;const selected=candidates[index];blocks.push({octave:blocks.length+1,start:current,end:to,points:selected.points,candidates,index,width,extended:selected.extended});path=path.concat(selected.points.slice(1));current=to;}
+const groups=[];let group=[];path.forEach(p=>{if(group.length&&p.string!==group[0].string){groups.push(group);group=[];}group.push(p);});if(group.length)groups.push(group);return {path:path.map((p,i)=>({...p,order:i+1})),complete:current.string===1&&blocks.length>0,groups:groups.map(g=>({string:g[0].string,frets:g.map(p=>p.fret),gaps:g.slice(1).map((p,i)=>p.fret-g[i].fret)})),octaves:(current.midi-first.midi)/12,blocks,width};}
+function spell(rootName,degree){const natural={C:0,D:2,E:4,F:5,G:7,A:9,B:11},letters='CDEFGAB',root=mod(natural[rootName[0]]+(rootName.includes('#')?1:rootName.includes('b')?-1:0)),match=degree.match(/^([♭♯]*)([1-7])$/),step=Number(match[2])-1,shift=[...match[1]].reduce((a,c)=>a+(c==='♯'?1:-1),0),target=mod(root+[0,2,4,5,7,9,11][step]+shift),letter=letters[(letters.indexOf(rootName[0])+step)%7];let diff=mod(target-natural[letter]);if(diff>6)diff-=12;return letter+(diff>0?'♯'.repeat(diff):'♭'.repeat(-diff));}
+window.KIRIN_SCALE_THEORY=Object.freeze({version:'1.10.0',scales:Object.freeze(scales),get,points,block,roots,route,spell});
+})();
+/* KIRIN-SCALE-THEORY:END */
+/* KIRIN-SHELL-JS:BEGIN */
+(function () {
+  'use strict';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.10.0';
+  var root = document.documentElement;
+  function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    try { window.dispatchEvent(new CustomEvent('kirin-theme-change', { detail: t })); } catch (e) {}
+  }
+  setTheme(savedTheme() || sysTheme());
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var follow = function () { if (!savedTheme()) { setTheme(sysTheme()); paint(); } };
+    if (mq.addEventListener) mq.addEventListener('change', follow); else if (mq.addListener) mq.addListener(follow);
+  }
+  var PAGES = [
+    ['https://kirinplayglound.wixsite.com/my-site', 'トップ'], ['circle-of-fifths.html', '5度圏ルーレット'], ['guitar-chord-composer.html', 'ギターコード作成'],
+    ['hikigatari-note.html', '弾き語りノート'], ['rhythm-pattern.html', 'リズムパターン作成'],
+    ['vocal-range-checker.html', 'ボーカル音域チェッカー'], ['chord-progressions.html', 'コード進行一覧'], ['scale-practice.html', 'スケール練習']
+  ];
+  var btn = null;
+  function paint() {
+    if (!btn) return;
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = dark ? 'ライトにする' : 'ダークにする';
+    btn.setAttribute('aria-label', dark ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え');
+  }
+  function build() {
+    if (document.querySelector('.kx-bar')) return;
+    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    var bar = document.createElement('div');
+    bar.className = 'kx-bar';
+    var brand = document.createElement('a');
+    brand.className = 'kx-brand';
+    brand.href = 'https://kirinplayglound.wixsite.com/my-site'; brand.target = '_top';
+    brand.textContent = 'キリンの遊び場';
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'kx-theme';
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      setTheme(next);
+      paint();
+    });
+    bar.appendChild(brand); var back=document.createElement('a');back.className='kx-brand';back.textContent='戻る';back.href='https://kirinplayglound.wixsite.com/my-site';back.target='_top';bar.appendChild(back);
+    bar.appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild);
+    var foot = document.createElement('footer');
+    foot.className = 'kx-foot';
+    var nav = document.createElement('nav');
+    nav.className = 'kx-nav';
+    nav.setAttribute('aria-label', 'ほかのページ');
+    PAGES.forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = /^https:/.test(p[0]) ? p[0] : p[0] + '?v=' + RELEASE_VERSION; if (/^https:/.test(p[0])) a.target = '_top';
+      a.textContent = p[1];
+      if (p[0] === here) a.setAttribute('aria-current', 'page');
+      nav.appendChild(a);
+    });
+    foot.appendChild(nav);
+    var note = document.createElement('p');
+    note.textContent = 'キリンの遊び場　データはこの端末のブラウザにだけ保存されます。';
+    foot.appendChild(note);
+    document.body.appendChild(foot);
+
+    paint();
+  }
+
+  function foldAll(){
+    function decorate(d){const sum=d.querySelector(':scope > summary');if(!sum)return;d.classList.add('k-fold');if(!sum.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';sum.appendChild(h);}}
+    function wrap(el,title,open){if(el.closest('details')||el.querySelector(':scope > details.k-fold'))return;const d=document.createElement('details'),sum=document.createElement('summary'),body=document.createElement('div');d.open=open;sum.textContent=title;body.className='k-fold-body';while(el.firstChild)body.appendChild(el.firstChild);el.appendChild(d);d.append(sum,body);decorate(d);}
+    const id=window.KIRIN_PAGE_META&&window.KIRIN_PAGE_META.appId;
+    if(id==='rhythm-pattern')document.querySelectorAll('.panel:not(details)').forEach(el=>wrap(el,el.querySelector('h2')?.childNodes[0]?.textContent?.trim()||'譜面・試聴',true));
+    if(id==='vocal-range-checker')document.querySelectorAll('.card').forEach((el,i)=>wrap(el,el.querySelector('.sub')?.textContent||['測定操作','現在の音','音域','鍵盤','検出音'][i]||'音域情報',true));
+    if(id==='circle-of-fifths'){const el=document.querySelector('.wheelStage');if(el)wrap(el,'五度圏ルーレット',true);document.querySelectorAll('.theory-panel').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'調の比較',true));}
+    
+    document.querySelectorAll('a').forEach(a=>{const text=a.textContent.trim();if(['戻る','トップ','キリンの遊び場'].includes(text)){a.href='https://kirinplayglound.wixsite.com/my-site';a.target='_top';}});
+    if(id==='guitar-chord-composer')document.querySelectorAll('main > section.card').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'設定と結果',true));
+    if(id==='circle-of-fifths')document.querySelectorAll('.infoBlock').forEach((el,i)=>{if(i>=2)wrap(el,i===2?'凡例と表記の説明':'度数ガイド',true);});
+    if(id==='vocal-range-checker'){const el=document.getElementById('detectedList')?.parentElement;if(el)wrap(el,'検出した音の一覧',true);}
+    if(id==='chord-progressions'){const el=document.querySelector('.k-lead');if(el)wrap(el,'使い方と説明',true);}
+    document.querySelectorAll('details').forEach(decorate); new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.matches('details'))decorate(node);node.querySelectorAll('details').forEach(decorate);}}).observe(document.body,{childList:true,subtree:true});
+    document.querySelectorAll('.collapse-toggle').forEach(b=>{b.classList.add('k-fold-toggle');if(!b.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';b.appendChild(h);}const content=document.getElementById(b.id.replace('Toggle','Content'));if(content){b.setAttribute('aria-controls',content.id);const update=()=>b.setAttribute('aria-expanded',String(!content.hidden));update();new MutationObserver(update).observe(content,{attributes:true,attributeFilter:['hidden']});}});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(foldAll,0));else setTimeout(foldAll,0);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+/* KIRIN-SHELL-JS:END */
+(function(){
+'use strict';
+const S=window.KIRIN_SCALE_THEORY,G=window.KIRIN_GUITAR_THEORY,$=id=>document.getElementById(id),keys=['C','Db','D','Eb','E','F','F#','G','Ab','A','Bb','B'];let degreesOn=false,routeStep=0,patternChoices={},selectedBlockMidi=null,lastResult=null;
+keys.forEach((n,i)=>$('scaleKey').add(new Option(n.replace('b','♭').replace('#','♯'),i)));S.scales.forEach(s=>$('scaleType').add(new Option(s.name,s.id)));G.presets.forEach(p=>$('scaleTuning').add(new Option(p.name,p.id)));for(let f=0;f<=20;f++)$('blockStart').add(new Option(f+'フレット',f));
+function input(){return {root:Number($('scaleKey').value),id:$('scaleType').value,tuning:G.presets.find(p=>p.id===$('scaleTuning').value).notes,mode:$('scaleMode').value};}
+function refreshRoots(){const v=input(),select=$('rootFret'),old=select.value;select.replaceChildren();S.roots(v.tuning,v.root,v.id,Number($('rootString').value)).forEach(p=>select.add(new Option(p.fret+'フレット '+G.note(p.midi),p.fret)));if([...select.options].some(o=>o.value===old))select.value=old;}
+function render(){const v=input(),scale=S.get(v.id),start=Number($('blockStart').value),width=Number($('blockWidth').value),sn=Number($('rootString').value),rootFret=Number($('rootFret').value),result=v.mode==='route'?S.route(v.tuning,v.root,v.id,sn,rootFret,{width:Number($('routeWidth').value),choices:patternChoices}):null,points=v.mode==='all'?S.points(v.tuning,v.root,v.id):v.mode==='block'?S.block(v.tuning,v.root,v.id,start,width):result.path;
+ const stepGroups=result?result.groups:[],activePoints=points;
+
+ const show=(id,yes)=>$(id).classList.toggle('scale-hide',!yes);show('blockStartLabel',v.mode==='block');show('blockWidthLabel',v.mode==='block');show('rootStringLabel',v.mode==='route');show('rootFretLabel',v.mode==='route');$('routeDetails').hidden=v.mode!=='route';show('routeWidthLabel',v.mode==='route');lastResult=result;renderPatternControls(result);
+ $('degreeToggle').textContent='度数表示 '+(degreesOn?'ON':'OFF');$('degreeToggle').setAttribute('aria-pressed',String(degreesOn));$('scaleDescription').textContent=scale.description;
+ const rootOptions=[...$('rootFret').options],rootIndex=$('rootFret').selectedIndex;$('previousPosition').disabled=v.mode==='all'||(v.mode==='block'?start===0:rootIndex<=0);$('nextPosition').disabled=v.mode==='all'||(v.mode==='block'?start>=20:rootIndex>=rootOptions.length-1);
+ $('scaleStatus').textContent=keys[v.root].replace('b','♭').replace('#','♯')+' ／ '+scale.name+' ／ '+points.length+'箇所'+(v.mode==='block'?'（'+start+'〜'+Math.min(24,start+width-1)+'フレット）':v.mode==='route'?' ／ '+(result.complete?'1弦まで／'+result.octaves.toFixed(1)+'オクターブ':'途中まで／'+result.octaves.toFixed(1)+'オクターブ：条件内で1弦へ届きません。'):'');
+ $('scaleNotes').replaceChildren();scale.degrees.forEach(d=>{const span=document.createElement('span');span.textContent=S.spell(keys[v.root],d)+(degreesOn?' ［'+d+'度］':'');$('scaleNotes').append(span);});$('scaleInspect').textContent='';
+ let frets=Array.from({length:25},(_,i)=>i);if(v.mode==='block')frets=[0,...Array.from({length:Math.min(width,25-start)},(_,i)=>start+i).filter(f=>f!==0)];
+ const board=$('scaleBoard');board.replaceChildren();board.style.gridTemplateColumns='80px repeat('+frets.length+',56px)';board.style.gridTemplateRows='32px repeat(6,56px)';const corner=document.createElement('div');corner.className='scale-head scale-label';corner.textContent='弦／開放';board.append(corner);frets.forEach(f=>{const head=document.createElement('div');head.className='scale-head'+(f===0?' scale-zero':'');head.textContent=f;board.append(head);});
+ for(let string=1;string<=6;string++){const label=document.createElement('div');label.className='scale-label';const a=document.createElement('span'),b=document.createElement('span');a.textContent=string+'弦';b.textContent=v.tuning[6-string];label.append(a,b);board.append(label);frets.forEach(f=>{const cell=document.createElement('div');cell.className='scale-cell'+(f===0?' scale-zero':'');const active=activePoints.find(p=>p.string===string&&p.fret===f);const point=active||(v.mode==='route'?S.points(v.tuning,v.root,v.id).find(p=>p.string===string&&p.fret===f):null);if(point){const mark=document.createElement('button');mark.type='button';mark.className='scale-mark'+(point.root?' root':'')+(v.mode==='route'&&!active?' scale-context':'');mark.dataset.string=string;mark.dataset.fret=f;mark.dataset.midi=point.midi;const sym=document.createElement('strong');sym.textContent=(point.root?'△':'○')+(point.order||'');const note=document.createElement('span');note.textContent=S.spell(keys[v.root],point.degree);mark.append(sym,note);if(degreesOn){const d=document.createElement('span');d.className='scale-degree';d.textContent=point.degree+'度';mark.append(d);}mark.setAttribute('aria-label',string+'弦 '+f+'フレット '+note.textContent+(degreesOn?' '+point.degree+'度':''));mark.onclick=()=>{$('scaleInspect').textContent=string+'弦 '+f+'フレット ／ '+note.textContent+(degreesOn?' ／ '+point.degree+'度':'');if(v.mode==='route'&&active&&point.root){const block=lastResult.blocks.find(b=>b.start.midi===point.midi);if(block){selectedBlockMidi=point.midi;patternChoices[point.midi]=(block.index+1)%block.candidates.length;render();$('patternNotice').textContent='このルート区間の候補を切り替えました。';}else $('patternNotice').textContent='終点ルートです。その先の区間はありません。';}};cell.append(mark);}board.append(cell);});}
+ $('octaveBlocks').replaceChildren();if(result)result.blocks.forEach(b=>{const p=document.createElement('p');p.textContent=b.octave+') '+b.start.string+'弦'+b.start.fret+'F → '+b.end.string+'弦'+b.end.fret+'F ／ '+(b.points.length-1)+'音進んで次のルート'+' ／ 候補'+(b.index+1)+'/'+b.candidates.length+(b.extended?'・移動付き':'・'+b.width+'フレット幅内');$('octaveBlocks').append(p);});
+ $('scalePatterns').replaceChildren();if(result)stepGroups.forEach((g,i)=>{const p=document.createElement('p'),shape=g.frets.map(f=>f-g.frets[0]).join('・'),pattern=g.gaps.map(n=>n===1?'半音':n===2?'全音':n+'半音').join('→');p.textContent=(i+1)+') '+g.string+'弦：'+g.frets.join('・')+'F ／ 形 '+shape+(pattern?' ／ '+pattern:'');$('scalePatterns').append(p);});
+ $('scaleRoute').replaceChildren();if(result)activePoints.forEach(p=>{const li=document.createElement('li');li.textContent=p.string+'弦 '+p.fret+'F '+S.spell(keys[v.root],p.degree)+(degreesOn?' ［'+p.degree+'度］':'');$('scaleRoute').append(li);});
+ const sc=document.querySelector('.scale-scroll'),low=activePoints.length?Math.min(...activePoints.map(p=>p.fret)):0;sc.scrollTo({left:v.mode==='route'?Math.max(0,low*56-12):0,behavior:'instant'});
+}
+function resetPatterns(){patternChoices={};selectedBlockMidi=null;}
+function renderPatternControls(result){const blockSelect=$('patternBlock'),variant=$('patternVariant');blockSelect.replaceChildren();variant.replaceChildren();if(!result||!result.blocks.length){$('previousPattern').disabled=true;$('nextPattern').disabled=true;$('patternNotice').textContent='変更できるルート区間がありません。';return;}if(!result.blocks.some(b=>b.start.midi===selectedBlockMidi))selectedBlockMidi=result.blocks[0].start.midi;result.blocks.forEach(b=>blockSelect.add(new Option(b.start.string+'弦'+b.start.fret+'F → '+b.end.string+'弦'+b.end.fret+'F',b.start.midi)));blockSelect.value=String(selectedBlockMidi);const block=result.blocks.find(b=>b.start.midi===selectedBlockMidi);block.candidates.forEach((c,i)=>variant.add(new Option('候補 '+(i+1)+' ／ '+c.low+'〜'+c.high+'F'+(c.extended?'（移動付き）':''),i)));variant.value=String(block.index);$('previousPattern').disabled=block.candidates.length<2;$('nextPattern').disabled=block.candidates.length<2;$('patternNotice').textContent=block.extended?'指定幅では収まらないため、同音の移動付き候補です。':'指定した'+block.width+'フレット幅の候補です。';}
+function changePattern(delta){if(!lastResult)return;const block=lastResult.blocks.find(b=>b.start.midi===selectedBlockMidi);if(!block)return;patternChoices[selectedBlockMidi]=(block.index+delta+block.candidates.length)%block.candidates.length;render();}
+$('patternBlock').onchange=()=>{selectedBlockMidi=Number($('patternBlock').value);renderPatternControls(lastResult);};$('patternVariant').onchange=()=>{patternChoices[selectedBlockMidi]=Number($('patternVariant').value);render();};$('previousPattern').onclick=()=>changePattern(-1);$('nextPattern').onclick=()=>changePattern(1);$('routeWidth').onchange=()=>{resetPatterns();render();};
+
+['scaleKey','scaleType','scaleTuning','rootString'].forEach(id=>$(id).onchange=()=>{routeStep=0;resetPatterns();refreshRoots();render();});['scaleMode','blockStart','blockWidth','rootFret'].forEach(id=>$(id).onchange=()=>{routeStep=0;resetPatterns();render();});$('degreeToggle').onclick=()=>{degreesOn=!degreesOn;render();};
+function move(d){const v=input();if(v.mode==='block')$('blockStart').value=Math.max(0,Math.min(20,Number($('blockStart').value)+d));if(v.mode==='route')$('rootFret').selectedIndex=Math.max(0,Math.min($('rootFret').options.length-1,$('rootFret').selectedIndex+d));render();}
+
+$('previousPosition').onclick=()=>{routeStep=0;move(-1);};$('nextPosition').onclick=()=>{routeStep=0;move(1);};$('scaleReset').onclick=()=>{$('scaleKey').value='0';$('scaleType').value='major';$('scaleTuning').value='standard';$('scaleMode').value='all';$('blockStart').value='0';$('blockWidth').value='5';$('rootString').value='6';degreesOn=false;routeStep=0;resetPatterns();$('routeWidth').value='5';refreshRoots();$('rootFret').selectedIndex=0;render();};refreshRoots();render();
+})();
+</script></body></html>

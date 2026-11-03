@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ボーカル音域チェッカー</title>
+  <style>
+/* KIRIN-BASE:BEGIN */
+/* ==========================================================
+   kirin-base.css | version=1.10.0 | updated=2026-11-03 | change=C-038 | canonical shared CSS
+   ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
+   ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
+   ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
+   ・COMPONENTS: .k-* の部品。body など素の要素には触れない
+   ・ライト／ダークは <html data-theme="light|dark"> で決まる。SHELL-JS が保存値→OS設定の順で必ず設定する
+   ========================================================== */
+/* KIRIN-TOKENS:BEGIN */
+:root {
+  color-scheme: light;
+  --kirin-font: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --kirin-mono: ui-monospace, Consolas, Menlo, monospace;
+  --kirin-radius: 12px;
+  --kirin-radius-sm: 8px;
+  --kirin-fs-s: clamp(12px, 0.15vw + 11px, 14px);
+  --kirin-fs-m: clamp(14px, 0.3vw + 13px, 17px);
+  --kirin-fs-l: clamp(20px, 0.7vw + 15px, 26px);
+  --kirin-page-max: 1800px;
+  --kirin-page-pad: clamp(6px, 1vw, 14px);
+  --kirin-gap: 12px;
+  --kirin-bg: #f3f5f8;
+  --kirin-bg-2: #e8edf5;
+  --kirin-surface: #ffffff;
+  --kirin-surface-2: #f0f4f9;
+  --kirin-line: #dce1e8;
+  --kirin-line-strong: #bcc6d4;
+  --kirin-text: #202838;
+  --kirin-muted: #647084;
+  --kirin-accent: #245bb5;
+  --kirin-accent-text: #245bb5;
+  --kirin-accent-soft: #e2ecfb;
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ac2434;
+  --kirin-danger-solid: #b42318;
+  --kirin-ok: #1a7f37;
+  --kirin-warn: #9a6700;
+  --kirin-warn-soft: #fff1cf;
+  --kirin-neutral: #475569;
+  --kirin-hover: #edf3fc;
+  --kirin-fg-rgb: 15, 23, 42;
+  --kirin-overlay: rgba(15, 23, 42, 0.45);
+  --kirin-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kirin-bg: #0b1020;
+  --kirin-bg-2: #162042;
+  --kirin-surface: #131b36;
+  --kirin-surface-2: #1a2447;
+  --kirin-line: rgba(148, 163, 184, 0.22);
+  --kirin-line-strong: rgba(148, 163, 184, 0.45);
+  --kirin-text: #eef3ff;
+  --kirin-muted: #a9b5d6;
+  --kirin-accent: #3b82f6;
+  --kirin-accent-text: #8fb4ff;
+  --kirin-accent-soft: rgba(126, 162, 255, 0.18);
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ff8c7a;
+  --kirin-danger-solid: #c2413a;
+  --kirin-ok: #9fe870;
+  --kirin-warn: #fbbf24;
+  --kirin-warn-soft: rgba(251, 191, 36, 0.16);
+  --kirin-neutral: #64748b;
+  --kirin-hover: rgba(126, 162, 255, 0.12);
+  --kirin-fg-rgb: 255, 255, 255;
+  --kirin-overlay: rgba(0, 0, 0, 0.6);
+  --kirin-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+}
+/* KIRIN-TOKENS:END */
+/* KIRIN-SHELL:BEGIN */
+.kx-bar, .kx-foot { box-sizing: border-box; width: 100%; max-width: var(--kirin-page-max); margin: 0 auto 8px; font: var(--kirin-fs-m)/1.5 var(--kirin-font); color: var(--kirin-text); }
+.kx-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 6px 10px; background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius-sm); }
+.kx-brand { padding: 6px 2px; color: var(--kirin-accent-text); font-weight: 800; text-decoration: none; }
+.kx-theme { min-height: 40px; padding: 4px 14px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface-2); color: var(--kirin-text); font: inherit; cursor: pointer; }
+.kx-theme:hover { background: var(--kirin-hover); }
+.kx-foot { margin-top: 8px; margin-bottom: 0; padding: 10px 2px 0; border-top: 1px solid var(--kirin-line); }
+.kx-foot p { margin: 8px 0 0; color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+.kx-nav { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.kx-nav a { display: inline-block; padding: 10px 8px; color: var(--kirin-accent-text); text-decoration: none; border-bottom: 2px solid transparent; }
+.kx-nav a:hover { background: var(--kirin-hover); }
+.kx-nav a[aria-current="page"] { color: var(--kirin-text); font-weight: 800; border-bottom-color: var(--kirin-accent); }
+.kx-theme:focus-visible, .kx-brand:focus-visible, .kx-nav a:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+@media (max-width: 480px) { .kx-nav a { padding: 11px 6px; } }
+/* KIRIN-SHELL:END */
+/* KIRIN-COMPONENTS:BEGIN */
+.k-body { margin: 0; padding: var(--kirin-page-pad); font-family: var(--kirin-font); font-size: var(--kirin-fs-m); line-height: 1.7; color: var(--kirin-text); background: var(--kirin-bg); }
+.k-body, .k-body * { box-sizing: border-box; }
+.k-body a { color: var(--kirin-accent-text); }
+.k-app { max-width: var(--kirin-page-max); margin: 0 auto; }
+.k-body, .k-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.k-body > .k-app, .k-page > .k-grow { flex: 1 0 auto; width: 100%; }
+.k-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 8px 0 14px; }
+.k-eyebrow { margin: 0; color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 800; letter-spacing: 0.08em; }
+.k-title { margin: 4px 0; font-size: var(--kirin-fs-l); line-height: 1.25; }
+.k-lead { margin: 6px 0 0; color: var(--kirin-muted); }
+.k-card { background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius); padding: 14px; box-shadow: var(--kirin-shadow); }
+.k-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 22px; margin-bottom: 8px; }
+.k-field { display: grid; gap: 5px; min-width: 0; font-size: var(--kirin-fs-m); }
+.k-field > span { color: var(--kirin-muted); font-size: var(--kirin-fs-s); font-weight: 700; }
+.k-select, .k-input { min-height: 44px; max-width: 100%; padding: 8px 10px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: 16px; }
+.k-btn { min-height: 44px; padding: 8px 12px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-btn:hover { background: var(--kirin-hover); }
+.k-btn--sm { min-height: 36px; padding: 4px 10px; font-size: var(--kirin-fs-s); }
+.k-btn:focus-visible, .k-select:focus-visible, .k-input:focus-visible, .k-tab:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+.k-tabs { display: inline-flex; overflow: hidden; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); }
+.k-tab { min-height: 42px; padding: 6px 14px; border: 0; border-right: 1px solid var(--kirin-line); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-tab:last-child { border-right: 0; }
+.k-tab:hover { background: var(--kirin-hover); }
+.k-tab[aria-pressed="true"] { background: var(--kirin-accent); color: var(--kirin-on-accent); font-weight: 700; }
+.k-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--kirin-accent-soft); color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 700; white-space: nowrap; }
+.k-muted { color: var(--kirin-muted); }
+.k-grid { display: grid; gap: var(--kirin-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.k-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--kirin-line); color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+@media (max-width: 600px) {
+  .k-controls { gap: 12px; }
+  .k-controls > .k-field { flex: 1 1 100%; }
+  .k-tabs { display: flex; width: 100%; }
+  .k-tab { flex: 1 1 0; padding: 6px 4px; }
+  .k-select, .k-input { width: 100%; }
+}
+
+/* KIRIN-FOLD-CSS:BEGIN */
+.k-fold {border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface);margin:8px 0;color:var(--kirin-text);}
+.k-fold > summary, .k-fold-toggle {display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;padding:8px 12px;cursor:pointer;font:700 var(--kirin-fs-m)/1.5 var(--kirin-font);color:var(--kirin-text);background:var(--kirin-surface-2);border-radius:var(--kirin-radius-sm);}
+.k-fold > summary {list-style:none;} .k-fold > summary::-webkit-details-marker {display:none;}
+.k-fold > summary::before {content:'▸';color:var(--kirin-accent-text);} .k-fold[open] > summary::before {content:'▾';}
+.k-fold-hint {font:400 var(--kirin-fs-s)/1.5 var(--kirin-font);color:var(--kirin-muted);letter-spacing:0;}
+.k-fold-body {padding:10px 12px;} .k-fold > summary:focus-visible,.k-fold-toggle:focus-visible {outline:2px solid var(--kirin-accent);outline-offset:2px;}
+.k-playing {outline:3px solid var(--kirin-accent);outline-offset:-3px;background:var(--kirin-accent-soft)!important;}
+.k-override-badge {padding:4px 8px;border:2px solid var(--kirin-warn);border-radius:8px;background:var(--kirin-warn-soft);color:var(--kirin-text);}
+.k-fold-toggle {width:100%;border:1px solid var(--kirin-line-strong);justify-content:flex-start;}
+/* KIRIN-FOLD-CSS:END */
+[hidden]{display:none!important}
+.k-fold-body{min-width:0}.k-fold-body>h2:first-child{margin-top:0}.k-fold-toggle:after{content:none!important}.k-fold-hint{white-space:nowrap}
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+/* KIRIN-COMPONENTS:END */
+/* KIRIN-BASE:END */
+    :root{
+      --bg:var(--kirin-bg);
+      --panel:var(--kirin-surface);
+      --line:var(--kirin-line);
+      --text:var(--kirin-text);
+      --sub:var(--kirin-muted);
+      --accent:var(--kirin-accent);
+      --whiteW:28px;
+      --blackW:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:var(--kirin-page-pad);
+      background:var(--bg);
+      color:var(--text);
+      font-family: var(--kirin-font);
+    }
+    h1{
+      margin:0 0 12px;
+      font-size: var(--kirin-fs-l);
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      margin-bottom:8px;
+    }
+    .row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:8px 0;
+    }
+    button{
+      border:none;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size: var(--kirin-fs-m);
+      color:var(--kirin-on-accent);
+      background:var(--accent);
+    }
+    button.secondary{ background:var(--kirin-neutral); }
+    button.warn{ background:var(--kirin-danger-solid); }
+    .big{
+      font-size: var(--kirin-fs-l);
+      font-weight:bold;
+      margin-top:6px;
+    }
+    .sub{
+      color:var(--sub);
+      font-size: var(--kirin-fs-m);
+    }
+    .mono{
+      font-family:monospace;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .value{
+      font-size: var(--kirin-fs-l);
+      font-weight:bold;
+    }
+    .status{
+      margin-top:6px;
+      font-size: var(--kirin-fs-m);
+      color:var(--kirin-ok);
+    }
+
+    .legend{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:8px;
+      font-size: var(--kirin-fs-s);
+      color:var(--kirin-muted);
+    }
+    .legend span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .dot{
+      width:14px;
+      height:14px;
+      border-radius:4px;
+      display:inline-block;
+      border:1px solid var(--kirin-line-strong);
+    }
+    .dot.current{ background:#ffd45a; }
+    .dot.detected{ background:#59a8ff; }
+    .dot.span{ background:#d9ffe5; }
+
+    .keyboardWrap{
+      overflow-x:auto;
+      padding-bottom:6px;
+    }
+    .keyboard{
+      position:relative;
+      height:150px;
+      user-select:none;
+      -webkit-user-select:none;
+      margin-top:8px;
+    }
+    .white-key, .black-key{
+      position:absolute;
+      border:1px solid #222;
+      border-radius:0 0 6px 6px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      font-size:10px;
+      padding-bottom:4px;
+      transition:.08s linear;
+    }
+    .white-key{
+      width:var(--whiteW);
+      height:140px;
+      background:#f6f6f6;
+      color:#111;
+      z-index:1;
+    }
+    .black-key{
+      width:var(--blackW);
+      height:88px;
+      background:#111;
+      color:#fff;
+      z-index:2;
+      border-color:#000;
+    }
+
+    .white-key.span{ background:#d9ffe5; }
+    .black-key.span{ background:#2b5d3b; }
+
+    .white-key.detected{ background:#59a8ff; color:#fff; }
+    .black-key.detected{ background:#2f79cf; }
+
+    .white-key.current{
+      background:#ffd45a;
+      color:#111;
+      box-shadow:inset 0 0 0 2px #ffb300;
+    }
+    .black-key.current{
+      background:#ffca3a;
+      color:#111;
+      box-shadow:inset 0 0 0 2px #ffb300;
+    }
+
+    .chips{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+    .chip{
+      background:var(--kirin-surface-2);
+      border:1px solid var(--kirin-line-strong);
+      border-radius:999px;
+      padding:5px 10px;
+      font-size: var(--kirin-fs-s);
+    }
+  .app{width:100%;max-width:var(--kirin-page-max);margin:0 auto}
+@media (min-width:900px){
+.app{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-content:start}
+.app>h1{grid-column:1/-1;margin:0}
+.app>.card{margin-bottom:0;min-width:0}
+.app>.card:nth-of-type(n+3){grid-column:1/-1}
+}
+
+.quick-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.quick-buttons button{position:static;min-height:44px}.noise-settings label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px}.noise-settings input[type=number]{width:100px}.volume-table-scroll{overflow-x:auto}.volume-table{width:100%;border-collapse:collapse}.volume-table td,.volume-table th{padding:8px;border-bottom:1px solid var(--kirin-line);text-align:right}.volume-table td:nth-child(-n+2),.volume-table th:nth-child(-n+2){text-align:left}.chip{display:inline-flex;align-items:center;gap:6px}
+
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+</style>
+<script>/* KIRIN-FILE: version=1.10.0; updated=2026-11-03; changeId=C-038 */ window.KIRIN_PAGE_META = Object.freeze({appId:'vocal-range-checker', version:'1.10.0', updated:'2026-11-03', changeId:'C-038'});
+/* KIRIN-SHELL-JS:BEGIN */
+(function () {
+  'use strict';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.10.0';
+  var root = document.documentElement;
+  function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    try { window.dispatchEvent(new CustomEvent('kirin-theme-change', { detail: t })); } catch (e) {}
+  }
+  setTheme(savedTheme() || sysTheme());
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var follow = function () { if (!savedTheme()) { setTheme(sysTheme()); paint(); } };
+    if (mq.addEventListener) mq.addEventListener('change', follow); else if (mq.addListener) mq.addListener(follow);
+  }
+  var PAGES = [
+    ['https://kirinplayglound.wixsite.com/my-site', 'トップ'], ['circle-of-fifths.html', '5度圏ルーレット'], ['guitar-chord-composer.html', 'ギターコード作成'],
+    ['hikigatari-note.html', '弾き語りノート'], ['rhythm-pattern.html', 'リズムパターン作成'],
+    ['vocal-range-checker.html', 'ボーカル音域チェッカー'], ['chord-progressions.html', 'コード進行一覧'], ['scale-practice.html', 'スケール練習']
+  ];
+  var btn = null;
+  function paint() {
+    if (!btn) return;
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = dark ? 'ライトにする' : 'ダークにする';
+    btn.setAttribute('aria-label', dark ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え');
+  }
+  function build() {
+    if (document.querySelector('.kx-bar')) return;
+    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    var bar = document.createElement('div');
+    bar.className = 'kx-bar';
+    var brand = document.createElement('a');
+    brand.className = 'kx-brand';
+    brand.href = 'https://kirinplayglound.wixsite.com/my-site'; brand.target = '_top';
+    brand.textContent = 'キリンの遊び場';
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'kx-theme';
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      setTheme(next);
+      paint();
+    });
+    bar.appendChild(brand); var back=document.createElement('a');back.className='kx-brand';back.textContent='戻る';back.href='https://kirinplayglound.wixsite.com/my-site';back.target='_top';bar.appendChild(back);
+    bar.appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild);
+    var foot = document.createElement('footer');
+    foot.className = 'kx-foot';
+    var nav = document.createElement('nav');
+    nav.className = 'kx-nav';
+    nav.setAttribute('aria-label', 'ほかのページ');
+    PAGES.forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = /^https:/.test(p[0]) ? p[0] : p[0] + '?v=' + RELEASE_VERSION; if (/^https:/.test(p[0])) a.target = '_top';
+      a.textContent = p[1];
+      if (p[0] === here) a.setAttribute('aria-current', 'page');
+      nav.appendChild(a);
+    });
+    foot.appendChild(nav);
+    var note = document.createElement('p');
+    note.textContent = 'キリンの遊び場　データはこの端末のブラウザにだけ保存されます。';
+    foot.appendChild(note);
+    document.body.appendChild(foot);
+
+    paint();
+  }
+
+  function foldAll(){
+    function decorate(d){const sum=d.querySelector(':scope > summary');if(!sum)return;d.classList.add('k-fold');if(!sum.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';sum.appendChild(h);}}
+    function wrap(el,title,open){if(el.closest('details')||el.querySelector(':scope > details.k-fold'))return;const d=document.createElement('details'),sum=document.createElement('summary'),body=document.createElement('div');d.open=open;sum.textContent=title;body.className='k-fold-body';while(el.firstChild)body.appendChild(el.firstChild);el.appendChild(d);d.append(sum,body);decorate(d);}
+    const id=window.KIRIN_PAGE_META&&window.KIRIN_PAGE_META.appId;
+    if(id==='rhythm-pattern')document.querySelectorAll('.panel:not(details)').forEach(el=>wrap(el,el.querySelector('h2')?.childNodes[0]?.textContent?.trim()||'譜面・試聴',true));
+    if(id==='vocal-range-checker')document.querySelectorAll('.card').forEach((el,i)=>wrap(el,el.querySelector('.sub')?.textContent||['測定操作','現在の音','音域','鍵盤','検出音'][i]||'音域情報',true));
+    if(id==='circle-of-fifths'){const el=document.querySelector('.wheelStage');if(el)wrap(el,'五度圏ルーレット',true);document.querySelectorAll('.theory-panel').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'調の比較',true));}
+    
+    document.querySelectorAll('a').forEach(a=>{const text=a.textContent.trim();if(['戻る','トップ','キリンの遊び場'].includes(text)){a.href='https://kirinplayglound.wixsite.com/my-site';a.target='_top';}});
+    if(id==='guitar-chord-composer')document.querySelectorAll('main > section.card').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'設定と結果',true));
+    if(id==='circle-of-fifths')document.querySelectorAll('.infoBlock').forEach((el,i)=>{if(i>=2)wrap(el,i===2?'凡例と表記の説明':'度数ガイド',true);});
+    if(id==='vocal-range-checker'){const el=document.getElementById('detectedList')?.parentElement;if(el)wrap(el,'検出した音の一覧',true);}
+    if(id==='chord-progressions'){const el=document.querySelector('.k-lead');if(el)wrap(el,'使い方と説明',true);}
+    document.querySelectorAll('details').forEach(decorate); new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.matches('details'))decorate(node);node.querySelectorAll('details').forEach(decorate);}}).observe(document.body,{childList:true,subtree:true});
+    document.querySelectorAll('.collapse-toggle').forEach(b=>{b.classList.add('k-fold-toggle');if(!b.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';b.appendChild(h);}const content=document.getElementById(b.id.replace('Toggle','Content'));if(content){b.setAttribute('aria-controls',content.id);const update=()=>b.setAttribute('aria-expanded',String(!content.hidden));update();new MutationObserver(update).observe(content,{attributes:true,attributeFilter:['hidden']});}});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(foldAll,0));else setTimeout(foldAll,0);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+/* KIRIN-SHELL-JS:END */
+</script>
+</head>
+<body class="k-page">
+  <div class="app k-grow">
+<h1>ボーカル音域チェッカー</h1>
+
+  <div class="card">
+    <div class="row">
+      <button id="startBtn">マイク開始</button><details class="noise-settings"><summary>物音対策と記録条件</summary><label><input type="checkbox" id="noiseFilter" checked>ブラウザの雑音・エコー抑制を使う</label><label>最低入力音量（dBFS）<input id="minInputDb" type="number" min="-60" max="-10" value="-35"></label><label>同じ音の継続（ms）<input id="stableDuration" type="number" min="80" max="1000" value="180"></label><p class="sub">本人の声と周囲の歌声・音楽を確実に分離する機能ではありません。小さい声が落ちる場合は閾値を下げてください。抑制設定の変更で音量の比較条件も変わります。</p><p id="noiseStatus" role="status">対応状況はマイク開始後に表示します。</p></details>
+      <button id="measureBtn">測定モード開始</button>
+      <button id="clearBtn" class="secondary">記録クリア</button>
+    </div>
+
+    <div class="big" id="currentNote">--</div>
+    <div class="sub mono" id="currentInfo">Hz: -- / cents: --</div>
+    <div class="status" id="measureStatus">待機中</div>
+  </div>
+
+  <div class="card grid">
+    <div>
+      <div class="sub">実測の最低音</div>
+      <div class="value" id="lowNote">--</div>
+    </div>
+    <div>
+      <div class="sub">実測の最高音</div>
+      <div class="value" id="highNote">--</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sub">測定した音をピアノ表示</div>
+    <div class="legend">
+      <span><i class="dot current"></i>現在の音</span>
+      <span><i class="dot detected"></i>実際に出た音</span>
+      <span><i class="dot span"></i>最低〜最高の範囲</span>
+    </div>
+    <div class="keyboardWrap">
+      <div id="keyboard" class="keyboard"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sub">出した音すべて</div>
+    <div class="mono" id="rangeText">--</div>
+    <div class="chips" id="detectedList"></div><div class="quick-buttons"><button id="excludeSelected" type="button">選択した音を対象外にする</button><button id="restoreExcluded" type="button">除外音をすべて戻す</button></div><p id="excludedSummary" role="status"></p><div class="volume-table-scroll"><table class="volume-table"><thead><tr><th>対象</th><th>音名</th><th>平均音量</th><th>最大音量</th><th>記録数</th></tr></thead><tbody id="noteVolumeBody"></tbody></table></div><p class="sub">音量はマイク入力の相対値dBFSです（0に近いほど大きい）。音圧dB SPLではありません。同じマイク・距離・設定で比較してください。音量だけで出しやすさを断定できません。</p>
+  </div>
+</div>
+
+<script>
+const noteNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const BLACK_SET = new Set([1,3,6,8,10]);
+
+const START_MIDI = 21;  // A0
+const END_MIDI   = 108; // C8
+const WHITE_W = 28;
+const BLACK_W = 18;
+
+let audioCtx = null;
+let analyser = null;
+let source = null;
+let stream = null;
+let timeData = null;
+let started = false;
+let measuring = false;
+let rafId = null;
+
+let currentFreq = null;
+let currentMidi = null;
+
+let candidateMidi = null;
+let stableFrames = 0;
+let missFrames = 0;
+let frameCount = 0;
+
+const detectedNotes = new Set();
+const excludedNotes=new Set(),selectedForExclusion=new Set(),noteLevels=new Map();
+let currentDb=-100,currentPower=0,candidateSince=0,lastSummary=0;
+
+const startBtn = document.getElementById("startBtn");
+const measureBtn = document.getElementById("measureBtn");
+const clearBtn = document.getElementById("clearBtn");
+
+const currentNoteEl = document.getElementById("currentNote");
+const currentInfoEl = document.getElementById("currentInfo");
+const lowNoteEl = document.getElementById("lowNote");
+const highNoteEl = document.getElementById("highNote");
+const keyboardEl = document.getElementById("keyboard");
+const measureStatusEl = document.getElementById("measureStatus");
+const rangeTextEl = document.getElementById("rangeText");
+const detectedListEl = document.getElementById("detectedList");
+
+function isBlack(midi){
+  return BLACK_SET.has(midi % 12);
+}
+function freqToMidi(freq){
+  return Math.round(69 + 12 * Math.log2(freq / 440));
+}
+function midiToFreq(midi){
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
+function midiToNote(midi){
+  const name = noteNames[(midi % 12 + 12) % 12];
+  const octave = Math.floor(midi / 12) - 1;
+  return `${name}${octave}`;
+}
+function centsOff(freq, midi){
+  const ref = midiToFreq(midi);
+  return Math.round(1200 * Math.log2(freq / ref));
+}
+
+function buildKeyboard(){
+  keyboardEl.innerHTML = "";
+  let whiteIndex = 0;
+
+  for(let midi = START_MIDI; midi <= END_MIDI; midi++){
+    const black = isBlack(midi);
+    const key = document.createElement("div");
+    key.id = `key-${midi}`;
+    key.dataset.midi = midi;
+    key.className = black ? "black-key" : "white-key";
+
+    if(black){
+      key.style.left = `${whiteIndex * WHITE_W - BLACK_W / 2}px`;
+    }else{
+      key.style.left = `${whiteIndex * WHITE_W}px`;
+      if(midi % 12 === 0){ // Cだけラベル
+        key.textContent = midiToNote(midi);
+      }
+      whiteIndex++;
+    }
+
+    keyboardEl.appendChild(key);
+  }
+
+  keyboardEl.style.width = `${whiteIndex * WHITE_W}px`;
+}
+
+function refreshSummary(){
+ const arr=[...detectedNotes].filter(m=>!excludedNotes.has(m)).sort((a,b)=>a-b);lowNoteEl.textContent=arr.length?midiToNote(arr[0]):'--';highNoteEl.textContent=arr.length?midiToNote(arr[arr.length-1]):'--';rangeTextEl.textContent=arr.length?'採用音域: '+midiToNote(arr[0])+' ～ '+midiToNote(arr[arr.length-1])+' / '+arr.length+'音':'採用音なし';
+ detectedListEl.replaceChildren();for(const midi of arr){const label=document.createElement('label');label.className='chip';const input=document.createElement('input');input.type='checkbox';input.checked=selectedForExclusion.has(midi);input.setAttribute('aria-label',midiToNote(midi)+'を除外選択');input.onchange=()=>{if(input.checked)selectedForExclusion.add(midi);else selectedForExclusion.delete(midi);};label.append(input,document.createTextNode(midiToNote(midi)));detectedListEl.append(label);}
+ const body=document.getElementById('noteVolumeBody');body.replaceChildren();for(const [m,v] of [...noteLevels].sort((a,b)=>a[0]-b[0])){const row=document.createElement('tr');const db=10*Math.log10(Math.max(1e-12,v.power/v.count));for(const text of [excludedNotes.has(m)?'除外':'採用',midiToNote(m),db.toFixed(1)+' dBFS',v.peak.toFixed(1)+' dBFS',String(v.count)]){const td=document.createElement('td');td.textContent=text;row.append(td);}body.append(row);}
+ document.getElementById('excludedSummary').textContent=excludedNotes.size?'除外中：'+[...excludedNotes].sort((a,b)=>a-b).map(midiToNote).join('、')+'（現在の測定では自動再登録しません）':'除外音なし';updateKeyboard();}
+
+function updateKeyboard(){
+  const arr = [...detectedNotes].sort((a,b) => a - b);
+  const low = arr.length ? arr[0] : null;
+  const high = arr.length ? arr[arr.length - 1] : null;
+
+  for(let midi = START_MIDI; midi <= END_MIDI; midi++){
+    const key = document.getElementById(`key-${midi}`);
+    if(!key) continue;
+
+    key.classList.remove("span", "detected", "current");
+
+    if(low !== null && midi >= low && midi <= high){
+      key.classList.add("span");
+    }
+    if(detectedNotes.has(midi)){
+      key.classList.add("detected");
+    }
+    if(currentMidi === midi){
+      key.classList.add("current");
+    }
+  }
+}
+
+function clearCurrentDisplay(){
+  currentFreq = null;
+  currentMidi = null;
+  currentNoteEl.textContent = "--";
+  currentInfoEl.textContent = "Hz: -- / cents: --";
+  updateKeyboard();
+}
+
+function clearDetected(){
+  detectedNotes.clear();excludedNotes.clear();selectedForExclusion.clear();noteLevels.clear();
+  refreshSummary();
+}
+
+function registerCurrentMidi(midi){if(!measuring||midi==null||excludedNotes.has(midi))return;const first=!detectedNotes.has(midi);detectedNotes.add(midi);const data=noteLevels.get(midi)||{power:0,count:0,peak:-100};data.power+=currentPower;data.count++;data.peak=Math.max(data.peak,currentDb);noteLevels.set(midi,data);if(first||performance.now()-lastSummary>300){lastSummary=performance.now();refreshSummary();}}
+
+function setMeasureUI(){
+  measureBtn.textContent = measuring ? "測定モード停止" : "測定モード開始";
+  measureStatusEl.textContent = measuring ? "測定中：出した音をすべて記録します" : "待機中";
+}
+
+async function startAudio(){
+  if(started) return;
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)(); const resumeAudio=audioCtx.resume();   stream = await navigator.mediaDevices.getUserMedia({
+    audio:{
+      echoCancellation:document.getElementById("noiseFilter").checked,
+      noiseSuppression:document.getElementById("noiseFilter").checked,
+      autoGainControl:false
+    }
+  });
+
+  // AudioContextは開始ボタンの操作内で作成・再開済み
+  await resumeAudio;
+
+  source = audioCtx.createMediaStreamSource(stream);
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 2048;
+  analyser.smoothingTimeConstant = 0.75;
+
+  source.connect(analyser);
+
+  timeData = new Float32Array(analyser.fftSize);
+  started = true;
+ const settings=stream.getAudioTracks()[0].getSettings();document.getElementById('noiseStatus').textContent='適用状況：雑音抑制 '+String(settings.noiseSuppression??'不明')+'／エコー抑制 '+String(settings.echoCancellation??'不明')+'／自動ゲイン '+String(settings.autoGainControl??'不明');
+
+  if(!rafId) loop();
+}
+
+async function toggleMeasure(){
+  if(!started){
+    await startAudio();
+  }
+
+  if(!measuring){
+    clearDetected(); // 新しい測定として開始
+    measuring = true;
+  }else{
+    measuring = false;
+  }
+  setMeasureUI();
+}
+
+function autoCorrelate(buf, sampleRate){
+  let SIZE = buf.length;
+  let rms = 0;
+
+  for(let i=0;i<SIZE;i++){
+    const v = buf[i];
+    rms += v * v;
+  }
+  rms = Math.sqrt(rms / SIZE);
+  if(20*Math.log10(Math.max(rms,1e-12)) < Number(document.getElementById("minInputDb").value)) return -1;
+
+  let r1 = 0;
+  let r2 = SIZE - 1;
+  const threshold = 0.2;
+
+  for(let i=0;i<SIZE/2;i++){
+    if(Math.abs(buf[i]) < threshold){ r1 = i; break; }
+  }
+  for(let i=1;i<SIZE/2;i++){
+    if(Math.abs(buf[SIZE - i]) < threshold){ r2 = SIZE - i; break; }
+  }
+
+  buf = buf.slice(r1, r2);
+  SIZE = buf.length;
+
+  const c = new Array(SIZE).fill(0);
+  for(let lag=0; lag<SIZE; lag++){
+    for(let i=0; i<SIZE-lag; i++){
+      c[lag] += buf[i] * buf[i + lag];
+    }
+  }
+
+  let d = 0;
+  while(d + 1 < SIZE && c[d] > c[d + 1]) d++;
+
+  let maxVal = -1;
+  let maxPos = -1;
+  for(let i=d; i<SIZE; i++){
+    if(c[i] > maxVal){
+      maxVal = c[i];
+      maxPos = i;
+    }
+  }
+  if(maxPos <= 0) return -1;
+
+  let T0 = maxPos;
+  const x1 = c[T0 - 1] || c[T0];
+  const x2 = c[T0];
+  const x3 = c[T0 + 1] || c[T0];
+  const a = (x1 + x3 - 2 * x2) / 2;
+  const b = (x3 - x1) / 2;
+  if(a) T0 = T0 - b / (2 * a);
+
+  const freq = sampleRate / T0;
+  if(freq < 60 || freq > 1400) return -1;
+
+  return freq;
+}
+
+function loop(){
+  rafId = requestAnimationFrame(loop);
+  if(!analyser) return;
+
+  frameCount++;
+  if(frameCount % 2 !== 0) return; // 少し軽量化
+
+  analyser.getFloatTimeDomainData(timeData);
+  currentPower=timeData.reduce((sum,v)=>sum+v*v,0)/timeData.length;currentDb=10*Math.log10(Math.max(currentPower,1e-12));
+  const freq = autoCorrelate(timeData, audioCtx.sampleRate);
+
+  if(freq === -1){
+    candidateMidi = null;
+    stableFrames = 0;
+    missFrames++;
+
+    if(missFrames > 4){
+      clearCurrentDisplay();
+    }
+    return;
+  }
+
+  missFrames = 0;
+
+  const midi = freqToMidi(freq);
+
+  if(candidateMidi === midi){
+    stableFrames++;
+  }else{
+    candidateMidi = midi;
+    stableFrames = 1;candidateSince=performance.now();
+  }
+
+  if(stableFrames < 3 || performance.now()-candidateSince < Number(document.getElementById("stableDuration").value)) return; // 安定したときだけ採用
+
+  currentFreq = freq;
+  currentMidi = midi;
+
+  const note = midiToNote(midi);
+  const cents = centsOff(freq, midi);
+
+  currentNoteEl.textContent = note;
+  currentInfoEl.textContent = `Hz: ${freq.toFixed(1)} / cents: ${cents > 0 ? "+" : ""}${cents} / ${currentDb.toFixed(1)} dBFS`;
+
+  registerCurrentMidi(midi);
+  updateKeyboard();
+}
+
+startBtn.addEventListener("click", async () => {
+  try{
+    await startAudio();
+    measureStatusEl.textContent = measuring ? "測定中：出した音をすべて記録します" : "マイク開始済み";
+  }catch(err){
+    alert("マイク開始に失敗しました: " + err.message);
+  }
+});
+
+measureBtn.addEventListener("click", async () => {
+  try{
+    await toggleMeasure();
+  }catch(err){
+    alert("測定モード開始に失敗しました: " + err.message);
+  }
+});
+
+clearBtn.addEventListener("click", () => {
+  clearDetected();
+});
+
+
+document.getElementById('excludeSelected').onclick=()=>{for(const m of selectedForExclusion){excludedNotes.add(m);detectedNotes.delete(m);}selectedForExclusion.clear();refreshSummary();};
+document.getElementById('restoreExcluded').onclick=()=>{for(const m of excludedNotes)if(noteLevels.has(m))detectedNotes.add(m);excludedNotes.clear();refreshSummary();};
+document.getElementById('noiseFilter').onchange=async()=>{if(!stream)return;const enabled=document.getElementById('noiseFilter').checked;try{await stream.getAudioTracks()[0].applyConstraints({noiseSuppression:enabled,echoCancellation:enabled,autoGainControl:false});const s=stream.getAudioTracks()[0].getSettings();document.getElementById('noiseStatus').textContent='雑音抑制 '+String(s.noiseSuppression??'不明')+'／エコー抑制 '+String(s.echoCancellation??'不明')+'。記録の比較は同じ設定で。';}catch(e){document.getElementById('noiseStatus').textContent='抑制の変更に未対応：'+e.message;}};
+
+buildKeyboard();
+setMeasureUI();
+refreshSummary();
+</script>
+</body>
+</html>

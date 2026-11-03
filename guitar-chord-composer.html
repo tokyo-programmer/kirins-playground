@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ギターコード作成</title>
+<style>
+/* KIRIN-BASE:BEGIN */
+/* ==========================================================
+   kirin-base.css | version=1.10.0 | updated=2026-11-03 | change=C-038 | canonical shared CSS
+   ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
+   ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
+   ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
+   ・COMPONENTS: .k-* の部品。body など素の要素には触れない
+   ・ライト／ダークは <html data-theme="light|dark"> で決まる。SHELL-JS が保存値→OS設定の順で必ず設定する
+   ========================================================== */
+/* KIRIN-TOKENS:BEGIN */
+:root {
+  color-scheme: light;
+  --kirin-font: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --kirin-mono: ui-monospace, Consolas, Menlo, monospace;
+  --kirin-radius: 12px;
+  --kirin-radius-sm: 8px;
+  --kirin-fs-s: clamp(12px, 0.15vw + 11px, 14px);
+  --kirin-fs-m: clamp(14px, 0.3vw + 13px, 17px);
+  --kirin-fs-l: clamp(20px, 0.7vw + 15px, 26px);
+  --kirin-page-max: 1800px;
+  --kirin-page-pad: clamp(6px, 1vw, 14px);
+  --kirin-gap: 12px;
+  --kirin-bg: #f3f5f8;
+  --kirin-bg-2: #e8edf5;
+  --kirin-surface: #ffffff;
+  --kirin-surface-2: #f0f4f9;
+  --kirin-line: #dce1e8;
+  --kirin-line-strong: #bcc6d4;
+  --kirin-text: #202838;
+  --kirin-muted: #647084;
+  --kirin-accent: #245bb5;
+  --kirin-accent-text: #245bb5;
+  --kirin-accent-soft: #e2ecfb;
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ac2434;
+  --kirin-danger-solid: #b42318;
+  --kirin-ok: #1a7f37;
+  --kirin-warn: #9a6700;
+  --kirin-warn-soft: #fff1cf;
+  --kirin-neutral: #475569;
+  --kirin-hover: #edf3fc;
+  --kirin-fg-rgb: 15, 23, 42;
+  --kirin-overlay: rgba(15, 23, 42, 0.45);
+  --kirin-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kirin-bg: #0b1020;
+  --kirin-bg-2: #162042;
+  --kirin-surface: #131b36;
+  --kirin-surface-2: #1a2447;
+  --kirin-line: rgba(148, 163, 184, 0.22);
+  --kirin-line-strong: rgba(148, 163, 184, 0.45);
+  --kirin-text: #eef3ff;
+  --kirin-muted: #a9b5d6;
+  --kirin-accent: #3b82f6;
+  --kirin-accent-text: #8fb4ff;
+  --kirin-accent-soft: rgba(126, 162, 255, 0.18);
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ff8c7a;
+  --kirin-danger-solid: #c2413a;
+  --kirin-ok: #9fe870;
+  --kirin-warn: #fbbf24;
+  --kirin-warn-soft: rgba(251, 191, 36, 0.16);
+  --kirin-neutral: #64748b;
+  --kirin-hover: rgba(126, 162, 255, 0.12);
+  --kirin-fg-rgb: 255, 255, 255;
+  --kirin-overlay: rgba(0, 0, 0, 0.6);
+  --kirin-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+}
+/* KIRIN-TOKENS:END */
+/* KIRIN-SHELL:BEGIN */
+.kx-bar, .kx-foot { box-sizing: border-box; width: 100%; max-width: var(--kirin-page-max); margin: 0 auto 8px; font: var(--kirin-fs-m)/1.5 var(--kirin-font); color: var(--kirin-text); }
+.kx-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 6px 10px; background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius-sm); }
+.kx-brand { padding: 6px 2px; color: var(--kirin-accent-text); font-weight: 800; text-decoration: none; }
+.kx-theme { min-height: 40px; padding: 4px 14px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface-2); color: var(--kirin-text); font: inherit; cursor: pointer; }
+.kx-theme:hover { background: var(--kirin-hover); }
+.kx-foot { margin-top: 8px; margin-bottom: 0; padding: 10px 2px 0; border-top: 1px solid var(--kirin-line); }
+.kx-foot p { margin: 8px 0 0; color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+.kx-nav { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.kx-nav a { display: inline-block; padding: 10px 8px; color: var(--kirin-accent-text); text-decoration: none; border-bottom: 2px solid transparent; }
+.kx-nav a:hover { background: var(--kirin-hover); }
+.kx-nav a[aria-current="page"] { color: var(--kirin-text); font-weight: 800; border-bottom-color: var(--kirin-accent); }
+.kx-theme:focus-visible, .kx-brand:focus-visible, .kx-nav a:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+@media (max-width: 480px) { .kx-nav a { padding: 11px 6px; } }
+/* KIRIN-SHELL:END */
+/* KIRIN-COMPONENTS:BEGIN */
+.k-body { margin: 0; padding: var(--kirin-page-pad); font-family: var(--kirin-font); font-size: var(--kirin-fs-m); line-height: 1.7; color: var(--kirin-text); background: var(--kirin-bg); }
+.k-body, .k-body * { box-sizing: border-box; }
+.k-body a { color: var(--kirin-accent-text); }
+.k-app { max-width: var(--kirin-page-max); margin: 0 auto; }
+.k-body, .k-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.k-body > .k-app, .k-page > .k-grow { flex: 1 0 auto; width: 100%; }
+.k-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 8px 0 14px; }
+.k-eyebrow { margin: 0; color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 800; letter-spacing: 0.08em; }
+.k-title { margin: 4px 0; font-size: var(--kirin-fs-l); line-height: 1.25; }
+.k-lead { margin: 6px 0 0; color: var(--kirin-muted); }
+.k-card { background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius); padding: 14px; box-shadow: var(--kirin-shadow); }
+.k-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 22px; margin-bottom: 8px; }
+.k-field { display: grid; gap: 5px; min-width: 0; font-size: var(--kirin-fs-m); }
+.k-field > span { color: var(--kirin-muted); font-size: var(--kirin-fs-s); font-weight: 700; }
+.k-select, .k-input { min-height: 44px; max-width: 100%; padding: 8px 10px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: 16px; }
+.k-btn { min-height: 44px; padding: 8px 12px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-btn:hover { background: var(--kirin-hover); }
+.k-btn--sm { min-height: 36px; padding: 4px 10px; font-size: var(--kirin-fs-s); }
+.k-btn:focus-visible, .k-select:focus-visible, .k-input:focus-visible, .k-tab:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+.k-tabs { display: inline-flex; overflow: hidden; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); }
+.k-tab { min-height: 42px; padding: 6px 14px; border: 0; border-right: 1px solid var(--kirin-line); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-tab:last-child { border-right: 0; }
+.k-tab:hover { background: var(--kirin-hover); }
+.k-tab[aria-pressed="true"] { background: var(--kirin-accent); color: var(--kirin-on-accent); font-weight: 700; }
+.k-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--kirin-accent-soft); color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 700; white-space: nowrap; }
+.k-muted { color: var(--kirin-muted); }
+.k-grid { display: grid; gap: var(--kirin-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.k-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--kirin-line); color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+@media (max-width: 600px) {
+  .k-controls { gap: 12px; }
+  .k-controls > .k-field { flex: 1 1 100%; }
+  .k-tabs { display: flex; width: 100%; }
+  .k-tab { flex: 1 1 0; padding: 6px 4px; }
+  .k-select, .k-input { width: 100%; }
+}
+
+/* KIRIN-FOLD-CSS:BEGIN */
+.k-fold {border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface);margin:8px 0;color:var(--kirin-text);}
+.k-fold > summary, .k-fold-toggle {display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;padding:8px 12px;cursor:pointer;font:700 var(--kirin-fs-m)/1.5 var(--kirin-font);color:var(--kirin-text);background:var(--kirin-surface-2);border-radius:var(--kirin-radius-sm);}
+.k-fold > summary {list-style:none;} .k-fold > summary::-webkit-details-marker {display:none;}
+.k-fold > summary::before {content:'▸';color:var(--kirin-accent-text);} .k-fold[open] > summary::before {content:'▾';}
+.k-fold-hint {font:400 var(--kirin-fs-s)/1.5 var(--kirin-font);color:var(--kirin-muted);letter-spacing:0;}
+.k-fold-body {padding:10px 12px;} .k-fold > summary:focus-visible,.k-fold-toggle:focus-visible {outline:2px solid var(--kirin-accent);outline-offset:2px;}
+.k-playing {outline:3px solid var(--kirin-accent);outline-offset:-3px;background:var(--kirin-accent-soft)!important;}
+.k-override-badge {padding:4px 8px;border:2px solid var(--kirin-warn);border-radius:8px;background:var(--kirin-warn-soft);color:var(--kirin-text);}
+.k-fold-toggle {width:100%;border:1px solid var(--kirin-line-strong);justify-content:flex-start;}
+/* KIRIN-FOLD-CSS:END */
+[hidden]{display:none!important}
+.k-fold-body{min-width:0}.k-fold-body>h2:first-child{margin-top:0}.k-fold-toggle:after{content:none!important}.k-fold-hint{white-space:nowrap}
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+/* KIRIN-COMPONENTS:END */
+/* KIRIN-BASE:END */
+/* このページ専用の色（ライト／ダーク） */
+:root{--g-board:#fff7ed;--g-fret:#94a3b8;--g-nut:#334155;--g-nutbg:#ffffff}
+:root[data-theme="dark"]{--g-board:#243049;--g-fret:#64748b;--g-nut:#cbd5e1;--g-nutbg:#34415f}
+:root{font-family: var(--kirin-font);color:var(--kirin-text);background:var(--kirin-bg)}
+*{box-sizing:border-box}
+body{margin:0;padding-bottom:76px;background:var(--kirin-bg)}
+button,input{font:inherit}
+button{touch-action:manipulation}
+.app{width:100%;max-width:var(--kirin-page-max);margin:0 auto;padding:var(--kirin-page-pad)}
+.hero{padding:6px 4px 8px}
+.eyebrow{margin:0 0 8px;color:var(--kirin-accent);font-size: var(--kirin-fs-s);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:0;font-size: var(--kirin-fs-l);line-height:1.15}
+.description{margin:10px 0 0;color:var(--kirin-muted);line-height:1.7;font-size: var(--kirin-fs-m)}
+.card{background:var(--kirin-surface);border-radius:20px;padding:12px;margin-bottom:10px;box-shadow:0 10px 30px rgba(15,23,42,.08)}
+.section-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+h2{margin:0;font-size: var(--kirin-fs-m)}
+h3{margin:0 0 10px;font-size: var(--kirin-fs-m)}
+.badge{background:var(--kirin-accent-soft);color:var(--kirin-accent-text);border-radius:999px;padding:6px 10px;font-size: var(--kirin-fs-s);font-weight:800;white-space:nowrap}
+.field{display:grid;gap:7px;margin-bottom:12px}
+.field span{color:var(--kirin-muted);font-size: var(--kirin-fs-s);font-weight:800}
+input{width:100%;border:1px solid var(--kirin-line);border-radius:10px;padding:7px 9px;background:var(--kirin-surface);color:var(--kirin-text);min-height:36px;font-size: var(--kirin-fs-m)}
+.preset-button,.fret-select-button{width:100%;border:1px solid var(--kirin-line);border-radius:12px;background:var(--kirin-surface);font-weight:900;color:var(--kirin-text)}
+.preset-button{min-height:44px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left}
+.preset-button strong{display:block;font-size: var(--kirin-fs-m)}
+.preset-button small{display:block;color:var(--kirin-muted);font-size: var(--kirin-fs-s);font-weight:700;margin-top:2px}
+.preset-button:after{content:"選択";color:var(--kirin-accent-text);font-size: var(--kirin-fs-s);font-weight:900;white-space:nowrap}
+.preset-button:active,.fret-select-button:active{background:var(--kirin-accent-soft)}
+.tuning-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.string-control{display:grid;grid-template-columns:38px 1fr;align-items:center;gap:6px;padding:7px 8px;border:1px solid var(--kirin-line);border-radius:13px;background:var(--kirin-surface-2)}
+.string-control span{color:var(--kirin-text);font-size: var(--kirin-fs-s);font-weight:900;white-space:nowrap}
+.quick-buttons,.audio-actions{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+.quick-buttons button,.audio-actions button{border:0;border-radius:999px;background:var(--kirin-neutral);color:var(--kirin-on-accent);padding:10px 13px;white-space:nowrap;min-height:42px;font-weight:800}
+.quick-buttons button.active,.audio-actions button.active,.bottom-bar button.active{background:var(--kirin-accent);box-shadow:0 0 0 4px rgba(37,99,235,.18)}
+.quick-buttons .utility-button{background:#0f766e}
+.quick-buttons .mute-utility-button{background:#7f1d1d}
+.audio-actions .primary-button{background:var(--kirin-accent)}
+.audio-actions .primary-button.active{background:#16a34a;box-shadow:0 0 0 4px rgba(22,163,74,.18)}
+.audio-actions .danger-button{background:var(--kirin-danger)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;margin-bottom:12px;border-radius:16px;background:var(--kirin-surface-2);border:1px solid var(--kirin-line)}
+.toggle-row span{display:block;color:var(--kirin-text);font-size: var(--kirin-fs-m);font-weight:900}
+.toggle-row small{display:block;margin-top:3px;color:var(--kirin-muted);font-size: var(--kirin-fs-s);line-height:1.4}
+.switch{position:relative;width:54px;min-width:54px;height:32px}
+.switch input{opacity:0;width:0;height:0;min-height:0;padding:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:var(--kirin-line-strong);border-radius:999px;transition:.18s}
+.slider:before{content:"";position:absolute;height:24px;width:24px;left:4px;bottom:4px;background:white;border-radius:999px;transition:.18s;box-shadow:0 2px 8px rgba(15,23,42,.22)}
+.switch input:checked+.slider{background:var(--kirin-accent)}
+.switch input:checked+.slider:before{transform:translateX(22px)}
+.fretboard-area{margin:12px 0;padding:10px;border-radius:18px;background:var(--kirin-surface-2);border:1px solid var(--kirin-line)}
+.fretboard-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.fretboard-title strong{font-size: var(--kirin-fs-m)}
+.fretboard-title span{color:var(--kirin-muted);font-size: var(--kirin-fs-s);line-height:1.45;text-align:right}
+.fretboard-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+.fretboard{display:grid;grid-template-columns:62px repeat(17,38px);gap:0;min-width:708px;user-select:none;border-radius:12px;overflow:hidden;background:var(--g-board);border:1px solid var(--kirin-line)}
+.fretboard-corner,.fret-number,.string-label,.fret-cell{min-height:30px;height:30px}
+.fretboard-corner{background:var(--kirin-surface-2);border-bottom:1px solid var(--kirin-line)}
+.fret-number{display:flex;align-items:center;justify-content:center;color:var(--kirin-muted);font-size: var(--kirin-fs-s);font-weight:800;background:var(--kirin-surface-2);border-bottom:1px solid var(--kirin-line)}
+.string-label{display:flex;align-items:center;justify-content:flex-end;gap:2px;padding-right:6px;color:var(--kirin-text);font-size: var(--kirin-fs-s);font-weight:900;text-align:right;background:var(--kirin-surface-2);border-right:1px solid var(--kirin-line)}
+.string-label small{color:var(--kirin-muted);font-size: var(--kirin-fs-s);font-weight:700}
+.fret-cell{position:relative;border:0;border-left:2px solid var(--g-fret);background:var(--g-board);color:transparent;padding:0;min-width:38px}
+.fret-cell.nut{border-left-width:4px;border-left-color:var(--g-nut);background:var(--g-nutbg)}
+.fret-cell:after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-50%);background:var(--kirin-muted);opacity:.85}
+.fret-cell:before{content:"";position:absolute;left:50%;top:50%;width:0;height:0;border-radius:999px;transform:translate(-50%,-50%);background:var(--kirin-accent);z-index:2;transition:.12s}
+.fret-cell.active:before{width:19px;height:19px;box-shadow:0 0 0 3px rgba(37,99,235,.18)}
+.fret-cell.open.active:before{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.18)}
+.fret-cell:active{background:var(--kirin-accent-soft)}
+.fret-table{display:grid;gap:7px}
+.fret-row{display:grid;grid-template-columns:1fr 58px;align-items:center;gap:7px;padding:7px 8px;border:1px solid var(--kirin-line);border-radius:13px;background:var(--kirin-surface)}
+.string-name{display:flex;align-items:center;gap:7px;min-width:0}
+.string-name strong{font-size: var(--kirin-fs-m);white-space:nowrap}
+.string-name span{color:var(--kirin-muted);font-size: var(--kirin-fs-s);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fret-select-button{min-height:36px;padding:5px 6px;text-align:center;font-size: var(--kirin-fs-m);letter-spacing:.04em}
+.current-shape{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding:11px 12px;background:var(--kirin-surface-2);border-radius:16px}
+.current-shape span{color:var(--kirin-muted);font-size: var(--kirin-fs-s)}
+.current-shape strong{font-size: var(--kirin-fs-m);letter-spacing:.12em}
+.result-card{border:2px solid var(--kirin-accent-soft)}
+.result-block+.result-block{margin-top:14px}
+.chord-list{display:flex;flex-wrap:wrap;gap:10px}
+.chord-chip{display:inline-flex;align-items:center;justify-content:center;min-width:72px;padding:11px 15px;border-radius:16px;background:var(--kirin-accent);color:var(--kirin-on-accent);font-size: var(--kirin-fs-l);font-weight:900}
+.collapse-toggle{width:100%;border:1px solid var(--kirin-line);border-radius:16px;padding:12px 14px;background:var(--kirin-surface-2);color:var(--kirin-text);display:flex;align-items:center;justify-content:space-between;gap:12px;font-weight:900;text-align:left}
+.collapse-toggle:after{content:"表示";color:var(--kirin-accent);font-size: var(--kirin-fs-s);font-weight:900}
+.collapse-toggle.open:after{content:"閉じる";color:var(--kirin-danger)}
+.collapse-content{margin-top:10px}
+.collapse-content[hidden]{display:none}
+.note-list{display:grid;gap:8px}
+.note-item{display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:10px;padding:10px 12px;background:var(--kirin-surface-2);border-radius:14px}
+.note-item span,.note-item small{color:var(--kirin-muted)}
+.note-item strong{font-size: var(--kirin-fs-m)}
+.audio-status{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--kirin-muted);font-size: var(--kirin-fs-m);font-weight:800}
+.status-dot{width:10px;height:10px;border-radius:999px;background:#9ca3af}
+.status-dot.active{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.15)}
+.volume-control{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin:10px 0 12px;padding:10px 12px;border-radius:16px;background:var(--kirin-surface-2)}
+.volume-control span{color:var(--kirin-muted);font-size: var(--kirin-fs-m);font-weight:800}
+.volume-control strong{min-width:44px;text-align:right;color:var(--kirin-text);font-size: var(--kirin-fs-m)}
+.volume-control input[type=range]{padding:0;min-height:32px}
+.hint{color:var(--kirin-muted);font-size: var(--kirin-fs-s);line-height:1.7;margin:8px 0 0}
+.muted{color:var(--kirin-muted)}
+.error{color:var(--kirin-danger);font-weight:800}
+.picker-backdrop{position:fixed;inset:0;z-index:100;background:var(--kirin-overlay);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.picker-panel{width:min(430px,100%);max-height:380px;background:var(--kirin-surface);border-radius:22px;box-shadow:0 24px 80px rgba(15,23,42,.28);overflow:hidden}
+.picker-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--kirin-line);background:var(--kirin-surface-2)}
+.picker-header strong{font-size: var(--kirin-fs-m)}
+.picker-header button{border:0;border-radius:999px;background:var(--kirin-line);color:var(--kirin-text);padding:8px 12px;font-weight:900}
+.picker-list{max-height:288px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px}
+.picker-option{width:100%;border:0;border-radius:14px;background:var(--kirin-surface);color:var(--kirin-text);padding:13px 14px;min-height:48px;font-size: var(--kirin-fs-m);font-weight:900;text-align:center}
+.picker-option+.picker-option{margin-top:4px}
+.picker-option small{display:block;margin-top:3px;color:var(--kirin-muted);font-size: var(--kirin-fs-s);font-weight:700}
+.picker-option.active{background:var(--kirin-accent);color:var(--kirin-on-accent)}
+.picker-option.active small{color:var(--kirin-accent-soft)}
+.picker-option:active{background:var(--kirin-accent-soft);color:var(--kirin-text)}
+.bottom-bar{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--kirin-surface) 94%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--kirin-line);padding:10px 12px;display:flex;gap:8px;overflow-x:auto;z-index:10}
+.bottom-bar button{border:0;border-radius:999px;padding:12px 16px;min-height:44px;white-space:nowrap;font-weight:900;background:var(--kirin-neutral);color:var(--kirin-on-accent)}
+.bottom-bar .main{background:var(--kirin-accent)}
+@media(max-width:360px){.tuning-grid{grid-template-columns:1fr}.fret-row{grid-template-columns:1fr 54px}}
+@media (min-width:1000px){
+.app{display:grid;grid-template-columns:minmax(320px,1fr) minmax(0,1.7fr);gap:12px;align-items:start}
+.app>section{min-width:0;margin-bottom:0}
+.app>.hero{grid-column:1/-1}
+.app>section:nth-of-type(2){grid-column:1;grid-row:2}
+.app>section:nth-of-type(3){grid-column:2;grid-row:2/span 2}
+.app>section:nth-of-type(4){grid-column:1;grid-row:3}
+}
+
+.k-controls,.quick-buttons{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.quick-buttons>button{position:static!important;flex:0 1 auto;min-height:44px}.fretboard-scroll{scroll-behavior:smooth}#formPosition{overflow-wrap:anywhere}#barreFret{max-width:300px} .fretboard-area{min-width:0}.fretboard-scroll{width:100%;max-width:720px}.fretboard{grid-template-columns:80px repeat(17,56px);width:1032px;min-width:1032px;max-width:none}.string-control{grid-template-columns:minmax(0,1fr)}.string-control input,.string-control select{max-width:100%;box-sizing:border-box} .bottom-bar{position:static!important;inset:auto!important;transform:none!important;display:flex;flex-wrap:wrap;gap:8px;width:calc(100% - 24px);max-width:720px;margin:12px auto;box-sizing:border-box}.bottom-bar button{flex:1 1 100px;min-height:44px}
+
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+
+.fretboard{overflow:visible!important}.string-label,.fretboard-corner{position:sticky;left:0;z-index:5;background:var(--kirin-surface-2);box-shadow:2px 0 4px rgba(0,0,0,.15)}.string-label{justify-content:center;flex-direction:column;gap:0}.mute-mark{position:absolute;z-index:3;inset:0;display:grid;place-items:center;color:var(--kirin-text);font-size:25px;font-weight:900;background:var(--g-nutbg)}.muted-string:before,.muted-string:after{display:none}.chord-result-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0}.chord-result-row small{color:var(--kirin-muted)}.string-control .quick-buttons{padding:0;overflow:visible;flex-wrap:nowrap}.string-control .quick-buttons button{flex:1}.bottom-bar{margin-bottom:0!important}.quick-buttons{padding-bottom:0}
+
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+
+/* KIRIN-GUITAR-VIEW:BEGIN */
+.fretboard-scroll{overflow-x:auto;overflow-y:hidden;height:auto!important;max-height:none!important;min-height:0; padding-bottom:12px;box-sizing:content-box;isolation:isolate}
+.fretboard{grid-template-columns:80px repeat(17,56px)!important;grid-template-rows:32px repeat(6,44px);height:296px!important;min-height:296px;max-height:none;width:1032px;min-width:1032px;overflow:visible!important}
+.fretboard-corner,.fret-number{height:32px!important;min-height:32px!important}.string-label,.fret-cell{height:44px!important;min-height:44px!important;max-height:44px;box-sizing:border-box}
+.string-label,.fretboard-corner{position:sticky!important;left:0!important;z-index:6!important;width:80px;background:var(--kirin-surface-2)}
+.fret-number.zero-fret,.fret-cell.open{position:sticky!important;left:80px!important;z-index:5!important;width:56px;background:var(--g-nutbg);box-shadow:2px 0 4px rgba(0,0,0,.16)}
+.string-label{padding:3px 6px!important;line-height:1.35;font-size:max(13px,var(--kirin-fs-s));gap:2px!important}.string-label small{font-size:inherit}.fret-cell{padding:0!important;line-height:1}.fretboard-title{flex-wrap:wrap;gap:8px 16px}.fretboard-title span{text-align:left;line-height:1.6}
+.string-control{gap:10px;padding:10px 12px}.string-control label{display:grid;gap:8px;line-height:1.5}.string-control .quick-buttons{justify-content:flex-start;gap:10px!important}.string-control .quick-buttons button{flex:0 0 44px!important;width:44px;min-width:44px;padding:6px!important;font-size:18px;line-height:1.4}
+.k-controls{gap:12px 16px!important;align-items:flex-end!important}.k-controls .k-field{display:grid;gap:8px;line-height:1.5}.k-controls select{margin-top:0!important}.quick-buttons,.audio-actions{gap:12px!important;align-items:center;flex-wrap:wrap;overflow:visible;padding:4px 0}.quick-buttons>button,.audio-actions>button,.bottom-bar>button{flex:0 1 auto!important;width:auto;min-height:44px;padding:8px 14px!important;font-size:var(--kirin-fs-m);line-height:1.5;white-space:normal}.bottom-bar{justify-content:center;gap:12px!important}.section-header,.toggle-row{gap:12px 16px;flex-wrap:wrap}.chord-result-row{gap:10px 14px!important;line-height:1.6}.preset-button{gap:16px;line-height:1.5}.preset-button small{margin-top:6px}.current-shape{line-height:1.7;overflow-wrap:anywhere}
+/* KIRIN-GUITAR-VIEW:END */
+</style>
+<script>/* KIRIN-FILE: version=1.10.0; updated=2026-11-03; changeId=C-038 */ window.KIRIN_PAGE_META = Object.freeze({appId:'guitar-chord-composer', version:'1.10.0', updated:'2026-11-03', changeId:'C-038'});
+/* KIRIN-SHELL-JS:BEGIN */
+(function () {
+  'use strict';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.10.0';
+  var root = document.documentElement;
+  function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    try { window.dispatchEvent(new CustomEvent('kirin-theme-change', { detail: t })); } catch (e) {}
+  }
+  setTheme(savedTheme() || sysTheme());
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var follow = function () { if (!savedTheme()) { setTheme(sysTheme()); paint(); } };
+    if (mq.addEventListener) mq.addEventListener('change', follow); else if (mq.addListener) mq.addListener(follow);
+  }
+  var PAGES = [
+    ['https://kirinplayglound.wixsite.com/my-site', 'トップ'], ['circle-of-fifths.html', '5度圏ルーレット'], ['guitar-chord-composer.html', 'ギターコード作成'],
+    ['hikigatari-note.html', '弾き語りノート'], ['rhythm-pattern.html', 'リズムパターン作成'],
+    ['vocal-range-checker.html', 'ボーカル音域チェッカー'], ['chord-progressions.html', 'コード進行一覧'], ['scale-practice.html', 'スケール練習']
+  ];
+  var btn = null;
+  function paint() {
+    if (!btn) return;
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = dark ? 'ライトにする' : 'ダークにする';
+    btn.setAttribute('aria-label', dark ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え');
+  }
+  function build() {
+    if (document.querySelector('.kx-bar')) return;
+    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    var bar = document.createElement('div');
+    bar.className = 'kx-bar';
+    var brand = document.createElement('a');
+    brand.className = 'kx-brand';
+    brand.href = 'https://kirinplayglound.wixsite.com/my-site'; brand.target = '_top';
+    brand.textContent = 'キリンの遊び場';
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'kx-theme';
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      setTheme(next);
+      paint();
+    });
+    bar.appendChild(brand); var back=document.createElement('a');back.className='kx-brand';back.textContent='戻る';back.href='https://kirinplayglound.wixsite.com/my-site';back.target='_top';bar.appendChild(back);
+    bar.appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild);
+    var foot = document.createElement('footer');
+    foot.className = 'kx-foot';
+    var nav = document.createElement('nav');
+    nav.className = 'kx-nav';
+    nav.setAttribute('aria-label', 'ほかのページ');
+    PAGES.forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = /^https:/.test(p[0]) ? p[0] : p[0] + '?v=' + RELEASE_VERSION; if (/^https:/.test(p[0])) a.target = '_top';
+      a.textContent = p[1];
+      if (p[0] === here) a.setAttribute('aria-current', 'page');
+      nav.appendChild(a);
+    });
+    foot.appendChild(nav);
+    var note = document.createElement('p');
+    note.textContent = 'キリンの遊び場　データはこの端末のブラウザにだけ保存されます。';
+    foot.appendChild(note);
+    document.body.appendChild(foot);
+
+    paint();
+  }
+
+  function foldAll(){
+    function decorate(d){const sum=d.querySelector(':scope > summary');if(!sum)return;d.classList.add('k-fold');if(!sum.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';sum.appendChild(h);}}
+    function wrap(el,title,open){if(el.closest('details')||el.querySelector(':scope > details.k-fold'))return;const d=document.createElement('details'),sum=document.createElement('summary'),body=document.createElement('div');d.open=open;sum.textContent=title;body.className='k-fold-body';while(el.firstChild)body.appendChild(el.firstChild);el.appendChild(d);d.append(sum,body);decorate(d);}
+    const id=window.KIRIN_PAGE_META&&window.KIRIN_PAGE_META.appId;
+    if(id==='rhythm-pattern')document.querySelectorAll('.panel:not(details)').forEach(el=>wrap(el,el.querySelector('h2')?.childNodes[0]?.textContent?.trim()||'譜面・試聴',true));
+    if(id==='vocal-range-checker')document.querySelectorAll('.card').forEach((el,i)=>wrap(el,el.querySelector('.sub')?.textContent||['測定操作','現在の音','音域','鍵盤','検出音'][i]||'音域情報',true));
+    if(id==='circle-of-fifths'){const el=document.querySelector('.wheelStage');if(el)wrap(el,'五度圏ルーレット',true);document.querySelectorAll('.theory-panel').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'調の比較',true));}
+    
+    document.querySelectorAll('a').forEach(a=>{const text=a.textContent.trim();if(['戻る','トップ','キリンの遊び場'].includes(text)){a.href='https://kirinplayglound.wixsite.com/my-site';a.target='_top';}});
+    if(id==='guitar-chord-composer')document.querySelectorAll('main > section.card').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'設定と結果',true));
+    if(id==='circle-of-fifths')document.querySelectorAll('.infoBlock').forEach((el,i)=>{if(i>=2)wrap(el,i===2?'凡例と表記の説明':'度数ガイド',true);});
+    if(id==='vocal-range-checker'){const el=document.getElementById('detectedList')?.parentElement;if(el)wrap(el,'検出した音の一覧',true);}
+    if(id==='chord-progressions'){const el=document.querySelector('.k-lead');if(el)wrap(el,'使い方と説明',true);}
+    document.querySelectorAll('details').forEach(decorate); new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.matches('details'))decorate(node);node.querySelectorAll('details').forEach(decorate);}}).observe(document.body,{childList:true,subtree:true});
+    document.querySelectorAll('.collapse-toggle').forEach(b=>{b.classList.add('k-fold-toggle');if(!b.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';b.appendChild(h);}const content=document.getElementById(b.id.replace('Toggle','Content'));if(content){b.setAttribute('aria-controls',content.id);const update=()=>b.setAttribute('aria-expanded',String(!content.hidden));update();new MutationObserver(update).observe(content,{attributes:true,attributeFilter:['hidden']});}});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(foldAll,0));else setTimeout(foldAll,0);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+/* KIRIN-SHELL-JS:END */
+</script>
+</head>
+
+<body class="k-page">
+<main class="app k-grow">
+  <section class="hero">
+    <p class="eyebrow">チューニングと押弦からコードを確認</p>
+    <h1>ギターコード作成</h1>
+    <p class="description">チューニング毎のコードを表示します。「再生」と「鳴っている音」は必要な時だけ開けます。</p>
+  </section>
+
+  <section class="card">
+    <div class="section-header">
+      <h2>1. チューニング</h2>
+      <span class="badge">6弦 → 1弦</span>
+    </div>
+    <label class="field">
+      <span>プリセット</span>
+      <button type="button" class="preset-button" id="presetButton"></button>
+    </label>
+    <div class="tuning-grid" id="tuningGrid"></div><p id="tuningMatch" class="hint" aria-live="polite"></p><p class="hint">音を上下キーで選択。＋／−は半音上下。音名の手入力も可能（Bb2など）。変更後はプリセット名・指板・コード表示が更新されます。</p>
+  </section>
+
+  <section class="card">
+    <div class="section-header">
+      <h2>2. フレット表示</h2>
+      <span class="badge">x = ミュート</span>
+    </div>
+
+<div class="k-controls"><label class="k-field">キー（コードのルート音）<select id="chordRoot" class="k-select"></select></label><label class="k-field">種類<select id="chordQuality" class="k-select"></select></label><button id="findForms" type="button">フォームを表示</button></div><div class="quick-buttons"><button id="previousForm" type="button">前のフォーム</button><button id="nextForm" type="button">次のフォーム</button><span id="formPosition" aria-live="polite"></span></div><p id="formStatus" class="hint" aria-live="polite">コードを選ぶと低いフレットから順に切り替えられます。</p><p class="hint">現在のチューニングから全構成音がそろう3〜6弦・押弦幅4フレット以内の候補を生成。弾きやすさは実機で確認してください。弦やフレットを変えると実音からコード名を再判定します。</p>
+    <div class="quick-buttons">
+      <button type="button" class="utility-button" id="openButton">全開放</button>
+      <button type="button" class="mute-utility-button" id="muteButton">全ミュート</button>
+    </div>
+
+    <label class="k-field">セーハ（全6弦を同じフレット）<select id="barreFret" class="k-select"><option value="">選択してください</option><option value="1">1フレットセーハ</option><option value="2">2フレットセーハ</option><option value="3">3フレットセーハ</option><option value="4">4フレットセーハ</option><option value="5">5フレットセーハ</option><option value="6">6フレットセーハ</option><option value="7">7フレットセーハ</option><option value="8">8フレットセーハ</option><option value="9">9フレットセーハ</option><option value="10">10フレットセーハ</option><option value="11">11フレットセーハ</option><option value="12">12フレットセーハ</option><option value="13">13フレットセーハ</option><option value="14">14フレットセーハ</option><option value="15">15フレットセーハ</option><option value="16">16フレットセーハ</option></select></label>
+    <div class="fretboard-area">
+      <div class="fretboard-title">
+        <strong>フレットボード</strong>
+        <span>上から1弦→6弦<br>0〜16フレット対応</span>
+      </div>
+      <div class="fretboard-scroll">
+        <div class="fretboard" id="fretboard"></div>
+      </div>
+    </div>
+
+    <div class="fret-table" id="fretTable"></div>
+
+    <div class="current-shape">
+      <span>現在の押弦</span>
+      <strong id="currentShape">x 3 2 0 1 0</strong>
+    </div>
+  </section>
+
+  <section class="card result-card">
+    <div class="section-header">
+      <h2>3. 結果</h2>
+    </div>
+
+    <div class="result-block">
+      <h3>コード候補</h3>
+      <div class="toggle-row">
+        <div>
+          <span>オンコード判定</span>
+          <small>最低音を含めて判定。転回形は／で表示。完全一致が最優先。</small>
+        </div>
+        <label class="switch">
+          <input id="onChordToggle" type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="chord-list" id="chordList"></div>
+    </div>
+
+    <div class="result-block">
+      <button type="button" class="collapse-toggle" id="audioToggle">再生</button>
+      <div class="collapse-content" id="audioContent" hidden>
+        <div class="audio-status">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="audioStatusText">音声はまだ有効になっていません</span>
+        </div>
+
+        <label class="volume-control">
+          <span>音量</span>
+          <input id="volumeSlider" type="range" min="0" max="100" value="100">
+          <strong id="volumeValue">100%</strong>
+        </label>
+
+        <div class="audio-actions">
+          <button type="button" class="primary-button" id="enableAudioButton">音声を有効にする</button>
+          <button type="button" id="blockPlayButton">同時再生</button>
+          <button type="button" id="downPlayButton">ダウン</button>
+          <button type="button" id="upPlayButton">アップ</button>
+          <button type="button" class="danger-button" id="stopButton">停止</button>
+        </div>
+
+        <p class="hint">スマホでは最初に「音声を有効にする」を押してください。下部の固定ボタンからも再生できます。</p>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <button type="button" class="collapse-toggle" id="notesToggle">鳴っている音</button>
+      <div class="collapse-content" id="notesContent" hidden>
+        <div class="note-list" id="noteList"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-bar">
+  <button class="main" type="button" id="bottomPlayButton">再生</button>
+  <button type="button" id="bottomDownButton">ダウン</button>
+  <button type="button" id="bottomUpButton">アップ</button>
+  <button type="button" id="bottomStopButton">停止</button>
+</nav>
+
+<script>
+/* KIRIN-GUITAR-THEORY:BEGIN */
+(function () {
+'use strict';
+const version='1.10.0';
+const presets=[
+{id:"standard",name:"レギュラー",description:"E A D G B E",notes:["E2","A2","D3","G3","B3","E4"],preferFlats:false},
+{id:"half-step-down",name:"半音下げ",description:"Eb Ab Db Gb Bb Eb",notes:["Eb2","Ab2","Db3","Gb3","Bb3","Eb4"],preferFlats:true},
+{id:"whole-step-down",name:"全音下げ",description:"D G C F A D",notes:["D2","G2","C3","F3","A3","D4"],preferFlats:false},
+{id:"drop-d",name:"Drop D",description:"D A D G B E",notes:["D2","A2","D3","G3","B3","E4"],preferFlats:false},
+{id:"drop-c",name:"Drop C",description:"C G C F A D",notes:["C2","G2","C3","F3","A3","D4"],preferFlats:false},
+{id:"dadgad",name:"DADGAD",description:"D A D G A D",notes:["D2","A2","D3","G3","A3","D4"],preferFlats:false},
+{id:"open-g",name:"Open G",description:"D G D G B D",notes:["D2","G2","D3","G3","B3","D4"],preferFlats:false},
+{id:"open-d",name:"Open D",description:"D A D F# A D",notes:["D2","A2","D3","F#3","A3","D4"],preferFlats:false},
+{id:"open-e",name:"Open E",description:"E B E G# B E",notes:["E2","B2","E3","G#3","B3","E4"],preferFlats:false}
+];
+presets.push(
+{id:'drop-c-sharp',name:'ドロップC♯',notes:['C#2','G#2','C#3','F#3','A#3','D#4'],preferFlats:false},
+{id:'drop-b',name:'ドロップB',notes:['B1','F#2','B2','E3','G#3','C#4'],preferFlats:false},
+{id:'drop-a',name:'ドロップA',notes:['A1','E2','A2','D3','F#3','B3'],preferFlats:false},
+{id:'open-c',name:'オープンC',notes:['C2','G2','C3','G3','C4','E4'],preferFlats:false},
+{id:'double-drop-d',name:'ダブルドロップD',notes:['D2','A2','D3','G3','B3','D4'],preferFlats:false},
+{id:'open-d-minor',name:'オープンDマイナー',notes:['D2','A2','D3','F3','A3','D4'],preferFlats:false});
+presets.forEach(p=>{p.description=p.notes.join(' ');p.name=p.name.replace('Drop ','ドロップ').replace('Open ','オープン');});
+const types=[
+{symbol:"",intervals:[0,4,7],priority:100},
+{symbol:"m",intervals:[0,3,7],priority:99},
+{symbol:"5",intervals:[0,7],priority:86},
+{symbol:"sus2",intervals:[0,2,7],priority:84},
+{symbol:"sus4",intervals:[0,5,7],priority:84},
+{symbol:"6",intervals:[0,4,7,9],priority:82},
+{symbol:"m6",intervals:[0,3,7,9],priority:82},
+{symbol:"7",intervals:[0,4,7,10],priority:90},
+{symbol:"maj7",intervals:[0,4,7,11],priority:90},
+{symbol:"m7",intervals:[0,3,7,10],priority:90},
+{symbol:"mMaj7",intervals:[0,3,7,11],priority:72},
+{symbol:"dim",intervals:[0,3,6],priority:72},
+{symbol:"aug",intervals:[0,4,8],priority:72},
+{symbol:"m7b5",intervals:[0,3,6,10],priority:75},
+{symbol:"dim7",intervals:[0,3,6,9],priority:70},
+{symbol:"add9",intervals:[0,2,4,7],priority:80},
+{symbol:"madd9",intervals:[0,2,3,7],priority:78},
+{symbol:"9",intervals:[0,2,4,7,10],priority:76},
+{symbol:"m9",intervals:[0,2,3,7,10],priority:76},
+{symbol:"maj9",intervals:[0,2,4,7,11],priority:74},
+{symbol:"11",intervals:[0,2,4,5,7,10],priority:62},
+{symbol:"13",intervals:[0,2,4,7,9,10],priority:60}
+];
+const mod=n=>((n%12)+12)%12;
+function toMidi(value){const m=String(value).trim().replace(/♯/g,'#').replace(/♭/g,'b').match(/^([A-Ga-g])([#b]?)(-?\d+)$/);if(!m)throw new Error('音名はE2、C#3、Bb3の形式で入力してください');return (Number(m[3])+1)*12+({C:0,D:2,E:4,F:5,G:7,A:9,B:11}[m[1].toUpperCase()])+(m[2]==='#'?1:m[2]==='b'?-1:0);}
+function note(m,flats=false){return (flats?['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']:['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'])[mod(m)]+(Math.floor(m/12)-1);}
+function matchPreset(notes){const m=notes.map(toMidi);return presets.find(p=>p.notes.every((n,i)=>toMidi(n)===m[i]))||null;}
+function detect(notes,flats=false,slash=true){
+ if(!notes.length)return [];const names=flats?['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']:['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+ const pcs=[...new Set(notes.map(n=>mod(n.midi)))];const bass=mod(Math.min(...notes.map(n=>n.midi)));const out=[];
+ for(let root=0;root<12;root++){const played=pcs.map(p=>mod(p-root));if(!played.includes(0))continue;
+ for(const ct of types){const missing=ct.intervals.filter(n=>!played.includes(n));const extra=played.filter(n=>!ct.intervals.includes(n));const exact=!missing.length&&!extra.length;
+ if(!exact&&(played.length<2||missing.length>1||extra.length>1))continue;
+ const name=names[root]+ct.symbol+(slash&&root!==bass?'/'+names[bass]:'');
+ out.push({name,type:exact?'exact':'near',score:(exact?3000:100)+ct.priority+(root===bass?8:0)-missing.length*30-extra.length*30,detail:exact?'全構成音が完全一致'+(root!==bass?'／最低音 '+names[bass]:''):'近似：不足音程 '+missing.join(',')+'／追加音程 '+extra.join(',')});}}
+ if(slash){const low=notes.reduce((a,b)=>a.midi<=b.midi?a:b);const body=notes.filter(n=>n!==low);const bp=[...new Set(body.map(n=>mod(n.midi)))];for(let root=0;root<12;root++)for(const ct of types){if(root===bass||ct.intervals.includes(mod(bass-root)))continue;const ints=bp.map(p=>mod(p-root));if(ints.length===ct.intervals.length&&ct.intervals.every(n=>ints.includes(n)))out.push({name:names[root]+ct.symbol+'/'+names[bass],type:'on',score:2000+ct.priority,detail:'和音に含まれない最低音を分離した完全一致'});}}
+ out.sort((a,b)=>b.score-a.score);return out.filter((v,i)=>out.findIndex(x=>x.name===v.name)===i).slice(0,8);
+}
+function forms(tuning,root,symbol){
+ const type=types.find(t=>t.symbol===symbol);if(!type)return [];const open=tuning.map(toMidi),want=type.intervals.map(n=>mod(n+root));const found=new Map();
+ for(let start=0;start<=16;start++){const opts=open.map(n=>{const o=[null];for(let f=Math.max(0,start);f<=Math.min(16,start+3);f++)if(want.includes(mod(n+f)))o.push(f);if(start>0&&want.includes(mod(n)))o.push(0);return o;});
+ function visit(i,shape){if(i<6){for(const f of opts[i])visit(i+1,shape.concat(f));return;}const played=shape.map((f,j)=>f===null?null:open[j]+f).filter(n=>n!==null);if(played.length<Math.max(3,want.length))return;const pcs=[...new Set(played.map(mod))];if(pcs.length!==want.length||!want.every(n=>pcs.includes(n)))return;const pos=shape.filter(n=>n>0);const low=pos.length?Math.min(...pos):0,hi=pos.length?Math.max(...pos):0;if(hi-low>3)return;const count=shape.filter(n=>n!==null).length;const bass=mod(Math.min(...played));const score=(bass===root?40:0)+count*8-shape.filter(n=>n>0).length*2-(hi-low)*3;const key=shape.join(',');found.set(key,{frets:shape,low,hi,score});}
+ visit(0,[]);}
+ const all=[...found.values()].sort((a,b)=>a.low-b.low||b.score-a.score||a.hi-b.hi);const groups=new Map();for(const x of all){const n=groups.get(x.low)||[];if(n.length<2){n.push(x);groups.set(x.low,n);}}
+ return [...groups.values()].flat().slice(0,32);
+}
+window.KIRIN_GUITAR_THEORY=Object.freeze({version,presets,types,toMidi,note,matchPreset,detect,forms});
+})();
+/* KIRIN-GUITAR-THEORY:END */
+const TUNING_PRESETS=window.KIRIN_GUITAR_THEORY.presets;
+
+const BASE_NOTE_TO_PC={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+const SHARP_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const FLAT_NAMES=["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+const INTERVAL_LABELS={0:"R",1:"b9",2:"9",3:"m3",4:"3",5:"4",6:"b5",7:"5",8:"#5",9:"6",10:"b7",11:"7"};
+const CHORD_TYPES=window.KIRIN_GUITAR_THEORY.types;
+
+const FRET_OPTIONS=[null,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+const FRETBOARD_MAX_FRET=16;
+
+let selectedPresetId="standard";
+let tuningNotes=["E2","A2","D3","G3","B3","E4"];
+let frets=[null,3,2,0,1,0];
+let useOnChordBass=true;
+let audioContext=null,masterGain=null,compressor=null,activeVoices=[],masterVolume=1.0,activePicker=null;
+
+function mod12(v){return((v%12)+12)%12}
+function parseNoteToMidi(note){return window.KIRIN_GUITAR_THEORY.toMidi(note);}
+function midiToFrequency(m){return 440*Math.pow(2,(m-69)/12)}
+function midiToPitchClass(m){return mod12(m)}
+function pitchClassToName(pc,flats){return(flats?FLAT_NAMES:SHARP_NAMES)[mod12(pc)]}
+function midiToNoteName(m,flats){return pitchClassToName(midiToPitchClass(m),flats)+(Math.floor(m/12)-1)}
+function formatFret(v){return v===null?"x":String(v)}
+function getSelectedPreset(){return TUNING_PRESETS.find(p=>p.id===selectedPresetId)}
+function getPreferFlats(){const p=getSelectedPreset();return p?p.preferFlats:false}
+
+function getSoundingNotes(){
+  const flats=getPreferFlats(),res=[];
+  for(let i=0;i<tuningNotes.length;i++){
+    const f=frets[i];
+    if(f===null)continue;
+    const midi=parseNoteToMidi(tuningNotes[i])+f;
+    res.push({stringNumber:6-i,openNote:tuningNotes[i],fret:f,midi,noteName:midiToNoteName(midi,flats),pitchClass:midiToPitchClass(midi),frequency:midiToFrequency(midi)});
+  }
+  return res;
+}
+
+function getLowestNote(notes){return notes.length?notes.slice().sort((a,b)=>a.midi-b.midi)[0]:null}
+function uniquePitchClassesFromNotes(notes){return Array.from(new Set(notes.map(n=>n.pitchClass))).sort((a,b)=>a-b)}
+function uniquePitchClassesFromPcs(pcs){return Array.from(new Set(pcs)).sort((a,b)=>a-b)}
+function sameArray(a,b){return a.length===b.length&&a.every((v,i)=>v===b[i])}
+function normalizeIntervals(pcs,root){return uniquePitchClassesFromPcs(pcs.map(pc=>mod12(pc-root)))}
+function intervalName(i){return INTERVAL_LABELS[mod12(i)]||String(i)}
+
+function makeChordName(rootPc,chordType,bassPc,flats,opt){
+  const root=pitchClassToName(rootPc,flats),bass=pitchClassToName(bassPc,flats);
+  let name=root+chordType.symbol;
+  if(opt&&opt.omitText)name+=opt.omitText;
+  if((opt&&opt.forceSlash)||bassPc!==rootPc)name+="/"+bass;
+  return name;
+}
+
+function makeOmitText(missing,extra){
+  const omit=[],add=[];
+  missing.forEach(i=>{
+    if((i===3||i===4)&&!omit.includes("no3"))omit.push("no3");
+    else if(i===7&&!omit.includes("no5"))omit.push("no5");
+    else if((i===10||i===11)&&!omit.includes("no7"))omit.push("no7");
+  });
+  extra.forEach(i=>{
+    if(i!==0){
+      const t="add"+intervalName(i);
+      if(!add.includes(t))add.push(t);
+    }
+  });
+  const parts=omit.concat(add).slice(0,2);
+  return parts.length?"("+parts.join(",")+")":"";
+}
+
+function describeDifference(missing,extra){
+  const p=[];
+  if(missing.length)p.push("不足: "+missing.map(intervalName).join(", "));
+  if(extra.length)p.push("余分: "+extra.map(intervalName).join(", "));
+  return p.length?p.join(" / "):"構成音が一致";
+}
+
+function detectOnChordCandidates(notes){return window.KIRIN_GUITAR_THEORY.detect(notes,getPreferFlats(),useOnChordBass).filter(c=>c.type==="on");}
+function detectChordCandidates(notes){return window.KIRIN_GUITAR_THEORY.detect(notes,getPreferFlats(),useOnChordBass);}
+function closePicker(){if(activePicker){activePicker.remove();activePicker=null}}
+function createPicker(titleText,options,activeValue,onSelect){
+  closePicker();
+  const backdrop=document.createElement("div");
+  backdrop.className="picker-backdrop";
+  const panel=document.createElement("div");
+  panel.className="picker-panel";
+  const header=document.createElement("div");
+  header.className="picker-header";
+  const title=document.createElement("strong");
+  title.textContent=titleText;
+  const cancel=document.createElement("button");
+  cancel.type="button";
+  cancel.textContent="キャンセル";
+  const list=document.createElement("div");
+  list.className="picker-list";
+  options.forEach(item=>{
+    const opt=document.createElement("button");
+    opt.type="button";
+    opt.className="picker-option";
+    if(item.html)opt.innerHTML=item.html;
+    else opt.textContent=item.label;
+    if(item.value===activeValue)opt.classList.add("active");
+    opt.addEventListener("click",e=>{
+      e.stopPropagation();
+      onSelect(item.value);
+      closePicker();
+    });
+    list.appendChild(opt);
+  });
+  cancel.addEventListener("click",e=>{e.stopPropagation();closePicker()});
+  panel.addEventListener("click",e=>e.stopPropagation());
+  backdrop.addEventListener("click",closePicker);
+  header.appendChild(title);
+  header.appendChild(cancel);
+  panel.appendChild(header);
+  panel.appendChild(list);
+  backdrop.appendChild(panel);
+  document.body.appendChild(backdrop);
+  activePicker=backdrop;
+  setTimeout(()=>{
+    const active=list.querySelector(".picker-option.active");
+    if(active)active.scrollIntoView({block:"center"});
+  },0);
+}
+
+function openPresetPicker(){
+  const options=TUNING_PRESETS.map(p=>({value:p.id,label:p.name,html:p.name+"<small>"+p.description+"</small>"}));
+  options.push({value:"custom",label:"カスタム",html:"カスタム<small>現在の入力値を使用</small>"});
+  createPicker("チューニングを選択",options,selectedPresetId,value=>{
+    if(value==="custom")selectedPresetId="custom";
+    else{
+      const p=TUNING_PRESETS.find(x=>x.id===value);
+      if(p){selectedPresetId=p.id;tuningNotes=p.notes.slice()}
+    }
+    guideForms=[];guideSnapshot="";document.getElementById("formStatus").textContent="チューニング変更後はフォームを再生成してください。";document.getElementById("nextForm").disabled=true;document.getElementById("previousForm").disabled=true;renderPresetButton();renderTuningGrid();renderFretboard();renderFretTable();renderResultOnly();updateButtonStates();
+  });
+}
+
+function openFretPicker(stringIndex){
+  const sn=6-stringIndex,active=frets[stringIndex];
+  const options=FRET_OPTIONS.map(v=>({value:v,label:formatFret(v)}));
+  createPicker(sn+"弦のフレットを選択",options,active,value=>{
+    frets[stringIndex]=value;
+    renderFretboard();renderFretTable();renderResultOnly();updateButtonStates();
+  });
+}
+
+function renderPresetButton(){
+  const b=document.getElementById("presetButton");
+  if(!b)return;
+  const p=getSelectedPreset();
+  if(selectedPresetId==="custom"||!p)b.innerHTML="<div><strong>カスタム</strong><small>"+tuningNotes.join(" ")+"</small></div>";
+  else b.innerHTML="<div><strong>"+p.name+"</strong><small>"+p.description+"</small></div>";
+}
+
+function renderFretboard(){
+  const board=document.getElementById("fretboard");
+  if(!board)return;
+  board.innerHTML="";
+  const corner=document.createElement("div");
+  corner.className="fretboard-corner";
+  board.appendChild(corner);
+  for(let f=0;f<=FRETBOARD_MAX_FRET;f++){
+    const num=document.createElement("div");
+    num.className="fret-number"+(f===0?" zero-fret":"");
+    num.textContent=String(f);
+    board.appendChild(num);
+  }
+  [5,4,3,2,1,0].forEach(si=>{
+    const open=tuningNotes[si],sn=6-si;
+    const label=document.createElement("div");
+    label.className="string-label";
+    label.innerHTML=sn+"弦 <small>"+open+"</small>";
+    board.appendChild(label);
+    for(let f=0;f<=FRETBOARD_MAX_FRET;f++){
+      const cell=document.createElement("button");
+      cell.type="button";
+      cell.className="fret-cell";
+      if(f===0){cell.classList.add("open","nut");if(frets[si]===null){cell.classList.add("muted-string");const mark=document.createElement("span");mark.className="mute-mark";mark.textContent="×";cell.append(mark);}}
+      if(frets[si]===f)cell.classList.add("active");
+      if(!(f===0&&frets[si]===null))cell.textContent=sn+"弦 "+f+"フレット";
+      cell.setAttribute("aria-label",sn+"弦 "+(f===0&&frets[si]===null?"ミュート。クリックで開放":" "+f+"フレット"));cell.setAttribute("aria-pressed",String(frets[si]===f));
+      cell.addEventListener("click",()=>{
+        frets[si]=frets[si]===f?null:f;
+        renderFretTable();renderFretboard();renderResultOnly();updateButtonStates();
+      });
+      board.appendChild(cell);
+    }
+  });
+}
+
+function renderFretTable(){
+  const table=document.getElementById("fretTable");
+  if(!table)return;
+  table.innerHTML="";
+  frets.forEach((f,i)=>{
+    const row=document.createElement("div");
+    row.className="fret-row";
+    const name=document.createElement("div");
+    name.className="string-name";
+    const strong=document.createElement("strong");
+    strong.textContent=6-i+"弦";
+    const span=document.createElement("span");
+    span.textContent="開放:"+tuningNotes[i];
+    name.appendChild(strong);
+    name.appendChild(span);
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="fret-select-button";
+    btn.textContent=formatFret(f);
+    btn.addEventListener("click",()=>openFretPicker(i));
+    row.appendChild(name);
+    row.appendChild(btn);
+    table.appendChild(row);
+  });
+}
+
+function renderResultOnly(){
+  const chordList=document.getElementById("chordList"),noteList=document.getElementById("noteList"),shape=document.getElementById("currentShape");
+  if(shape){const muted=frets.map((f,i)=>f===null?(6-i)+"弦":null).filter(Boolean);shape.textContent="6弦→1弦："+frets.map(formatFret).join(" ")+" ／ "+(muted.length?"ミュート："+muted.join("・"):"ミュートなし");}
+  if(chordList)chordList.innerHTML="";
+  if(noteList)noteList.innerHTML="";
+  try{
+    const notes=getSoundingNotes(),candidates=detectChordCandidates(notes);
+    if(chordList){
+      if(!notes.length){
+        const p=document.createElement("p");p.className="muted";p.textContent="鳴っている弦がありません。";chordList.appendChild(p);
+      }else if(!candidates.length){
+        const p=document.createElement("p");p.className="muted";p.textContent="近いコードも見つかりませんでした。";chordList.appendChild(p);
+      }else{
+        candidates.slice(0,6).forEach((c,idx)=>{
+          const chip=document.createElement("span");
+          chip.className="chord-chip";
+          if(c.type==="on"){chip.textContent=c.name;chip.style.background="#059669";chip.title=c.detail}
+          else if(c.type==="on-near"){chip.textContent="≈ "+c.name;chip.style.background=idx===0?"#0f766e":"#475569";chip.title=c.detail}
+          else if(c.type==="near"){chip.textContent="≈ "+c.name;chip.style.background=idx===0?"#7c3aed":"#475569";chip.title=c.detail}
+          else{chip.textContent=c.name;chip.style.background="#2563eb";chip.title="完全一致"}
+          const row=document.createElement("div");row.className="chord-result-row";const info=document.createElement("small");const muted=frets.map((f,i)=>f===null?(6-i)+"弦":null).filter(Boolean);info.textContent=muted.length?"このフォームのミュート："+muted.join("・"):"このフォームは全弦を鳴らします";row.append(chip,info);chordList.appendChild(row);
+        });
+        const detail=document.createElement("p");
+        detail.className="hint";
+        const first=candidates[0];
+        detail.textContent=(first.type==="on"?"オンコード判定を優先表示しています。最有力: ":first.type==="on-near"?"オンコード近似を表示しています。最有力: ":first.type==="near"?"完全一致しないため、近い順に表示しています。最有力: ":"完全一致候補を表示しています。")+(first.type==="exact"?"":first.name+" / "+first.detail);
+        chordList.appendChild(detail);
+      }
+    }
+    if(noteList){
+      if(!notes.length){
+        const p=document.createElement("p");p.className="muted";p.textContent="鳴っている音がありません。";noteList.appendChild(p);
+      }else{
+        notes.forEach(n=>{
+          const item=document.createElement("div");
+          item.className="note-item";
+          const s=document.createElement("span");s.textContent=n.stringNumber+"弦";
+          const st=document.createElement("strong");st.textContent=n.noteName;
+          const sm=document.createElement("small");sm.textContent=n.frequency.toFixed(2)+" Hz";
+          item.appendChild(s);item.appendChild(st);item.appendChild(sm);noteList.appendChild(item);
+        });
+      }
+    }
+  }catch(e){
+    if(chordList){const p=document.createElement("p");p.className="error";p.textContent=e.message;chordList.appendChild(p)}
+  }
+  updateButtonStates();
+  guideChanged();
+}
+
+function getAWeightingDb(f){
+  const f2=f*f;
+  const ra=(Math.pow(12200,2)*f2*f2)/((f2+Math.pow(20.6,2))*Math.sqrt((f2+Math.pow(107.7,2))*(f2+Math.pow(737.9,2)))*(f2+Math.pow(12200,2)));
+  return 20*Math.log10(ra)+2;
+}
+function getCleanPerceptualGain(f){
+  const aDb=getAWeightingDb(f);
+  let g=Math.pow(10,(-aDb*.06)/20);
+  return Math.max(.95,Math.min(1.18,g));
+}
+
+function getAudioContext(){
+  if(audioContext)return audioContext;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)throw new Error("このブラウザは Web Audio API に対応していません。");
+  audioContext=new AC();
+  masterGain=audioContext.createGain();
+  masterGain.gain.value=masterVolume;
+  compressor=audioContext.createDynamicsCompressor();
+  compressor.threshold.value=-8;
+  compressor.knee.value=24;
+  compressor.ratio.value=1.8;
+  compressor.attack.value=.018;
+  compressor.release.value=.28;
+  masterGain.connect(compressor);
+  compressor.connect(audioContext.destination);
+  return audioContext;
+}
+function getMasterGain(){if(!masterGain)getAudioContext();return masterGain}
+function setMasterVolume(v){
+  masterVolume=Math.max(0,Math.min(1,v));
+  if(masterGain)masterGain.gain.value=masterVolume;
+  const el=document.getElementById("volumeValue");
+  if(el)el.textContent=Math.round(masterVolume*100)+"%";
+}
+async function enableAudio(){
+  const ctx=getAudioContext();
+  if(ctx.state==="suspended")await ctx.resume();
+  updateAudioStatus();
+}
+function updateAudioStatus(){
+  const dot=document.getElementById("statusDot"),txt=document.getElementById("audioStatusText");
+  const enabled=audioContext&&audioContext.state==="running";
+  if(dot)dot.classList.toggle("active",!!enabled);
+  if(txt)txt.textContent=enabled?"音声は有効です":"音声はまだ有効になっていません";
+  updateButtonStates();
+}
+
+function triggerNote(noteName,start,duration,velocity){
+  const ctx=getAudioContext(),out=getMasterGain();
+  const midi=parseNoteToMidi(noteName),freq=midiToFrequency(midi),isLow=freq<180;
+  const pg=getCleanPerceptualGain(freq),attack=isLow?.045:.022,decay=isLow?.24:.18,release=.22;
+  const releaseStart=start+duration*.6,end=start+duration,basePeak=velocity*pg,baseSustain=basePeak*.52;
+  function voice(f,gScale,wave,bright){
+    const osc=ctx.createOscillator(),hp=ctx.createBiquadFilter(),lp=ctx.createBiquadFilter(),gain=ctx.createGain();
+    osc.type=wave;osc.frequency.setValueAtTime(f,start);
+    hp.type="highpass";hp.frequency.setValueAtTime(isLow?45:35,start);hp.Q.setValueAtTime(.7,start);
+    lp.type="lowpass";lp.frequency.setValueAtTime(bright,start);lp.frequency.exponentialRampToValueAtTime(Math.max(1400,bright*.55),end);lp.Q.setValueAtTime(.5,start);
+    const peak=basePeak*gScale,sustain=baseSustain*gScale;
+    gain.gain.setValueAtTime(.0001,start);
+    gain.gain.linearRampToValueAtTime(peak,start+attack);
+    gain.gain.exponentialRampToValueAtTime(Math.max(.0001,sustain),start+decay);
+    gain.gain.setValueAtTime(Math.max(.0001,sustain),releaseStart);
+    gain.gain.linearRampToValueAtTime(.0001,end+release);
+    osc.connect(hp);hp.connect(lp);lp.connect(gain);gain.connect(out);
+    osc.start(start);osc.stop(end+release+.05);
+    const v={oscillator:osc,gain,lp,hp};
+    activeVoices.push(v);
+    osc.onended=()=>{try{osc.disconnect();hp.disconnect();lp.disconnect();gain.disconnect()}catch(e){}activeVoices=activeVoices.filter(x=>x!==v)};
+  }
+  voice(freq,isLow?.95:1,"triangle",isLow?4200:5600);
+  if(isLow){voice(freq*2,.10,"sine",4200);voice(freq*3,.035,"sine",4800)}
+}
+function stopNotes(){
+  if(!audioContext)return;
+  const now=audioContext.currentTime;
+  activeVoices.forEach(v=>{try{v.gain.gain.cancelScheduledValues(now);v.gain.gain.setTargetAtTime(.0001,now,.025);v.oscillator.stop(now+.12)}catch(e){}});
+  activeVoices=[];
+}
+async function playCurrentChord(style){
+  await enableAudio();
+  const notes=getSoundingNotes();
+  if(!notes.length)return;
+  stopNotes();
+  const ctx=getAudioContext(),now=ctx.currentTime+.04,names=notes.map(n=>n.noteName),velocity=Math.min(.38,.86/Math.sqrt(names.length));
+  if(style==="block"){names.forEach(n=>triggerNote(n,now,1.65,velocity));return}
+  const ordered=style==="up"?names.slice().reverse():names;
+  ordered.forEach((n,i)=>triggerNote(n,now+i*.045,1.6,velocity));
+}
+
+function sameFrets(a,b){return a.length===b.length&&a.every((v,i)=>v===b[i])}
+function setButtonActive(id,active){const b=document.getElementById(id);if(b)b.classList.toggle("active",!!active)}
+function updateButtonStates(){
+  setButtonActive("openButton",sameFrets(frets,[0,0,0,0,0,0]));
+  setButtonActive("muteButton",sameFrets(frets,[null,null,null,null,null,null]));
+  setButtonActive("enableAudioButton",audioContext&&audioContext.state==="running");
+}
+function setShape(shape){frets=shape.slice();renderFretTable();renderFretboard();renderResultOnly();updateButtonStates()}
+function toggleCollapse(buttonId,contentId){
+  const b=document.getElementById(buttonId),c=document.getElementById(contentId);
+  if(!b||!c)return;
+  const open=c.hidden;
+  c.hidden=!open;
+  b.classList.toggle("open",open);
+}
+
+function setupEvents(){
+  const presetButton=document.getElementById("presetButton");
+  if(presetButton)presetButton.addEventListener("click",openPresetPicker);
+
+  document.getElementById("openButton").addEventListener("click",()=>setShape([0,0,0,0,0,0]));
+  document.getElementById("muteButton").addEventListener("click",()=>setShape([null,null,null,null,null,null]));
+
+  const onChordToggle=document.getElementById("onChordToggle");
+  onChordToggle.checked=useOnChordBass;
+  onChordToggle.addEventListener("change",()=>{useOnChordBass=onChordToggle.checked;renderResultOnly()});
+
+  const volumeSlider=document.getElementById("volumeSlider");
+  volumeSlider.value=String(Math.round(masterVolume*100));
+  volumeSlider.addEventListener("input",e=>setMasterVolume(Number(e.target.value)/100));
+
+  document.getElementById("audioToggle").addEventListener("click",()=>toggleCollapse("audioToggle","audioContent"));
+  document.getElementById("notesToggle").addEventListener("click",()=>toggleCollapse("notesToggle","notesContent"));
+
+  document.getElementById("enableAudioButton").addEventListener("click",enableAudio);
+  document.getElementById("blockPlayButton").addEventListener("click",()=>playCurrentChord("block"));
+  document.getElementById("downPlayButton").addEventListener("click",()=>playCurrentChord("down"));
+  document.getElementById("upPlayButton").addEventListener("click",()=>playCurrentChord("up"));
+  document.getElementById("stopButton").addEventListener("click",stopNotes);
+
+  document.getElementById("bottomPlayButton").addEventListener("click",()=>playCurrentChord("block"));
+  document.getElementById("bottomDownButton").addEventListener("click",()=>playCurrentChord("down"));
+  document.getElementById("bottomUpButton").addEventListener("click",()=>playCurrentChord("up"));
+  document.getElementById("bottomStopButton").addEventListener("click",stopNotes);
+}
+
+function render(){
+  renderPresetButton();
+  renderTuningGrid();
+  renderFretboard();
+  renderFretTable();
+  renderResultOnly();
+  updateAudioStatus();
+  setMasterVolume(masterVolume);
+}
+
+
+let guideForms=[],guideIndex=0,guideSnapshot='';
+function guideChanged(){if(guideSnapshot&&guideSnapshot!==frets.join(','))document.getElementById('formStatus').textContent='押弦を変更しました。結果は現在の実音から再判定しています。';}
+function tuningChanged(i,value){try{const api=window.KIRIN_GUITAR_THEORY,m=api.toMidi(value);if(m<24||m>88)throw new Error('C1〜E6の範囲で入力');tuningNotes[i]=api.note(m,value.includes('b')||value.includes('♭'));const p=api.matchPreset(tuningNotes);selectedPresetId=p?p.id:'custom';guideForms=[];guideSnapshot='';document.getElementById('nextForm').disabled=true;document.getElementById('previousForm').disabled=true;renderPresetButton();renderFretboard();renderFretTable();renderResultOnly();renderTuningGrid();document.getElementById('formStatus').textContent='チューニング変更後はフォームを再生成してください。';}catch(e){document.getElementById('tuningMatch').textContent=e.message;}}
+function renderTuningGrid(){const grid=document.getElementById('tuningGrid'),api=window.KIRIN_GUITAR_THEORY;grid.replaceChildren();tuningNotes.forEach((n,i)=>{const wrap=document.createElement('div');wrap.className='string-control';const label=document.createElement('label');label.textContent=(6-i)+'弦';const sel=document.createElement('select');sel.id='tuningNote'+i;sel.className='k-select';sel.setAttribute('aria-label',(6-i)+'弦の開放音');for(let m=24;m<=88;m++)sel.add(new Option(api.note(m,getPreferFlats()),String(m)));sel.value=String(api.toMidi(n));sel.onchange=()=>tuningChanged(i,api.note(Number(sel.value),getPreferFlats()));label.append(sel);wrap.append(label);const actions=document.createElement('div');actions.className='quick-buttons';for(const [d,text] of [[-1,'−'],[1,'＋']]){const b=document.createElement('button');b.type='button';b.textContent=text;b.setAttribute('aria-label',(6-i)+'弦を半音'+(d>0?'上げる':'下げる'));b.onclick=()=>tuningChanged(i,api.note(api.toMidi(tuningNotes[i])+d,getPreferFlats()));actions.append(b);}wrap.append(actions);grid.append(wrap);});const p=api.matchPreset(tuningNotes);document.getElementById('tuningMatch').textContent=p?'既存プリセットと一致：'+p.name:'カスタム：既存プリセットと一致しません';}
+function focusGuideFrets(){const sc=document.querySelector(".fretboard-scroll"),num=document.querySelectorAll(".fret-number"),board=document.getElementById("fretboard");const pos=frets.filter(v=>v>0),low=pos.length?Math.min(...pos):0;if(sc&&board&&num[low]){const target=low===0?0:80+56*low-136-12;sc.scrollTo({left:Math.max(0,target),behavior:"smooth"});}}
+function showGuideForm(){const f=guideForms[guideIndex];document.getElementById('previousForm').disabled=!f||guideIndex===0;document.getElementById('nextForm').disabled=!f||guideIndex>=guideForms.length-1;document.getElementById('formPosition').textContent=f?(guideIndex+1)+' / '+guideForms.length+'（'+f.low+'〜'+f.hi+'フレット）':'0 / 0';if(!f){document.getElementById('formStatus').textContent='条件内で全構成音のそろうフォームなし。別の種類やチューニングを選んでください。';return;}setShape(f.frets);focusGuideFrets();guideSnapshot=frets.join(',');document.getElementById('formStatus').textContent='生成フォーム：'+frets.map(formatFret).join(' ')+'（6弦→1弦）。実音の判定結果は下に表示。';}
+function findGuideForms(){guideForms=window.KIRIN_GUITAR_THEORY.forms(tuningNotes,Number(document.getElementById('chordRoot').value),document.getElementById('chordQuality').value);guideIndex=0;showGuideForm();}
+function setupGuide(){const root=document.getElementById('chordRoot'),q=document.getElementById('chordQuality');SHARP_NAMES.forEach((n,i)=>root.add(new Option(n,String(i))));CHORD_TYPES.forEach(t=>q.add(new Option(t.symbol==='maj7'?'M7（メジャー7）':(t.symbol||'メジャー'),t.symbol)));root.onchange=findGuideForms;q.onchange=findGuideForms;document.getElementById('findForms').onclick=findGuideForms;document.getElementById('previousForm').onclick=()=>{if(guideIndex>0){guideIndex--;showGuideForm();}};document.getElementById('nextForm').onclick=()=>{if(guideIndex<guideForms.length-1){guideIndex++;showGuideForm();}};}
+
+document.getElementById("barreFret").onchange=e=>{if(e.target.value!==""){setShape(Array(6).fill(Number(e.target.value)));guideSnapshot="";document.getElementById("formStatus").textContent=e.target.value+"フレットセーハ：実音からコード候補を再判定。";focusGuideFrets();}};
+setupGuide();
+setupEvents();
+document.getElementById("chordRoot").value="0";
+document.getElementById("chordQuality").value="";
+render();
+findGuideForms();
+</script>
+</body>
+</html>

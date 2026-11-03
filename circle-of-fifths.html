@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5度圏ルーレット</title>
+  <style>
+/* KIRIN-BASE:BEGIN */
+/* ==========================================================
+   kirin-base.css | version=1.10.0 | updated=2026-11-03 | change=C-038 | canonical shared CSS
+   ・TOKENS    : 色・余白などの変数。副作用なし。全ページにそのまま埋め込める
+   ・SHELL     : 全ページ共通の上部バー（テーマ切替）と下部リンク。.kx-* だけ
+   ・SHELL-JS  : 上の2つを作るスクリプトの正本（下のコメント内）。各HTMLの <script> に同じ文字列を埋め込む
+   ・COMPONENTS: .k-* の部品。body など素の要素には触れない
+   ・ライト／ダークは <html data-theme="light|dark"> で決まる。SHELL-JS が保存値→OS設定の順で必ず設定する
+   ========================================================== */
+/* KIRIN-TOKENS:BEGIN */
+:root {
+  color-scheme: light;
+  --kirin-font: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", sans-serif;
+  --kirin-mono: ui-monospace, Consolas, Menlo, monospace;
+  --kirin-radius: 12px;
+  --kirin-radius-sm: 8px;
+  --kirin-fs-s: clamp(12px, 0.15vw + 11px, 14px);
+  --kirin-fs-m: clamp(14px, 0.3vw + 13px, 17px);
+  --kirin-fs-l: clamp(20px, 0.7vw + 15px, 26px);
+  --kirin-page-max: 1800px;
+  --kirin-page-pad: clamp(6px, 1vw, 14px);
+  --kirin-gap: 12px;
+  --kirin-bg: #f3f5f8;
+  --kirin-bg-2: #e8edf5;
+  --kirin-surface: #ffffff;
+  --kirin-surface-2: #f0f4f9;
+  --kirin-line: #dce1e8;
+  --kirin-line-strong: #bcc6d4;
+  --kirin-text: #202838;
+  --kirin-muted: #647084;
+  --kirin-accent: #245bb5;
+  --kirin-accent-text: #245bb5;
+  --kirin-accent-soft: #e2ecfb;
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ac2434;
+  --kirin-danger-solid: #b42318;
+  --kirin-ok: #1a7f37;
+  --kirin-warn: #9a6700;
+  --kirin-warn-soft: #fff1cf;
+  --kirin-neutral: #475569;
+  --kirin-hover: #edf3fc;
+  --kirin-fg-rgb: 15, 23, 42;
+  --kirin-overlay: rgba(15, 23, 42, 0.45);
+  --kirin-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kirin-bg: #0b1020;
+  --kirin-bg-2: #162042;
+  --kirin-surface: #131b36;
+  --kirin-surface-2: #1a2447;
+  --kirin-line: rgba(148, 163, 184, 0.22);
+  --kirin-line-strong: rgba(148, 163, 184, 0.45);
+  --kirin-text: #eef3ff;
+  --kirin-muted: #a9b5d6;
+  --kirin-accent: #3b82f6;
+  --kirin-accent-text: #8fb4ff;
+  --kirin-accent-soft: rgba(126, 162, 255, 0.18);
+  --kirin-on-accent: #ffffff;
+  --kirin-danger: #ff8c7a;
+  --kirin-danger-solid: #c2413a;
+  --kirin-ok: #9fe870;
+  --kirin-warn: #fbbf24;
+  --kirin-warn-soft: rgba(251, 191, 36, 0.16);
+  --kirin-neutral: #64748b;
+  --kirin-hover: rgba(126, 162, 255, 0.12);
+  --kirin-fg-rgb: 255, 255, 255;
+  --kirin-overlay: rgba(0, 0, 0, 0.6);
+  --kirin-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+}
+/* KIRIN-TOKENS:END */
+/* KIRIN-SHELL:BEGIN */
+.kx-bar, .kx-foot { box-sizing: border-box; width: 100%; max-width: var(--kirin-page-max); margin: 0 auto 8px; font: var(--kirin-fs-m)/1.5 var(--kirin-font); color: var(--kirin-text); }
+.kx-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 6px 10px; background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius-sm); }
+.kx-brand { padding: 6px 2px; color: var(--kirin-accent-text); font-weight: 800; text-decoration: none; }
+.kx-theme { min-height: 40px; padding: 4px 14px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface-2); color: var(--kirin-text); font: inherit; cursor: pointer; }
+.kx-theme:hover { background: var(--kirin-hover); }
+.kx-foot { margin-top: 8px; margin-bottom: 0; padding: 10px 2px 0; border-top: 1px solid var(--kirin-line); }
+.kx-foot p { margin: 8px 0 0; color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+.kx-nav { display: flex; flex-wrap: wrap; gap: 0 4px; }
+.kx-nav a { display: inline-block; padding: 10px 8px; color: var(--kirin-accent-text); text-decoration: none; border-bottom: 2px solid transparent; }
+.kx-nav a:hover { background: var(--kirin-hover); }
+.kx-nav a[aria-current="page"] { color: var(--kirin-text); font-weight: 800; border-bottom-color: var(--kirin-accent); }
+.kx-theme:focus-visible, .kx-brand:focus-visible, .kx-nav a:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+@media (max-width: 480px) { .kx-nav a { padding: 11px 6px; } }
+/* KIRIN-SHELL:END */
+/* KIRIN-COMPONENTS:BEGIN */
+.k-body { margin: 0; padding: var(--kirin-page-pad); font-family: var(--kirin-font); font-size: var(--kirin-fs-m); line-height: 1.7; color: var(--kirin-text); background: var(--kirin-bg); }
+.k-body, .k-body * { box-sizing: border-box; }
+.k-body a { color: var(--kirin-accent-text); }
+.k-app { max-width: var(--kirin-page-max); margin: 0 auto; }
+.k-body, .k-page { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+.k-body > .k-app, .k-page > .k-grow { flex: 1 0 auto; width: 100%; }
+.k-header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; margin: 8px 0 14px; }
+.k-eyebrow { margin: 0; color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 800; letter-spacing: 0.08em; }
+.k-title { margin: 4px 0; font-size: var(--kirin-fs-l); line-height: 1.25; }
+.k-lead { margin: 6px 0 0; color: var(--kirin-muted); }
+.k-card { background: var(--kirin-surface); border: 1px solid var(--kirin-line); border-radius: var(--kirin-radius); padding: 14px; box-shadow: var(--kirin-shadow); }
+.k-controls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 22px; margin-bottom: 8px; }
+.k-field { display: grid; gap: 5px; min-width: 0; font-size: var(--kirin-fs-m); }
+.k-field > span { color: var(--kirin-muted); font-size: var(--kirin-fs-s); font-weight: 700; }
+.k-select, .k-input { min-height: 44px; max-width: 100%; padding: 8px 10px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: 16px; }
+.k-btn { min-height: 44px; padding: 8px 12px; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-btn:hover { background: var(--kirin-hover); }
+.k-btn--sm { min-height: 36px; padding: 4px 10px; font-size: var(--kirin-fs-s); }
+.k-btn:focus-visible, .k-select:focus-visible, .k-input:focus-visible, .k-tab:focus-visible { outline: 2px solid var(--kirin-accent); outline-offset: 2px; }
+.k-tabs { display: inline-flex; overflow: hidden; border: 1px solid var(--kirin-line-strong); border-radius: var(--kirin-radius-sm); }
+.k-tab { min-height: 42px; padding: 6px 14px; border: 0; border-right: 1px solid var(--kirin-line); background: var(--kirin-surface); color: var(--kirin-text); font: inherit; font-size: var(--kirin-fs-m); cursor: pointer; }
+.k-tab:last-child { border-right: 0; }
+.k-tab:hover { background: var(--kirin-hover); }
+.k-tab[aria-pressed="true"] { background: var(--kirin-accent); color: var(--kirin-on-accent); font-weight: 700; }
+.k-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--kirin-accent-soft); color: var(--kirin-accent-text); font-size: var(--kirin-fs-s); font-weight: 700; white-space: nowrap; }
+.k-muted { color: var(--kirin-muted); }
+.k-grid { display: grid; gap: var(--kirin-gap); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.k-footer { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--kirin-line); color: var(--kirin-muted); font-size: var(--kirin-fs-s); }
+@media (max-width: 600px) {
+  .k-controls { gap: 12px; }
+  .k-controls > .k-field { flex: 1 1 100%; }
+  .k-tabs { display: flex; width: 100%; }
+  .k-tab { flex: 1 1 0; padding: 6px 4px; }
+  .k-select, .k-input { width: 100%; }
+}
+
+/* KIRIN-FOLD-CSS:BEGIN */
+.k-fold {border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface);margin:8px 0;color:var(--kirin-text);}
+.k-fold > summary, .k-fold-toggle {display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:44px;padding:8px 12px;cursor:pointer;font:700 var(--kirin-fs-m)/1.5 var(--kirin-font);color:var(--kirin-text);background:var(--kirin-surface-2);border-radius:var(--kirin-radius-sm);}
+.k-fold > summary {list-style:none;} .k-fold > summary::-webkit-details-marker {display:none;}
+.k-fold > summary::before {content:'▸';color:var(--kirin-accent-text);} .k-fold[open] > summary::before {content:'▾';}
+.k-fold-hint {font:400 var(--kirin-fs-s)/1.5 var(--kirin-font);color:var(--kirin-muted);letter-spacing:0;}
+.k-fold-body {padding:10px 12px;} .k-fold > summary:focus-visible,.k-fold-toggle:focus-visible {outline:2px solid var(--kirin-accent);outline-offset:2px;}
+.k-playing {outline:3px solid var(--kirin-accent);outline-offset:-3px;background:var(--kirin-accent-soft)!important;}
+.k-override-badge {padding:4px 8px;border:2px solid var(--kirin-warn);border-radius:8px;background:var(--kirin-warn-soft);color:var(--kirin-text);}
+.k-fold-toggle {width:100%;border:1px solid var(--kirin-line-strong);justify-content:flex-start;}
+/* KIRIN-FOLD-CSS:END */
+[hidden]{display:none!important}
+.k-fold-body{min-width:0}.k-fold-body>h2:first-child{margin-top:0}.k-fold-toggle:after{content:none!important}.k-fold-hint{white-space:nowrap}
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+/* KIRIN-COMPONENTS:END */
+/* KIRIN-BASE:END */
+    :root {
+      --bg1: var(--kirin-bg);
+      --bg2: var(--kirin-bg-2);
+      --panel: rgba(var(--kirin-fg-rgb),0.06);
+      --panel-border: rgba(var(--kirin-fg-rgb),0.10);
+      --text: var(--kirin-text);
+      --sub: var(--kirin-muted);
+      --accent: var(--kirin-accent-text);
+      --major: #ffd36a;
+      --minor: #7cead8;
+      --dim: #ffb28a;
+      --danger: var(--kirin-danger);
+      --shadow: 0 18px 44px rgba(0,0,0,0.34);
+
+      /* 基本値（スマホ寄り） */
+      --wheel-max: 1060px;
+      --wheel-zoom: 1.10;
+      --wheel-shift-y: 54px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      color: var(--text);
+      font-family: var(--kirin-font);
+      background:
+        radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--kirin-accent) 20%, var(--kirin-bg)) 0%, var(--bg2) 35%, var(--bg1) 75%),
+        var(--bg1);
+      overflow-x: hidden;
+    }
+
+    .app {
+      max-width: var(--kirin-page-max);
+      margin: 0 auto;
+      padding: 4px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .mainPanel {
+      padding: 10px 10px 8px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: var(--kirin-fs-l);
+      line-height: 1.15;
+    }
+
+    .desc {
+      margin: 0 0 8px;
+      color: var(--sub);
+      line-height: 1.58;
+      font-size: var(--kirin-fs-m);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .toggleGroup {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(var(--kirin-fg-rgb),0.06);
+      border: 1px solid rgba(var(--kirin-fg-rgb),0.10);
+    }
+
+    .toggleBtn {
+      border: none;
+      background: transparent;
+      color: var(--sub);
+      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .toggleBtn.active {
+      color: var(--kirin-on-accent);
+      background: linear-gradient(135deg, var(--kirin-accent-text), #9b7cff);
+      box-shadow: 0 8px 18px rgba(126,162,255,0.30);
+    }
+
+    .ghostBtn {
+      border: 1px solid rgba(var(--kirin-fg-rgb),0.10);
+      background: rgba(var(--kirin-fg-rgb),0.05);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+
+    .ghostBtn:hover {
+      transform: translateY(-1px);
+      background: rgba(var(--kirin-fg-rgb),0.08);
+    }
+
+    .wheelStage {
+      position: relative;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      padding: 0;
+    }
+
+    .wheelFrame {
+      position: relative;
+      width: min(100%, var(--wheel-max));
+      max-width: 100%;
+      aspect-ratio: 1 / 0.76;
+      display: grid;
+      place-items: center;
+      user-select: none;
+      touch-action: none;
+      overflow: visible;
+    }
+
+    .svgViewport {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border-radius: 42% 42% 48% 48% / 54% 54% 46% 46%;
+    }
+
+    #wheelSvg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 130%;
+      height: 130%;
+      display: block;
+      cursor: grab;
+      overflow: visible;
+      transform: translate(-50%, calc(-50% + var(--wheel-shift-y))) scale(var(--wheel-zoom));
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    #wheelSvg.dragging {
+      cursor: grabbing;
+    }
+
+    .bottomMask {
+      position: absolute;
+      left: -2%;
+      right: -2%;
+      bottom: -1%;
+      height: 31%;
+      background:
+        linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--kirin-bg) 0%, transparent) 0%,
+          color-mix(in srgb, var(--kirin-bg) 16%, transparent) 18%,
+          color-mix(in srgb, var(--kirin-bg) 44%, transparent) 44%,
+          color-mix(in srgb, var(--kirin-bg) 78%, transparent) 72%,
+          color-mix(in srgb, var(--kirin-bg) 95%, transparent) 100%
+        );
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .pointer {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 12px solid var(--danger);
+      z-index: 8;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
+      pointer-events: none;
+    }
+
+    .selectionBar {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      min-width: min(72%, 620px);
+      max-width: 90%;
+      padding: 7px 10px;
+      border-radius: 14px;
+      background:
+        color-mix(in srgb, var(--kirin-surface) 92%, transparent);
+      border: 1px solid rgba(var(--kirin-fg-rgb),0.12);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+      display: grid;
+      gap: 2px;
+      text-align: center;
+      z-index: 9;
+      backdrop-filter: blur(12px);
+    }
+
+    .selectionMode {
+      font-size: var(--kirin-fs-s);
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--sub);
+    }
+
+    .selectionMain {
+      font-size: var(--kirin-fs-l);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .selectionSub {
+      font-size: var(--kirin-fs-s);
+      color: var(--kirin-muted);
+      font-weight: 700;
+    }
+
+    .hint {
+      color: var(--sub);
+      text-align: center;
+      font-size: var(--kirin-fs-s);
+      line-height: 1.35;
+      margin-top: 0;
+    }
+
+    .infoSection {
+      margin-top: 6px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .infoBlock {
+      background: rgba(var(--kirin-fg-rgb),0.035);
+      border: 1px solid rgba(var(--kirin-fg-rgb),0.08);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .mainKey {
+      font-size: var(--kirin-fs-l);
+      font-weight: 900;
+      line-height: 1.08;
+      margin-bottom: 6px;
+    }
+
+    .subInfo {
+      color: var(--sub);
+      line-height: 1.62;
+      font-size: var(--kirin-fs-m);
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .chip {
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: var(--kirin-fs-s);
+      font-weight: 800;
+      border: 1px solid rgba(var(--kirin-fg-rgb),0.10);
+      background: rgba(var(--kirin-fg-rgb),0.06);
+    }
+
+    .scaleTitle {
+      margin: 0 0 8px;
+      font-size: var(--kirin-fs-m);
+      font-weight: 800;
+      color: var(--kirin-text);
+    }
+
+    .scaleLine {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
+
+    .scaleLine::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .scaleLine::-webkit-scrollbar-thumb {
+      background: rgba(var(--kirin-fg-rgb),0.18);
+      border-radius: 999px;
+    }
+
+    .noteChip {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(var(--kirin-fg-rgb),0.06);
+      border: 1px solid rgba(var(--kirin-fg-rgb),0.10);
+      font-weight: 900;
+      font-size: var(--kirin-fs-m);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    .miniLegend {
+      display: grid;
+      gap: 6px;
+      color: var(--sub);
+      font-size: var(--kirin-fs-s);
+      line-height: 1.5;
+    }
+
+    .miniLegendRow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+
+    .footerNote {
+      color: var(--sub);
+      font-size: var(--kirin-fs-s);
+      line-height: 1.55;
+    }
+
+    .degreeGuideBlock {
+      margin-top: 0;
+    }
+
+    .degreeGuideLead {
+      margin: 0 0 10px;
+      font-size: var(--kirin-fs-s);
+      line-height: 1.6;
+      color: var(--kirin-muted);
+    }
+
+    .degree-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+    }
+
+    .degree-table {
+      width: 100%;
+      min-width: 320px;
+      border-collapse: collapse;
+      background: rgba(var(--kirin-fg-rgb),.025);
+      border: 1px solid rgba(var(--kirin-fg-rgb),.07);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .degree-table thead th {
+      background: rgba(var(--kirin-fg-rgb),.06);
+      color: var(--kirin-text);
+      font-size: var(--kirin-fs-s);
+      font-weight: 800;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(var(--kirin-fg-rgb),.08);
+      white-space: nowrap;
+    }
+
+    .degree-table tbody td {
+      padding: 10px 12px;
+      font-size: var(--kirin-fs-s);
+      line-height: 1.55;
+      color: var(--kirin-text);
+      border-bottom: 1px solid rgba(var(--kirin-fg-rgb),.06);
+      vertical-align: top;
+    }
+
+    .degree-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .degree-table tbody tr:hover {
+      background: rgba(var(--kirin-fg-rgb),.035);
+    }
+
+    .degree-table td:first-child,
+    .degree-table td:last-child {
+      font-weight: 700;
+      color: var(--kirin-text);
+      white-space: nowrap;
+    }
+
+    /* ===== PCを明示的に修整 ===== */
+    @media (min-width: 981px) {
+      :root {
+        --wheel-max: 1400px;
+        --wheel-zoom: 1.09;
+        --wheel-shift-y: 180px;
+      }
+
+      .app {
+        max-width: var(--kirin-page-max);
+      }
+
+      .wheelFrame {
+        width: min(96vw, var(--wheel-max));
+        height: min(82vh, 980px);
+        min-height: 620px;
+        max-width: 100%;
+        aspect-ratio: auto;
+      }
+
+      #wheelSvg {
+        width: 118%;
+        height: 118%;
+      }
+    }
+
+    @media (max-width: 980px) {
+      :root {
+        --wheel-zoom: 1.05;
+        --wheel-shift-y: 46px;
+      }
+
+      .app {
+        padding: 3px;
+      }
+
+      .wheelFrame {
+        aspect-ratio: 1 / 0.80;
+      }
+
+      #wheelSvg {
+        width: 130%;
+        height: 130%;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --wheel-zoom: 0.99;
+        --wheel-shift-y: 36px;
+      }
+
+      .mainPanel {
+        padding: 8px 8px 6px;
+      }
+
+      .wheelFrame {
+        aspect-ratio: 1 / 0.84;
+      }
+
+      .selectionBar {
+        min-width: 94%;
+        padding: 6px 8px;
+      }
+
+      .selectionMain {
+        font-size: var(--kirin-fs-l);
+      }
+
+      .desc {
+        margin-bottom: 6px;
+        font-size: var(--kirin-fs-s);
+        line-height: 1.45;
+      }
+
+      .mainKey {
+        font-size: var(--kirin-fs-l);
+      }
+
+      .subInfo,
+      .footerNote,
+      .miniLegend,
+      .degreeGuideLead {
+        font-size: var(--kirin-fs-s);
+      }
+
+      .noteChip {
+        font-size: var(--kirin-fs-m);
+        min-width: 44px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .degreeGuideLead {
+        font-size: var(--kirin-fs-s);
+      }
+
+      .degree-table thead th,
+      .degree-table tbody td {
+        padding: 9px 10px;
+        font-size: var(--kirin-fs-s);
+      }
+    }
+  
+/* KIRIN-CIRCLE-LAYOUT:BEGIN */
+.mainPanel{max-width:1320px;margin:auto;font-size:var(--kirin-fs-m)}
+.wheelFrame{width:min(100%,680px)!important;aspect-ratio:1/1!important;margin:0 auto;height:auto!important;min-height:0!important;}
+#wheelSvg{width:100%;height:100%;top:0;left:0;transform:none;}
+.svgViewport{border-radius:0;overflow:visible}.bottomMask{display:none}.selectionBar{bottom:8px;min-width:0;width:56%;font-size:var(--kirin-fs-m);padding:6px;}
+.infoSection{margin-top:8px}.miniLegend,.footerNote,.subInfo,.degreeGuideLead,.degree-table{font-size:var(--kirin-fs-m)!important}.selectionMode{font-size:14px} .infoBlock{min-width:0}.scaleLine{display:flex;flex-wrap:wrap}.degree-table th,.degree-table td{font-size:var(--kirin-fs-m)!important} @media(max-width:999px){.infoSection{grid-template-columns:minmax(0,1fr)!important}}
+@media(min-width:1000px){.mainPanel{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,1fr);gap:8px 18px;align-items:start}.mainPanel>h1,.mainPanel>.desc,.mainPanel>.toolbar{grid-column:1/-1}.wheelStage{grid-column:1;grid-row:4}.infoSection{grid-column:2;grid-row:4;display:grid;gap:8px}.wheelFrame{width:min(100%,640px)!important}.mainPanel>.desc{max-width:none}}
+/* KIRIN-CIRCLE-LAYOUT:END */
+
+.theory-toggles{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}.theory-toggles button{min-height:44px;position:static}.theory-panel{grid-column:1/-1;border:1px solid var(--kirin-line);border-radius:12px;padding:12px;background:var(--kirin-surface);min-width:0}.theory-panel[hidden]{display:none!important}#modulationGears{display:flex;max-width:760px;margin:auto}#modulationGears svg{width:50%;height:auto}#substituteList{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:4px 12px}.mainPanel .wheelStage,.mainPanel .infoSection{grid-row:auto!important}.theory-panel select{min-height:44px;max-width:100%} #modulationGears svg+svg{margin-left:-24px} @media(max-width:600px){#modulationGears svg+svg{margin-left:-12px}}
+
+/* KIRIN-LAYOUT:BEGIN */
+:root{--kirin-space-unit:4px;--kirin-control-pad-y:8px;--kirin-control-pad-x:12px;--kirin-panel-pad:12px;--kirin-page-pad:clamp(12px,1.4vw,20px)}
+body{box-sizing:border-box;margin:0!important;padding:var(--kirin-page-pad)!important;min-height:0!important;background:var(--kirin-bg);color:var(--kirin-text);font-family:var(--kirin-font)}
+body>.app,body>.container,body>.k-app,body>.wrap{padding:0!important;width:100%;max-width:var(--kirin-page-max);margin:0 auto!important;min-width:0;min-height:0!important;flex:none!important}
+.kx-bar{margin:0 auto 12px!important;padding:8px 12px}.kx-foot{margin:12px auto 0!important;padding:12px 0 0!important}.kx-foot p{margin:8px 0 0}.kx-nav a{padding:8px 12px}
+button:not(.fret-cell):not(.scale-cell):not(.bar-config-btn):not(.simple-step):not(.pitch-cell){padding:var(--kirin-control-pad-y) var(--kirin-control-pad-x);min-height:44px;max-width:100%;box-sizing:border-box;border-radius:var(--kirin-radius-sm)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select{padding:8px 10px;min-height:44px;box-sizing:border-box;max-width:100%}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;min-height:0;padding:0;flex:0 0 18px;accent-color:var(--kirin-accent)}
+.k-fold-body{padding:var(--kirin-panel-pad);min-width:0}.k-fold-body>h2:first-child{display:none}.card:has(>.k-fold),.panel:has(>.k-fold),.infoBlock:has(>.k-fold),.theory-panel:has(>.k-fold){padding:0!important}.k-fold{min-width:0}.k-fold-hint{font-size:var(--kirin-fs-s)}
+.k-fold>summary{padding:8px 12px;min-height:44px}.k-fold-body>p:last-child{margin-bottom:0}.k-fold-body>details.k-fold{border:0}
+/* KIRIN-LAYOUT:END */
+
+#modulationGears{max-width:360px!important}#modulationGears svg{min-width:0}#modulationPanel{max-width:760px;justify-self:center;width:100%}#substitutePanel{margin-top:12px;border:0;border-top:1px solid var(--kirin-line);border-radius:0;background:none}#substitutePanel>.k-fold{border:0}
+
+/* KIRIN-FRAME:BEGIN */
+:root{--kirin-content-inset:16px}
+.k-fold-body,.panel-collapsible-body{padding:var(--kirin-content-inset)!important;box-sizing:border-box}
+.k-fold>summary{padding:10px var(--kirin-content-inset)!important}
+.card:has(>.k-fold),.panel:has(>.k-fold),.theory-panel:has(>.k-fold){border:0!important;box-shadow:none!important;background:transparent!important}
+.card>.k-fold,.panel>.k-fold,.theory-panel>.k-fold{border:1px solid var(--kirin-line);border-radius:var(--kirin-radius-sm);background:var(--kirin-surface)}
+body.k-page .card:not(:has(>.k-fold)){padding:var(--kirin-content-inset)!important}
+body.k-page .item-details,body.k-page .top-help{padding:8px var(--kirin-content-inset)}
+body.k-page .item-details>summary{padding:8px 4px!important}
+.score-shell,.score-canvas{border:0!important;box-shadow:none!important;border-radius:0!important;background:transparent!important}
+/* KIRIN-FRAME:END */
+</style>
+<script>/* KIRIN-FILE: version=1.10.0; updated=2026-11-03; changeId=C-038 */ window.KIRIN_PAGE_META = Object.freeze({appId:'circle-of-fifths', version:'1.10.0', updated:'2026-11-03', changeId:'C-038'});
+/* KIRIN-SHELL-JS:BEGIN */
+(function () {
+  'use strict';
+  var KEY = 'kirin-theme'; var RELEASE_VERSION = '1.10.0';
+  var root = document.documentElement;
+  function sysTheme() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+  function savedTheme() { try { var t = localStorage.getItem(KEY); return t === 'dark' || t === 'light' ? t : null; } catch (e) { return null; } }
+  function setTheme(t) {
+    root.setAttribute('data-theme', t);
+    try { window.dispatchEvent(new CustomEvent('kirin-theme-change', { detail: t })); } catch (e) {}
+  }
+  setTheme(savedTheme() || sysTheme());
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var follow = function () { if (!savedTheme()) { setTheme(sysTheme()); paint(); } };
+    if (mq.addEventListener) mq.addEventListener('change', follow); else if (mq.addListener) mq.addListener(follow);
+  }
+  var PAGES = [
+    ['https://kirinplayglound.wixsite.com/my-site', 'トップ'], ['circle-of-fifths.html', '5度圏ルーレット'], ['guitar-chord-composer.html', 'ギターコード作成'],
+    ['hikigatari-note.html', '弾き語りノート'], ['rhythm-pattern.html', 'リズムパターン作成'],
+    ['vocal-range-checker.html', 'ボーカル音域チェッカー'], ['chord-progressions.html', 'コード進行一覧'], ['scale-practice.html', 'スケール練習']
+  ];
+  var btn = null;
+  function paint() {
+    if (!btn) return;
+    var dark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = dark ? 'ライトにする' : 'ダークにする';
+    btn.setAttribute('aria-label', dark ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え');
+  }
+  function build() {
+    if (document.querySelector('.kx-bar')) return;
+    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    var bar = document.createElement('div');
+    bar.className = 'kx-bar';
+    var brand = document.createElement('a');
+    brand.className = 'kx-brand';
+    brand.href = 'https://kirinplayglound.wixsite.com/my-site'; brand.target = '_top';
+    brand.textContent = 'キリンの遊び場';
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'kx-theme';
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      setTheme(next);
+      paint();
+    });
+    bar.appendChild(brand); var back=document.createElement('a');back.className='kx-brand';back.textContent='戻る';back.href='https://kirinplayglound.wixsite.com/my-site';back.target='_top';bar.appendChild(back);
+    bar.appendChild(btn);
+    document.body.insertBefore(bar, document.body.firstChild);
+    var foot = document.createElement('footer');
+    foot.className = 'kx-foot';
+    var nav = document.createElement('nav');
+    nav.className = 'kx-nav';
+    nav.setAttribute('aria-label', 'ほかのページ');
+    PAGES.forEach(function (p) {
+      var a = document.createElement('a');
+      a.href = /^https:/.test(p[0]) ? p[0] : p[0] + '?v=' + RELEASE_VERSION; if (/^https:/.test(p[0])) a.target = '_top';
+      a.textContent = p[1];
+      if (p[0] === here) a.setAttribute('aria-current', 'page');
+      nav.appendChild(a);
+    });
+    foot.appendChild(nav);
+    var note = document.createElement('p');
+    note.textContent = 'キリンの遊び場　データはこの端末のブラウザにだけ保存されます。';
+    foot.appendChild(note);
+    document.body.appendChild(foot);
+
+    paint();
+  }
+
+  function foldAll(){
+    function decorate(d){const sum=d.querySelector(':scope > summary');if(!sum)return;d.classList.add('k-fold');if(!sum.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';sum.appendChild(h);}}
+    function wrap(el,title,open){if(el.closest('details')||el.querySelector(':scope > details.k-fold'))return;const d=document.createElement('details'),sum=document.createElement('summary'),body=document.createElement('div');d.open=open;sum.textContent=title;body.className='k-fold-body';while(el.firstChild)body.appendChild(el.firstChild);el.appendChild(d);d.append(sum,body);decorate(d);}
+    const id=window.KIRIN_PAGE_META&&window.KIRIN_PAGE_META.appId;
+    if(id==='rhythm-pattern')document.querySelectorAll('.panel:not(details)').forEach(el=>wrap(el,el.querySelector('h2')?.childNodes[0]?.textContent?.trim()||'譜面・試聴',true));
+    if(id==='vocal-range-checker')document.querySelectorAll('.card').forEach((el,i)=>wrap(el,el.querySelector('.sub')?.textContent||['測定操作','現在の音','音域','鍵盤','検出音'][i]||'音域情報',true));
+    if(id==='circle-of-fifths'){const el=document.querySelector('.wheelStage');if(el)wrap(el,'五度圏ルーレット',true);document.querySelectorAll('.theory-panel').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'調の比較',true));}
+    
+    document.querySelectorAll('a').forEach(a=>{const text=a.textContent.trim();if(['戻る','トップ','キリンの遊び場'].includes(text)){a.href='https://kirinplayglound.wixsite.com/my-site';a.target='_top';}});
+    if(id==='guitar-chord-composer')document.querySelectorAll('main > section.card').forEach(el=>wrap(el,el.querySelector('h2')?.textContent||'設定と結果',true));
+    if(id==='circle-of-fifths')document.querySelectorAll('.infoBlock').forEach((el,i)=>{if(i>=2)wrap(el,i===2?'凡例と表記の説明':'度数ガイド',true);});
+    if(id==='vocal-range-checker'){const el=document.getElementById('detectedList')?.parentElement;if(el)wrap(el,'検出した音の一覧',true);}
+    if(id==='chord-progressions'){const el=document.querySelector('.k-lead');if(el)wrap(el,'使い方と説明',true);}
+    document.querySelectorAll('details').forEach(decorate); new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.matches('details'))decorate(node);node.querySelectorAll('details').forEach(decorate);}}).observe(document.body,{childList:true,subtree:true});
+    document.querySelectorAll('.collapse-toggle').forEach(b=>{b.classList.add('k-fold-toggle');if(!b.querySelector('.k-fold-hint')){const h=document.createElement('small');h.className='k-fold-hint';h.textContent='クリック開閉';b.appendChild(h);}const content=document.getElementById(b.id.replace('Toggle','Content'));if(content){b.setAttribute('aria-controls',content.id);const update=()=>b.setAttribute('aria-expanded',String(!content.hidden));update();new MutationObserver(update).observe(content,{attributes:true,attributeFilter:['hidden']});}});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(foldAll,0));else setTimeout(foldAll,0);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+})();
+/* KIRIN-SHELL-JS:END */
+</script>
+</head>
+<body>
+  <div class="app">
+    <section class="panel mainPanel">
+      <h1>5度圏ルーレット</h1>
+      <p class="desc">
+        外周に <strong>Major</strong>、内周に <strong>Relative minor</strong> を表示しています。
+        選択キーに関係する位置だけ、コード名の横に <strong>ローマ数字の度数</strong> を付けています。
+        最内側の diminished は常に見える位置に補助表示します。
+      </p>
+
+      <div class="toolbar">
+        <div class="toggleGroup">
+          <button id="majorBtn" class="toggleBtn active">Major表示</button>
+          <button id="minorBtn" class="toggleBtn">Minor表示</button>
+        </div>
+        <button id="resetBtn" class="ghostBtn">C / Am に戻す</button>
+      </div>
+
+<div class="quick-buttons theory-toggles"><button type="button" id="modulationToggle" aria-pressed="false">転調比較 OFF</button><button type="button" id="substituteToggle" aria-pressed="false">代理コード OFF</button></div><section class="theory-panel" id="modulationPanel" hidden><h2>2つの調の連動比較</h2><label>転調先（主音からの半音差）<select id="modulationOffset"><option value="0">0半音</option><option value="1">1半音</option><option value="2">2半音</option><option value="3">3半音</option><option value="4">4半音</option><option value="5">5半音</option><option value="6">6半音</option><option value="7" selected>7半音（完全5度）</option><option value="8">8半音</option><option value="9">9半音</option><option value="10">10半音</option><option value="11">11半音</option></select></label><div id="modulationGears"></div><p id="modulationSummary" role="status"></p><p class="hint">歯車風の比較図です。回転だけで転調が成立するわけではありません。共通コードを橋渡しに使い、転調先の終止で新しい調を確立する方法などがあります。短調のV7終止例は和声的短音階由来です。</p></section>
+      <div class="wheelStage">
+        <div class="wheelFrame">
+          <div class="pointer"></div>
+
+          <div class="svgViewport">
+            <svg id="wheelSvg" viewBox="0 0 900 900" aria-label="Circle of Fifths Wheel"></svg>
+            <div class="bottomMask"></div>
+          </div>
+
+          <div class="selectionBar">
+            <div class="selectionMode" id="selectionMode">MAJOR SELECTED</div>
+            <div class="selectionMain" id="selectionMain">C Major</div>
+            <div class="selectionSub" id="selectionSub">relative minor: Am / 調号: 調号なし</div>
+          </div>
+        </div>
+
+        <div class="hint">
+          外周クリック / タップ = Major選択 / 内周クリック / タップ = Minor選択 / ドラッグで回転
+        </div>
+      </div>
+
+      <div class="infoSection">
+        <div class="infoBlock">
+          <div class="mainKey" id="selectedKeyLabel">C Major</div>
+          <div class="subInfo" id="keySummary"></div>
+          <div class="chips" id="infoChips"></div>
+        </div>
+
+        <div class="infoBlock">
+          <div class="scaleTitle">スケール構成音</div>
+          <div class="scaleLine" id="scaleNotes"></div>
+        </div>
+
+        <div class="infoBlock">
+          <div class="miniLegend">
+            <div class="miniLegendRow"><span class="swatch" style="background:#ffd36a;"></span>外周：Majorキー / Major系コード位置</div>
+            <div class="miniLegendRow"><span class="swatch" style="background:#7cead8;"></span>内周：Relative minor / Minor系コード位置</div>
+            <div class="miniLegendRow"><span class="swatch" style="background:#ffb28a;"></span>最内側：Diminished（補助表示）</div>
+            <div class="miniLegendRow"><span class="swatch" style="background:#7ea2ff;"></span>選択中のキー</div>
+          </div>
+          <div class="footerNote" style="margin-top:10px;">
+            ※ マイナーは <strong>ナチュラルマイナー</strong> 表示です。<br>
+            ※ 音名はキー文脈に応じて綴り分けしています。<br>
+            例：F# major では <strong>E#</strong>、Db major では <strong>F</strong>
+          </div>
+        </div>
+
+        <div class="infoBlock degreeGuideBlock">
+          <div class="scaleTitle">度数ガイド</div>
+          <p class="degreeGuideLead">
+            5度圏のキーを選ぶときに、各度数の役割とダイアトニックコードを確認できる補助表です。
+          </p>
+
+          <div class="degree-table-wrap">
+            <table class="degree-table">
+              <thead>
+                <tr>
+                  <th>度数</th>
+                  <th>英語名</th>
+                  <th>日本語イメージ</th>
+                  <th id="degreeTableKeyHead">Cコード</th>
+                </tr>
+              </thead>
+              <tbody id="degreeTableBody"></tbody>
+            </table>
+<section class="theory-panel" id="substitutePanel" hidden><h2>代理コードの候補</h2><div id="substituteList"></div><p id="tritoneExample"></p><p class="hint">機能が近い候補で、自動置換ではありません。旋律・前後の進行・声部進行で適否が変わります。短調の表示は自然短音階内の候補です。裏コードはドミナント7thが主和音へ進む場合などの候補で、三和音を無条件に置き換える意味ではありません。</p></section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+/* KIRIN-HARMONY:BEGIN */
+(function(){'use strict';
+const mod=n=>((n%12)+12)%12;
+const names=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+function triads(root,mode='major'){const intervals=mode==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10],q=mode==='major'?['','m','m','','','m','dim']:['m','dim','','m','','',''];return intervals.map((v,i)=>({rootPc:mod(root+v),quality:q[i],name:names[mod(root+v)]+q[i],degree:i+1}));}
+function compare(root,target,mode='major'){const source=triads(root,mode),dest=triads(target,mode);const common=source.filter(a=>dest.some(b=>b.rootPc===a.rootPc&&b.quality===a.quality));return {source,dest,common,cadence:names[mod(target+7)]+'7 → '+names[mod(target)]+(mode==='minor'?'m':'')};}
+function substitutes(root,mode='major'){const chords=triads(root,mode),groups=mode==='major'?[[0,2,5],[1,3],[4,6]]:[[0,2,5],[1,3],[4,6]];return chords.map((c,i)=>({chord:c,options:groups.find(g=>g.includes(i)).filter(j=>j!==i).map(j=>chords[j]),condition:mode==='major'?'機能が近い候補。旋律・声部進行・前後の和音で適否が変わります。':'自然短音階内の機能が近い候補。短調のV7は別の和声的短音階の扱い。'}));}
+function tritone(root){return names[mod(root+6)]+'7';}
+window.KIRIN_HARMONY=Object.freeze({version:'1.10.0',names,triads,compare,substitutes,tritone});
+})();
+/* KIRIN-HARMONY:END */
+    const mod = (n, m = 12) => ((n % m) + m) % m;
+
+    function normalizeDeg(deg) {
+      return mod(deg, 360);
+    }
+
+    function shortestAngleDiff(to, from) {
+      let d = to - from;
+      while (d > 180) d -= 360;
+      while (d < -180) d += 360;
+      return d;
+    }
+
+    function clamp(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+
+    function polar(cx, cy, r, angleFromTop) {
+      const rad = (angleFromTop - 90) * Math.PI / 180;
+      return {
+        x: cx + r * Math.cos(rad),
+        y: cy + r * Math.sin(rad)
+      };
+    }
+
+    function sectorPath(cx, cy, innerR, outerR, startAngle, endAngle) {
+      const p1 = polar(cx, cy, outerR, startAngle);
+      const p2 = polar(cx, cy, outerR, endAngle);
+      const p3 = polar(cx, cy, innerR, endAngle);
+      const p4 = polar(cx, cy, innerR, startAngle);
+      const largeArc = endAngle - startAngle <= 180 ? 0 : 1;
+
+      return [
+        `M ${p1.x} ${p1.y}`,
+        `A ${outerR} ${outerR} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
+        `L ${p3.x} ${p3.y}`,
+        `A ${innerR} ${innerR} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
+        "Z"
+      ].join(" ");
+    }
+
+    function pickClosestRotationTarget(currentRotation, baseTarget) {
+      const k = Math.round((currentRotation - baseTarget) / 360);
+      const candidates = [
+        baseTarget + (k - 1) * 360,
+        baseTarget + k * 360,
+        baseTarget + (k + 1) * 360
+      ];
+      return candidates.reduce((best, n) =>
+        Math.abs(n - currentRotation) < Math.abs(best - currentRotation) ? n : best
+      );
+    }
+
+    function approxTextWidth(text, fontSize = 14) {
+      return Math.max(fontSize * 1.2, text.length * fontSize * 0.75);
+    }
+
+    const OUTER_MAJOR_LABELS = ["C", "G", "D", "A", "E", "B", "F#", "Db", "Ab", "Eb", "Bb", "F"];
+    const INNER_MINOR_LABELS = ["Am", "Em", "Bm", "F#m", "C#m", "G#m", "D#m", "Bbm", "Fm", "Cm", "Gm", "Dm"];
+    const STEP = 30;
+
+    const MODES = {
+      major: {
+        name: "Major",
+        basePc: 0,
+        intervals: [0, 2, 4, 5, 7, 9, 11],
+        degrees: ["I", "ii", "iii", "IV", "V", "vi", "vii°"],
+        qualities: ["", "m", "m", "", "", "m", "dim"]
+      },
+      minor: {
+        name: "Minor",
+        basePc: 9,
+        intervals: [0, 2, 3, 5, 7, 8, 10],
+        degrees: ["i", "ii°", "III", "iv", "v", "VI", "VII"],
+        qualities: ["m", "dim", "", "m", "m", "", ""]
+      }
+    };
+
+    const LETTERS = ["C", "D", "E", "F", "G", "A", "B"];
+    const NATURAL_PCS = {
+      C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11
+    };
+
+    function parseNoteLabel(label) {
+      const m = String(label).match(/^([A-G])([#b]*)(m)?$/);
+      if (!m) throw new Error("Invalid note label: " + label);
+      const [, letter, accidental = "", minorMark] = m;
+      return { letter, accidental, isMinorLabel: Boolean(minorMark) };
+    }
+
+    function accidentalToOffset(accidental) {
+      let v = 0;
+      for (const ch of accidental) {
+        if (ch === "#") v += 1;
+        if (ch === "b") v -= 1;
+      }
+      return v;
+    }
+
+    function noteLabelToPc(label) {
+      const normalized = label.replace(/m$/, "");
+      const { letter, accidental } = parseNoteLabel(normalized);
+      return mod(NATURAL_PCS[letter] + accidentalToOffset(accidental));
+    }
+
+    function accidentalFromDiff(diff) {
+      if (diff === 0) return "";
+      if (diff === 1) return "#";
+      if (diff === 2) return "##";
+      if (diff === 11) return "b";
+      if (diff === 10) return "bb";
+      if (diff < 6) return "#".repeat(diff);
+      return "b".repeat(12 - diff);
+    }
+
+    function spellPitchWithLetter(letter, targetPc) {
+      const naturalPc = NATURAL_PCS[letter];
+      const diff = mod(targetPc - naturalPc);
+      return letter + accidentalFromDiff(diff);
+    }
+
+    function tonicRootLabel(slot, modeName) {
+      return modeName === "major"
+        ? OUTER_MAJOR_LABELS[mod(slot)]
+        : INNER_MINOR_LABELS[mod(slot)].replace(/m$/, "");
+    }
+
+    function keyLabel(slot, modeName) {
+      return modeName === "major"
+        ? OUTER_MAJOR_LABELS[mod(slot)]
+        : INNER_MINOR_LABELS[mod(slot)];
+    }
+
+    function relativeLabel(slot, modeName) {
+      return modeName === "major"
+        ? INNER_MINOR_LABELS[mod(slot)]
+        : OUTER_MAJOR_LABELS[mod(slot)];
+    }
+
+    function scaleSpellingsFromKey(tonicLabel, modeName) {
+      const tonic = tonicLabel.replace(/m$/, "");
+      const tonicPc = noteLabelToPc(tonic);
+      const tonicLetter = parseNoteLabel(tonic).letter;
+      const startLetterIndex = LETTERS.indexOf(tonicLetter);
+
+      return MODES[modeName].intervals.map((interval, i) => {
+        const letter = LETTERS[(startLetterIndex + i) % 7];
+        const targetPc = mod(tonicPc + interval);
+        return spellPitchWithLetter(letter, targetPc);
+      });
+    }
+
+    function signatureText(slot) {
+      slot = mod(slot);
+      if (slot === 0) return "調号なし";
+      if (slot <= 6) return `# × ${slot}`;
+      return `b × ${12 - slot}`;
+    }
+
+    function slotFromPc(pc, modeName) {
+      const base = MODES[modeName].basePc;
+      return mod((pc - base) * 7);
+    }
+
+    function chordRing(quality) {
+      if (quality === "m") return "minor";
+      if (quality === "dim") return "dim";
+      return "major";
+    }
+
+    function diatonicChords(slot, modeName) {
+      const mode = MODES[modeName];
+      const tonic = tonicRootLabel(slot, modeName);
+      const scale = scaleSpellingsFromKey(tonic, modeName);
+
+      return scale.map((rootName, i) => {
+        const quality = mode.qualities[i];
+        const ring = chordRing(quality);
+        const rootPc = noteLabelToPc(rootName);
+        const displaySlot = ring === "minor"
+          ? slotFromPc(rootPc, "minor")
+          : slotFromPc(rootPc, "major");
+
+        return {
+          degree: mode.degrees[i],
+          root: rootName,
+          rootPc,
+          quality,
+          ring,
+          slot: displaySlot,
+          name: rootName + quality
+        };
+      });
+    }
+
+    const wheelSvg = document.getElementById("wheelSvg");
+    const majorBtn = document.getElementById("majorBtn");
+    const minorBtn = document.getElementById("minorBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const selectionMode = document.getElementById("selectionMode");
+    const selectionMain = document.getElementById("selectionMain");
+    const selectionSub = document.getElementById("selectionSub");
+
+    const selectedKeyLabel = document.getElementById("selectedKeyLabel");
+    const keySummary = document.getElementById("keySummary");
+    const infoChips = document.getElementById("infoChips");
+    const scaleNotesEl = document.getElementById("scaleNotes");
+
+    const degreeTableKeyHead = document.getElementById("degreeTableKeyHead");
+    const degreeTableBody = document.getElementById("degreeTableBody");
+
+    const DEGREE_GUIDE = {
+      major: [
+        { degree: "1度", english: "Tonic",        image: "主音、中心、帰る場所" },
+        { degree: "2度", english: "Supertonic",   image: "主音の上" },
+        { degree: "3度", english: "Mediant",      image: "1度と5度の間" },
+        { degree: "4度", english: "Subdominant",  image: "5度の下側の対応位置" },
+        { degree: "5度", english: "Dominant",     image: "強い推進力を持つ音" },
+        { degree: "6度", english: "Submediant",   image: "上側の中間音" },
+        { degree: "7度", english: "Leading tone", image: "導音、1度へ行きたがる音" }
+      ],
+      minor: [
+        { degree: "1度", english: "Tonic",       image: "主音、中心、帰る場所" },
+        { degree: "2度", english: "Supertonic",  image: "主音の上" },
+        { degree: "3度", english: "Mediant",     image: "主音と5度の間" },
+        { degree: "4度", english: "Subdominant", image: "安定から少し離れる音" },
+        { degree: "5度", english: "Dominant",    image: "流れを作る支点" },
+        { degree: "6度", english: "Submediant",  image: "暗さや広がりを感じやすい音" },
+        { degree: "7度", english: "Subtonic",    image: "主音の全音下にある音" }
+      ]
+    };
+
+
+/* KIRIN-CIRCLE-HARMONY-UI:BEGIN */
+let modulationOn=false,substituteOn=false;
+function harmonyRoot(){return noteLabelToPc(tonicRootLabel(state.selectedSlot,state.mode));}
+function makeComparisonGear(root,label,reverse){const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 420 440');svg.setAttribute('role','img');svg.setAttribute('aria-label',label);const points=Array.from({length:96},(_,i)=>{const a=i*Math.PI*2/96,rad=i%4<2?194:182;return (210+Math.sin(a)*rad)+','+(210-Math.cos(a)*rad);}).join(' '),gear=document.createElementNS(ns,'polygon');gear.setAttribute('points',points);gear.setAttribute('fill','var(--kirin-surface-2)');gear.setAttribute('stroke','var(--kirin-accent)');gear.setAttribute('transform','rotate('+((reverse?-1:1)*state.rotation)+' 210 210)');svg.append(gear);const h=window.KIRIN_HARMONY;for(let i=0;i<12;i++){const a=i*Math.PI/6,n=document.createElementNS(ns,'text');n.setAttribute('x',String(210+Math.sin(a)*142));n.setAttribute('y',String(217-Math.cos(a)*142));n.setAttribute('text-anchor','middle');n.setAttribute('font-size','24');n.setAttribute('fill','var(--kirin-text)');n.textContent=h.names[(root+i*7)%12];svg.append(n);}const text=document.createElementNS(ns,'text');text.setAttribute('x','210');text.setAttribute('y','210');text.setAttribute('text-anchor','middle');text.setAttribute('fill','var(--kirin-text)');text.setAttribute('font-size','25');text.textContent=label;svg.append(text);return svg;}
+function renderHarmonyPanels(){const h=window.KIRIN_HARMONY,root=harmonyRoot(),target=(root+Number(document.getElementById('modulationOffset').value))%12;document.getElementById('modulationPanel').hidden=!modulationOn;document.getElementById('substitutePanel').hidden=!substituteOn;
+if(modulationOn){const c=h.compare(root,target,state.mode),box=document.getElementById('modulationGears');box.replaceChildren(makeComparisonGear(root,'現在：'+h.names[root]+(state.mode==='minor'?'m':''),false),makeComparisonGear(target,'転調先：'+h.names[target]+(state.mode==='minor'?'m':''),true));document.getElementById('modulationSummary').textContent='共通コード：'+(c.common.map(v=>v.name).join('、')||'三和音の共通コードなし（直接転調などを検討）')+' ／ 転調先の終止例：'+c.cadence;}
+wheelSvg.querySelector('#substituteOverlay')?.remove();if(substituteOn){const choices=h.substitutes(root,state.mode),actual=diatonicChords(state.selectedSlot,state.mode),list=document.getElementById('substituteList');list.replaceChildren();choices.forEach((v,i)=>{const p=document.createElement('p');p.textContent=actual[i].name+' → 候補 '+v.options.map(c=>c.name).join('／');list.append(p);});const dominant=(root+7)%12;document.getElementById('tritoneExample').textContent='ドミナント7thの別候補：'+h.names[dominant]+'7 → '+h.tritone(dominant)+'（裏コード）→ '+h.names[root]+(state.mode==='minor'?'m':'');;}}
+document.getElementById('modulationToggle').onclick=()=>{modulationOn=!modulationOn;const b=document.getElementById('modulationToggle');b.textContent='転調比較 '+(modulationOn?'ON':'OFF');b.setAttribute('aria-pressed',String(modulationOn));renderHarmonyPanels();};document.getElementById('substituteToggle').onclick=()=>{substituteOn=!substituteOn;const b=document.getElementById('substituteToggle');b.textContent='代理コード '+(substituteOn?'ON':'OFF');b.setAttribute('aria-pressed',String(substituteOn));renderHarmonyPanels();};document.getElementById('modulationOffset').onchange=renderHarmonyPanels;
+/* KIRIN-CIRCLE-HARMONY-UI:END */
+    const state = {
+      mode: "major",
+      selectedSlot: 0,
+      rotation: 0,
+      isDragging: false,
+      dragStartAngle: 0,
+      startRotation: 0,
+      lastPointerAngle: 0,
+      lastMoveTime: 0,
+      velocity: 0,
+      rafId: 0,
+      moved: false,
+      ignoreClickUntil: 0
+    };
+
+    function isInUpperHalf(angle) {
+      const a = normalizeDeg(angle);
+      return a <= 112 || a >= 248;
+    }
+
+    function slotAngle(slot) {
+      return slot * STEP + state.rotation;
+    }
+
+    function scaleForAngle(angle) {
+      let a = normalizeDeg(angle);
+      if (a > 180) a = 360 - a;
+      const v = 1 - Math.abs(a) / 112;
+      return clamp(v, 0.62, 1);
+    }
+
+function FG(){ return (getComputedStyle(document.documentElement).getPropertyValue('--kirin-fg-rgb')||'255,255,255').trim(); }
+function TXT(){ return (getComputedStyle(document.documentElement).getPropertyValue('--kirin-text')||'#eef3ff').trim(); }
+    function buildDegreeMaps() {
+      const maps = { major: {}, minor: {}, dim: {} };
+      const chords = diatonicChords(state.selectedSlot, state.mode);
+      for (const ch of chords) maps[ch.ring][ch.slot] = ch;
+      return maps;
+    }
+
+    function ringSectorFill(type, slot) {
+      const selected = slot === state.selectedSlot;
+      const angle = slotAngle(slot);
+      const upper = isInUpperHalf(angle);
+
+      if (type === "outer") {
+        if (selected && state.mode === "major") return "url(#selectedGrad)";
+        if (selected) return "rgba(126,162,255,0.22)";
+        return upper ? "rgba("+FG()+",0.078)" : "rgba("+FG()+",0.018)";
+      }
+
+      if (selected && state.mode === "minor") return "url(#selectedGrad)";
+      if (selected) return "rgba(126,162,255,0.18)";
+      return upper ? "rgba(77,226,197,0.17)" : "rgba(77,226,197,0.025)";
+    }
+
+    function degreeBadgeWidth(text, fontSize) {
+      return approxTextWidth(text, fontSize) + 16;
+    }
+
+    function renderTextWithDegree({
+      cx, cy, radius, angle, label, degreeInfo, selected, ring, fontBase, textColor
+    }) {
+      if (!isInUpperHalf(angle)) return "";
+
+      const p = polar(cx, cy, radius, angle);
+      const scale = scaleForAngle(angle);
+
+      const fontSize = Math.round(fontBase * (1.0 + scale * 0.08));
+
+      if (!degreeInfo) {
+        return `
+          <g>
+            <text x="${p.x}" y="${p.y + 1}"
+                  fill="${selected ? '#ffffff' : textColor}"
+                  font-size="${fontSize}"
+                  font-weight="${selected ? 900 : 860}"
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  style="pointer-events:none;">${label}</text>
+          </g>
+        `;
+      }
+
+      const degreeFont = Math.round(Math.max(22, fontSize * 0.6));
+      const badgeH = Math.round(degreeFont * 1.6);
+      const badgeW = degreeBadgeWidth(degreeInfo.degree, degreeFont);
+
+      const textY = p.y - Math.round(fontSize * 0.28);
+      const badgeCenterY = textY + Math.round(fontSize * 0.82) + 8;
+      const badgeX = p.x - badgeW / 2;
+      const badgeY = badgeCenterY - badgeH / 2;
+
+      const badgeFill =
+        ring === "major" ? "rgba(255,211,106,0.97)" :
+        ring === "minor" ? "rgba(124,234,216,0.97)" :
+        "rgba(255,178,138,0.97)";
+
+      return `
+        <g>
+          <text x="${p.x}" y="${textY}"
+                fill="${selected ? '#ffffff' : textColor}"
+                font-size="${fontSize}"
+                font-weight="${selected ? 900 : 860}"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                style="pointer-events:none;">${label}</text>
+
+          <rect x="${badgeX}" y="${badgeY}" width="${badgeW}" height="${badgeH}"
+                rx="${badgeH/2}" ry="${badgeH/2}" fill="${badgeFill}" />
+
+          <text x="${p.x}" y="${badgeCenterY + 1}"
+                fill="#17203f"
+                font-size="${degreeFont}"
+                font-weight="900"
+                text-anchor="middle"
+                dominant-baseline="middle">${degreeInfo.degree}</text>
+        </g>
+      `;
+    }
+
+    function renderDimLabel({ cx, cy, chord }) {
+      const p = {
+        x: cx,
+        y: cy - 110
+      };
+
+      const fontSize = 30;
+      const degreeFont = 24;
+      const badgeH = Math.round(degreeFont * 1.6);
+      const badgeW = degreeBadgeWidth(chord.degree, degreeFont);
+
+      const textW = approxTextWidth(chord.name, fontSize);
+      const totalW = Math.max(textW, badgeW) + 28;
+      const totalH = fontSize + badgeH + 26;
+
+      const boxX = p.x - totalW / 2;
+      const boxY = p.y - totalH / 2;
+
+      const textY = boxY + 22;
+      const badgeCenterY = textY + 26;
+      const badgeX = p.x - badgeW / 2;
+      const badgeY = badgeCenterY - badgeH / 2;
+
+      return `
+        <g>
+          <rect x="${boxX}" y="${boxY}" width="${totalW}" height="${totalH}"
+                rx="18" ry="18"
+                fill="rgba(255,178,138,0.18)"
+                stroke="rgba(255,178,138,0.82)"
+                stroke-width="2" />
+
+          <text x="${p.x}" y="${textY}"
+                fill="${TXT()}"
+                font-size="${fontSize}"
+                font-weight="900"
+                text-anchor="middle"
+                dominant-baseline="middle">${chord.name}</text>
+
+          <rect x="${badgeX}" y="${badgeY}" width="${badgeW}" height="${badgeH}"
+                rx="${badgeH/2}" ry="${badgeH/2}"
+                fill="rgba(255,178,138,0.97)" />
+
+          <text x="${p.x}" y="${badgeCenterY + 1}"
+                fill="#18203e"
+                font-size="${degreeFont}"
+                font-weight="900"
+                text-anchor="middle"
+                dominant-baseline="middle">${chord.degree}</text>
+        </g>
+      `;
+    }
+
+    function renderWheel() {
+      const cx = 450;
+      const cy = 450;
+
+      const outerInnerR = 280;
+      const outerOuterR = 382;
+      const innerInnerR = 190;
+      const innerOuterR = 268;
+
+      let outerSectors = "";
+      let innerSectors = "";
+      let outerLabels = "";
+      let innerLabels = "";
+      let dimLabels = "";
+      let hitAreas = "";
+
+      const degreeMaps = buildDegreeMaps();
+
+      for (let i = 0; i < 12; i++) {
+        const angle = slotAngle(i);
+        const start = angle - STEP / 2;
+        const end = angle + STEP / 2;
+        const upper = isInUpperHalf(angle);
+        const selected = i === state.selectedSlot;
+
+        const outerPath = sectorPath(cx, cy, outerInnerR, outerOuterR, start, end);
+        const innerPath = sectorPath(cx, cy, innerInnerR, innerOuterR, start, end);
+
+        outerSectors += `
+          <path d="${outerPath}"
+                fill="${ringSectorFill('outer', i)}"
+                stroke="rgba(${FG()},${upper ? 0.09 : 0.025})"
+                stroke-width="2"
+                data-slot="${i}"
+                data-ring="outer" />
+        `;
+
+        innerSectors += `
+          <path d="${innerPath}"
+                fill="${ringSectorFill('inner', i)}"
+                stroke="rgba(${FG()},${upper ? 0.09 : 0.025})"
+                stroke-width="2"
+                data-slot="${i}"
+                data-ring="inner" />
+        `;
+
+        const outerChord = degreeMaps.major[i];
+        const innerChord = degreeMaps.minor[i];
+
+        outerLabels += renderTextWithDegree({
+          cx, cy,
+          radius: 344,
+          angle,
+          label: outerChord ? outerChord.name : OUTER_MAJOR_LABELS[i],
+          degreeInfo: outerChord || null,
+          selected,
+          ring: "major",
+          fontBase: 40,
+          textColor: TXT()
+        });
+
+        innerLabels += renderTextWithDegree({
+          cx, cy,
+          radius: 238,
+          angle,
+          label: innerChord ? innerChord.name : INNER_MINOR_LABELS[i],
+          degreeInfo: innerChord || null,
+          selected,
+          ring: "minor",
+          fontBase: 36,
+          textColor: TXT()
+        });
+
+        const po = polar(cx, cy, 344, angle);
+        const pi = polar(cx, cy, 238, angle);
+
+        hitAreas += `
+          <circle cx="${po.x}" cy="${po.y}" r="32" fill="transparent" data-slot="${i}" data-ring="outer" />
+          <circle cx="${pi.x}" cy="${pi.y}" r="30" fill="transparent" data-slot="${i}" data-ring="inner" />
+        `;
+      }
+
+      const dimChord = Object.values(degreeMaps.dim)[0];
+      if (dimChord) {
+        dimLabels = renderDimLabel({
+          cx,
+          cy,
+          chord: dimChord
+        });
+      }
+
+      const selectedTopOuter = polar(cx, cy, 390, 0);
+      const selectedTopInner = polar(cx, cy, 272, 0);
+
+      wheelSvg.innerHTML = `
+        <defs>
+          <linearGradient id="selectedGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7ea2ff" />
+            <stop offset="100%" stop-color="#9b7cff" />
+          </linearGradient>
+        </defs>
+
+        <circle cx="${cx}" cy="${cy}" r="414"
+                fill="rgba(${FG()},0.02)"
+                stroke="rgba(${FG()},0.05)"
+                stroke-width="2" />
+        <circle cx="${cx}" cy="${cy}" r="${outerOuterR}"
+                fill="none"
+                stroke="rgba(${FG()},0.055)"
+                stroke-width="2" />
+        <circle cx="${cx}" cy="${cy}" r="${innerOuterR}"
+                fill="none"
+                stroke="rgba(${FG()},0.055)"
+                stroke-width="2" />
+        <circle cx="${cx}" cy="${cy}" r="${innerInnerR}"
+                fill="none"
+                stroke="rgba(${FG()},0.05)"
+                stroke-width="2" />
+        <circle cx="${cx}" cy="${cy}" r="156"
+                fill="rgba(${FG()},0.018)"
+                stroke="rgba(${FG()},0.04)"
+                stroke-width="2" />
+
+        ${outerSectors}
+        ${innerSectors}
+
+        <circle cx="${selectedTopOuter.x}" cy="${selectedTopOuter.y}" r="4.5" fill="rgba(${FG()},0.92)" />
+        <circle cx="${selectedTopInner.x}" cy="${selectedTopInner.y}" r="3.5" fill="rgba(${FG()},0.48)" />
+
+        ${outerLabels}
+        ${innerLabels}
+        ${dimLabels}
+        ${hitAreas}
+      `;
+    }
+
+    function renderInfo() {
+      const mode = state.mode;
+      const slot = state.selectedSlot;
+      const tonic = tonicRootLabel(slot, mode);
+      const key = keyLabel(slot, mode);
+      const relative = relativeLabel(slot, mode);
+      const scale = scaleSpellingsFromKey(tonic, mode);
+
+      selectionMode.textContent = `${mode.toUpperCase()} SELECTED`;
+      selectionMain.textContent = `${tonic} ${mode === "major" ? "Major" : "Minor"}`;
+      selectionSub.textContent = mode === "major"
+        ? `relative minor: ${relative} / 調号: ${signatureText(slot)}`
+        : `relative major: ${relative} / 調号: ${signatureText(slot)}`;
+
+      selectedKeyLabel.textContent = `${tonic} ${mode === "major" ? "Major" : "Minor"}`;
+      keySummary.innerHTML = `
+        調号: <strong>${signatureText(slot)}</strong><br>
+        相対調: <strong>${relative}</strong><br>
+        diminished はサークル中心より少し上に固定表示しています。
+      `;
+
+      infoChips.innerHTML = `
+        <div class="chip">${mode === "major" ? "長調" : "短調"}</div>
+        <div class="chip">Key: ${key}</div>
+        <div class="chip">Relative: ${relative}</div>
+      `;
+
+      scaleNotesEl.innerHTML = scale
+        .map(n => `<div class="noteChip">${n}</div>`)
+        .join("");
+    }
+
+    function formatTableKeyName(slot, mode) {
+      return mode === "major"
+        ? tonicRootLabel(slot, "major")
+        : keyLabel(slot, "minor");
+    }
+
+    function renderDegreeGuide() {
+      const mode = state.mode;
+      const slot = state.selectedSlot;
+      const guide = DEGREE_GUIDE[mode];
+      const chords = diatonicChords(slot, mode);
+
+      degreeTableKeyHead.textContent = `${formatTableKeyName(slot, mode)}コード`;
+
+      degreeTableBody.innerHTML = guide.map((row, i) => `
+        <tr>
+          <td>${row.degree}</td>
+          <td>${row.english}</td>
+          <td>${row.image}</td>
+          <td>${chords[i].name}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderButtons() {
+      majorBtn.classList.toggle("active", state.mode === "major");
+      minorBtn.classList.toggle("active", state.mode === "minor");
+    }
+
+window.addEventListener('kirin-theme-change', function () { renderAll(); });
+    function renderAll() {
+      renderButtons();
+      renderWheel();
+      renderInfo();
+      renderDegreeGuide();
+      renderHarmonyPanels();
+    }
+
+    function syncSelectedSlotFromRotation() {
+      const normalized = normalizeDeg(state.rotation);
+      state.selectedSlot = mod(Math.round(-normalized / STEP), 12);
+    }
+
+    function baseRotationForSlot(slot) {
+      return -mod(slot) * STEP;
+    }
+
+    function cancelAnimation() {
+      if (state.rafId) {
+        cancelAnimationFrame(state.rafId);
+        state.rafId = 0;
+      }
+    }
+
+    function animateRotationTo(target, duration = 280) {
+      cancelAnimation();
+      const start = state.rotation;
+      const delta = target - start;
+      const t0 = performance.now();
+
+      function frame(now) {
+        const t = Math.min(1, (now - t0) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        state.rotation = start + delta * eased;
+        syncSelectedSlotFromRotation();
+        renderAll();
+
+        if (t < 1) {
+          state.rafId = requestAnimationFrame(frame);
+        } else {
+          state.rotation = target;
+          syncSelectedSlotFromRotation();
+          renderAll();
+        }
+      }
+
+      state.rafId = requestAnimationFrame(frame);
+    }
+
+    function snapToNearest(duration = 240) {
+      syncSelectedSlotFromRotation();
+      const target = pickClosestRotationTarget(
+        state.rotation,
+        baseRotationForSlot(state.selectedSlot)
+      );
+      animateRotationTo(target, duration);
+    }
+
+    function animateToSlot(slot, duration = 280) {
+      state.selectedSlot = mod(slot);
+      const target = pickClosestRotationTarget(
+        state.rotation,
+        baseRotationForSlot(state.selectedSlot)
+      );
+      animateRotationTo(target, duration);
+    }
+
+    function startInertia() {
+      cancelAnimation();
+      let last = performance.now();
+
+      function frame(now) {
+        const dt = now - last;
+        last = now;
+
+        state.rotation += state.velocity * dt;
+        state.velocity *= Math.pow(0.94, dt / 16.7);
+
+        syncSelectedSlotFromRotation();
+        renderAll();
+
+        if (Math.abs(state.velocity) > 0.01) {
+          state.rafId = requestAnimationFrame(frame);
+        } else {
+          state.velocity = 0;
+          snapToNearest(260);
+        }
+      }
+
+      state.rafId = requestAnimationFrame(frame);
+    }
+
+    function getPointerAngle(clientX, clientY) {
+      const rect = wheelSvg.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = clientX - cx;
+      const dy = clientY - cy;
+
+      let deg = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+      if (deg < 0) deg += 360;
+      return deg;
+    }
+
+    wheelSvg.addEventListener("pointerdown", (e) => {
+      cancelAnimation();
+      wheelSvg.classList.add("dragging");
+
+      state.isDragging = true;
+      state.dragStartAngle = getPointerAngle(e.clientX, e.clientY);
+      state.startRotation = state.rotation;
+      state.lastPointerAngle = state.dragStartAngle;
+      state.lastMoveTime = performance.now();
+      state.velocity = 0;
+      state.moved = false;
+
+      wheelSvg.setPointerCapture(e.pointerId);
+    });
+
+    wheelSvg.addEventListener("pointermove", (e) => {
+      if (!state.isDragging) return;
+
+      const angle = getPointerAngle(e.clientX, e.clientY);
+      const deltaFromStart = shortestAngleDiff(angle, state.dragStartAngle);
+      state.rotation = state.startRotation + deltaFromStart;
+
+      const now = performance.now();
+      const dt = Math.max(1, now - state.lastMoveTime);
+      const deltaFromLast = shortestAngleDiff(angle, state.lastPointerAngle);
+      state.velocity = deltaFromLast / dt;
+
+      state.lastPointerAngle = angle;
+      state.lastMoveTime = now;
+
+      if (Math.abs(deltaFromStart) > 2) state.moved = true;
+
+      syncSelectedSlotFromRotation();
+      renderAll();
+    });
+
+    function endDrag() {
+      if (!state.isDragging) return;
+
+      state.isDragging = false;
+      wheelSvg.classList.remove("dragging");
+
+      if (state.moved) {
+        state.ignoreClickUntil = performance.now() + 250;
+        startInertia();
+      } else {
+        snapToNearest(180);
+      }
+    }
+
+    wheelSvg.addEventListener("pointerup", endDrag);
+    wheelSvg.addEventListener("pointercancel", endDrag);
+    wheelSvg.addEventListener("lostpointercapture", endDrag);
+
+    wheelSvg.addEventListener("click", (e) => {
+      if (performance.now() < state.ignoreClickUntil) return;
+
+      let el = e.target;
+      while (el && el !== wheelSvg) {
+        if (el.dataset && el.dataset.slot != null && el.dataset.ring) {
+          const slot = Number(el.dataset.slot);
+          const ring = el.dataset.ring;
+
+          if (ring === "outer") state.mode = "major";
+          if (ring === "inner") state.mode = "minor";
+
+          animateToSlot(slot, 260);
+          return;
+        }
+        el = el.parentNode;
+      }
+    });
+
+    majorBtn.addEventListener("click", () => {
+      state.mode = "major";
+      renderAll();
+    });
+
+    minorBtn.addEventListener("click", () => {
+      state.mode = "minor";
+      renderAll();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      cancelAnimation();
+      state.mode = "major";
+      state.selectedSlot = 0;
+      animateToSlot(0, 260);
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>
